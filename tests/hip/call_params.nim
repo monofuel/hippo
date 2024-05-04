@@ -1,12 +1,20 @@
 import hippo
 
-
-## asmNoStackFrame is required to avoid a bunch of nim stuff
-func add*(a,b: cint; c: ptr[cint]) {.exportc, asmNoStackFrame.} =
+template globalFunc(body: typed) =
+  {.push stackTrace: off.}
   {.push checks: off}
-  c[] = a + b
+  body
+  {.pop}
   {.pop}
 
+proc add*(a,b: cint; c: ptr[cint]) {.exportc, globalFunc, codegenDecl: "__global__ $# $#$#".} =
+  c[] = a + b
+
+
+
+# hippoGlobal:
+#   proc add*(a,b: cint; c: ptr[cint]) =
+#   c[] = a + b
 
 proc main() =
   echo "DEBUG: init"
@@ -16,8 +24,8 @@ proc main() =
   echo "DEBUG: hipMalloc"
   # TODO implement <<< >>> syntax
   {.emit: """
-  //add<<<1,1>>>(2,7,dev_c);
-  add(2,7,dev_c);
+  add<<<1,1>>>(2,7,dev_c);
+  //add(2,7,dev_c);
   """.}
   discard hipMemcpy(addr c, dev_c, sizeof(int32).cint, hipMemcpyDeviceToHost)
   echo "DEBUG: hipMemcpy"
