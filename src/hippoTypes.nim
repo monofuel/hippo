@@ -59,3 +59,6 @@ proc hipLaunchKernel*(function_address: pointer; numBlocks: dim3; dimBlocks: dim
 # proc hipLaunchKernel*(function_address: pointer; numBlocks: dim3; dimBlocks: dim3;
 #                      args: ptr pointer; sharedMemBytes: csize_t; stream: hipStream_t): cint {.
 #     importcpp: "hipLaunchKernel(@)", header: "hip/hip_runtime.h".}
+
+proc hipLaunchKernelGGL*(function_address: pointer; numBlocks: dim3; dimBlocks: dim3;): cint {.
+    importcpp: "hipLaunchKernelGGL(@)", header: "hip/hip_runtime.h", varargs.}
