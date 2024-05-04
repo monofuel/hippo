@@ -45,7 +45,7 @@ type
     y* {.importc: "y".}: uint32_t ## < y
     z* {.importc: "z".}: uint32_t ## < z
 
-proc newDim3*(x: uint32_t; y: uint32_t; z: uint32_t): Dim3 =
+proc newDim3*(x: uint32_t = 1; y: uint32_t = 1; z: uint32_t = 1): Dim3 =
   result.x = x
   result.y = y
   result.z = z
