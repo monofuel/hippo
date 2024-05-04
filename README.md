@@ -51,7 +51,7 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
 ## Feature todo list
 
 - [x] support c++ attributes like `__global__`, `__device__`
-- [ ] support kernel execution syntax `<<<1,1>>>` somehow
+- [x] support kernel execution syntax `<<<1,1>>>` somehow
 - [ ] figure out how to handle built-ins like block/thread indices
 - [ ] setup automation for building nim types from HIP headers
 
