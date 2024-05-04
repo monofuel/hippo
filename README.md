@@ -57,6 +57,9 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
 
 - [ ] Ensure that every example from the book "CUDA by Example" can be run with this library
 
+- [ ] add pictures to project
+- [ ] setup automated testing build for HIP
+  - need a docker image with nim, hipcc, and nvcc
 - [ ] setup automated testing with hip-cpu
 - [ ] setup CI runners for both nvidia & amd GPUs for testing binaries
 - [ ] setup automation for building nim types from CUDA headers
