@@ -13,7 +13,40 @@
   - however it is understandable to want to switch out with CUDA if you only care about NVIDIA GPUs
 
 - initial example can be found at `tests/hip`
-- assuming the hipcc compiler is in your PATH, you can run the example with `im cpp --cc:clang --clang.cpp.exe=hipcc --clang.cpp.linkerexe=hipcc call_params_emit.nim`
+- assuming the hipcc compiler is in your PATH, you can run the example with `nim cpp --cc:clang --clang.cpp.exe:hipcc --clang.cpp.linkerexe:hipcc call_params_emit.nim`
+
+## Compiling
+
+### Required flags
+
+You must compile with nim cpp for c++
+You must also set the compiler type to 'clang' and the exe to 'hipcc'
+
+example cli: `nim cpp --cc:clang --clang.cpp.exe:hipcc --clang.cpp.linkerexe:hipcc filename.nim`
+
+example config.nims:
+```
+--cc:clang
+--clang.cpp.exe:hipcc
+--clang.cpp.linkerexe:hipcc
+```
+
+- [ ] TODO, figure out the flags needed to compile with nvcc. I'm not sure what `--cc` needs to be set to for compatible arguments
+
+### Optional flags
+
+- `-d:hippo_runtime=HIP` (default) or `-d:hippo_runtime=CUDA` to switch between HIP and CUDA
+  - I'm not currently testing CUDA so #YOLO
+
+## Pragmas
+
+- all pragmas are prefixed with `hippo` to avoid conflicts
+
+basic kernel example:
+```
+proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
+  c[] = a + b
+```
 
 ## Feature todo list
 

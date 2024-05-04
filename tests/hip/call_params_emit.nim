@@ -12,6 +12,9 @@ __global__ void add(int a, int b, int *c) {
 """}
 
 
+proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
+  c[] = a + b
+
 type
   hipMemcpyKind* {.size: sizeof(cint), importcpp: "hipMemcpyKind".} = enum
     hipMemcpyHostToHost = 0,    ## < Host-to-Host Copy
