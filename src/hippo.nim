@@ -23,6 +23,3 @@ template hippoHost*(body: typed) =
   {.push stackTrace: off, checks: off, exportc, codegenDecl: "__host__ $# $#$#".}
   body
   {.pop}
-
-# proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
-#   c[] = a + b
