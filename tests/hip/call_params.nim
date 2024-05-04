@@ -1,16 +1,7 @@
 import hippo
 
-template globalFunc(body: typed) =
-  {.push stackTrace: off.}
-  {.push checks: off}
-  body
-  {.pop}
-  {.pop}
-
-proc add*(a,b: cint; c: ptr[cint]) {.exportc, globalFunc, codegenDecl: "__global__ $# $#$#".} =
+proc add*(a, b: cint; c: ptr[cint]) {.hippoGlobal.} =
   c[] = a + b
-
-
 
 # hippoGlobal:
 #   proc add*(a,b: cint; c: ptr[cint]) =
