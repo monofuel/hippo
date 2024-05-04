@@ -2,7 +2,7 @@ import hippo
 
 
 ## asmNoStackFrame is required to avoid a bunch of nim stuff
-func add*(a,b: int; c: ptr[int]) {.exportc, asmNoStackFrame, noconv.} =
+func add*(a,b: cint; c: ptr[cint]) {.exportc, asmNoStackFrame.} =
   {.push checks: off}
   c[] = a + b
   {.pop}
