@@ -34,3 +34,4 @@
   - will be useful for debugging and testing
   - also useful for running on systems without a GPU
 - [ ] Test with [chipStar](https://github.com/CHIP-SPV/chipStar) verify it can run with openCL
+- [ ] Figure out some way to get this to work with WEBGPU
