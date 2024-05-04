@@ -32,10 +32,15 @@ proc launchKernel*(
   blockDim: dim3 = newDim3(1, 1, 1),
   args: tuple
 ): cint =
-  var args = (addr args[0], addr args[1], addr args[2])
+  #var kernelArgs = (addr args[0], addr args[1], addr args[2])
+  var kernelArgs: seq[pointer]
+  for key, arg in args.fieldPairs:
+    echo key
+    kernelArgs.add(cast[pointer](addr arg))
+
   hipLaunchKernel(
     cast[pointer](kernel),
     gridDim,
     blockDim,
-    cast[ptr pointer](addr args)
+    cast[ptr pointer](addr kernelArgs[0]),
   )
