@@ -2,7 +2,10 @@ import hippo
 
 const N = 10
 
+
+
 proc addKernel(a,b,c: ptr[cint]){.hippoGlobal.} =
+  var blockIdx {.importcpp: "blockIdx".}: BlockIdx
   let tid = blockIdx.x # handle data at this index
   if tid < N: # guard for out of bounds
     c[] = a[] + b[]
