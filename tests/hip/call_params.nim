@@ -1,7 +1,11 @@
 import hippo
 
-proc add*(a,b: int; c: ptr[int]) {.exportc, noconv.}=
+
+## asmNoStackFrame is required to avoid a bunch of nim stuff
+func add*(a,b: int; c: ptr[int]) {.exportc, asmNoStackFrame, noconv.} =
+  {.push checks: off}
   c[] = a + b
+  {.pop}
 
 
 proc main() =
@@ -11,9 +15,10 @@ proc main() =
   discard hipMalloc(cast[ptr pointer](addr dev_c), sizeof(int32).cint)
   echo "DEBUG: hipMalloc"
   # TODO implement <<< >>> syntax
-  # {.emit: """
-  # add<<<1,1>>>(2,7,dev_c);
-  # """.}
+  {.emit: """
+  //add<<<1,1>>>(2,7,dev_c);
+  add(2,7,dev_c);
+  """.}
   discard hipMemcpy(addr c, dev_c, sizeof(int32).cint, hipMemcpyDeviceToHost)
   echo "DEBUG: hipMemcpy"
   echo "2 + 7 = ", c
