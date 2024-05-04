@@ -35,8 +35,8 @@ example config.nims:
 
 ### Optional flags
 
-- `-d:hippo_runtime=HIP` (default) or `-d:hippo_runtime=CUDA` to switch between HIP and CUDA
-  - I'm not currently testing CUDA so #YOLO
+- `-d:hippo_runtime=HIP` (default)
+- no cuda features implemented yet, but should be technically possible.
 
 ## Pragmas
 
@@ -50,7 +50,7 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
 
 ## Feature todo list
 
-- [ ] support c++ attributes like `__global__`, `__device__`
+- [x] support c++ attributes like `__global__`, `__device__`
 - [ ] support kernel execution syntax `<<<1,1>>>` somehow
 - [ ] figure out how to handle built-ins like block/thread indices
 - [ ] setup automation for building nim types from HIP headers

@@ -3,10 +3,6 @@ import hippo
 proc add*(a, b: cint; c: ptr[cint]) {.hippoGlobal.} =
   c[] = a + b
 
-# hippoGlobal:
-#   proc add*(a,b: cint; c: ptr[cint]) =
-#   c[] = a + b
-
 proc main() =
   echo "DEBUG: init"
   var c: int32

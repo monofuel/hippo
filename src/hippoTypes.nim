@@ -9,6 +9,7 @@ when defined(hippo_runtime):
     echo "Using HIP runtime"
   elif hippo_runtime == "CUDA":
     # nvcc loads the CUDA runtime automatically
+    # Note: i have not actually setup any CUDA stuff yet
     echo "Using CUDA runtime"
 else:
   # Default to HIP
@@ -18,6 +19,8 @@ else:
 #include "hip/hip_runtime.h"
 """}
   echo "Using HIP runtime"
+
+# TODO cuda runtime types
 
 type
   hipMemcpyKind* {.size: sizeof(cint), header: "hip/hip_runtime.h", importcpp: "hipMemcpyKind".} = enum
