@@ -15,9 +15,9 @@ proc main() =
   var dev_a, dev_b, dev_c: pointer
 
   # allocate gpu memory
-  handleError(hipMalloc(cast[ptr pointer](addr dev_a), sizeof(int32)*N))
-  handleError(hipMalloc(cast[ptr pointer](addr dev_b), sizeof(int32)*N))
-  handleError(hipMalloc(cast[ptr pointer](addr dev_c), sizeof(int32)*N))
+  handleError(hipMalloc(addr dev_a, sizeof(int32)*N))
+  handleError(hipMalloc(addr dev_b, sizeof(int32)*N))
+  handleError(hipMalloc(addr dev_c, sizeof(int32)*N))
 
   # fill in arrays a and b on the host
   for i in 0..<N:

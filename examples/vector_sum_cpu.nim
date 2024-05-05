@@ -1,3 +1,4 @@
+# vector_sums_cpu.nims is setup to use HIP-CPU
 import hippo
 
 const N: int32 = 10
