@@ -14,5 +14,13 @@ jobs:
     - uses: jiro4989/setup-nim-action@v1
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y hipcc nvidia-cuda-toolkit
     - run: nimble test -y
     - run: nimble test --gc:orc -y
+
+# TODO setup cpu builds
+# TODO setup gpu builds
+# TODO setup cpu tests
