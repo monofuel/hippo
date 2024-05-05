@@ -10,6 +10,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: recursive
     - uses: jiro4989/setup-nim-action@v1
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
@@ -37,3 +39,7 @@ jobs:
       run: |
         nim cpp examples/vector_sum_cpu.nim
         nim cpp examples/vector_sum.nim
+    
+    - name: Execute CPU Example
+      run: |
+        ./examples/vector_sum_cpu
