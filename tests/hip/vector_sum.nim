@@ -12,10 +12,7 @@ proc addKernel(a, b, c: ptr[cint]){.hippoGlobal.} =
 
 proc main() =
   var a,b,c: array[N, int32]
-  var
-    dev_a: pointer
-    dev_b: pointer
-    dev_c: pointer
+  var dev_a, dev_b, dev_c: pointer
 
   # allocate gpu memory
   handleError(hipMalloc(cast[ptr pointer](addr dev_a), sizeof(int32)*N))
