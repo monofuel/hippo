@@ -78,7 +78,7 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
 
 - [ ] Ensure that every example from the book "CUDA by Example" can be run with this library
 
-- [ ] Add a compiler option to use [HIP-CPU](https://github.com/ROCm/HIP-CPU) to run HIP code on the CPU
+- [x] Add a compiler option to use [HIP-CPU](https://github.com/ROCm/HIP-CPU) to run HIP code on the CPU
   - will be useful for debugging and testing
   - also useful for running on systems without a GPU
 - [ ] add pictures to project
