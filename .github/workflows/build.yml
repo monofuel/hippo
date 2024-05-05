@@ -23,7 +23,7 @@ jobs:
         sudo apt-get update
         # rocm takes up too much space for github ci runner
         #sudo apt-get install -y hipcc rocm nvidia-cuda-toolkit
-        sudo apt-get install -y hipcc rocm-device-libs hip-runtime nvidia-cuda-toolkit
+        sudo apt-get install -y hipcc rocm-device-libs rocm-hip-runtime nvidia-cuda-toolkit
         echo "/opt/rocm/bin" >> $GITHUB_PATH
         echo "/usr/local/cuda/bin" >> $GITHUB_PATH
     
