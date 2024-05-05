@@ -10,6 +10,8 @@
 - requires that `hipcc` is in your PATH
   - hip supports both CUDA and HIP, so you can use this with either
   - for CUDA, you will need to have `nvcc` in your PATH
+    - set the environment variable HIP_PLATFORM=nvidia for hipcc to build for nvidia
+    - [ ] currently, nvcc fails on an error about std=gnu++17. need to fix
 - HIP-CPU is supported with the `-d:HippoRuntime=HIP_CPU` flag
   - does not require hipcc. works with gcc.
   - you can write kernels and test them on cpu with breakpoints and everything!!
