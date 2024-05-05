@@ -10,15 +10,12 @@ proc addKernel(a, b, c: ptr[cint]){.hippoGlobal.} =
     let cArray = cast[ptr UncheckedArray[cint]](c)
     cArray[tid] = aArray[tid] + bArray[tid]
 
-
-
 proc main() =
   var a,b,c: array[N, int32]
   var
     dev_a: pointer
     dev_b: pointer
     dev_c: pointer
-
 
   # allocate gpu memory
   handleError(hipMalloc(cast[ptr pointer](addr dev_a), sizeof(int32)*N))
@@ -29,7 +26,6 @@ proc main() =
   for i in 0..<N:
     a[i] = -i
     b[i] = i * i
-
 
   # copy data to device
   handleError(hipMemcpy(dev_a, addr a[0], sizeof(int32)*N, hipMemcpyHostToDevice))
@@ -53,9 +49,6 @@ proc main() =
   handleError(hipFree(dev_a))
   handleError(hipFree(dev_b))
   handleError(hipFree(dev_c))
-
-
-
 
 when isMainModule:
   main()
