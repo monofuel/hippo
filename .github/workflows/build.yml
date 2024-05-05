@@ -22,6 +22,8 @@ jobs:
         echo -e 'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600' | sudo tee /etc/apt/preferences.d/rocm-pin-600
         sudo apt-get update
         sudo apt-get install -y hipcc nvidia-cuda-toolkit
+        echo "/opt/rocm/bin" >> $GITHUB_PATH
+        echo "/usr/local/cuda/bin" >> $GITHUB_PATH
     
     - name: Run Tests
       run: |
