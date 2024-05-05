@@ -1,0 +1,27 @@
+nimTitle	hippoTypes	hippoTypes.html	module src/hippoTypes		0
+nim	HippoRuntime	hippoTypes.html#HippoRuntime	const HippoRuntime		4
+nim	size_t	hippoTypes.html#size_t	type size_t		32
+nim	uint8_t	hippoTypes.html#uint8_t	type uint8_t		33
+nim	uint16_t	hippoTypes.html#uint16_t	type uint16_t		34
+nim	uint32_t	hippoTypes.html#uint32_t	type uint32_t		35
+nim	uint64_t	hippoTypes.html#uint64_t	type uint64_t		36
+nim	hipStream_t	hippoTypes.html#hipStream_t	type hipStream_t		37
+nim	hipError_t	hippoTypes.html#hipError_t	type hipError_t		38
+nim	hipMemcpyKind	hippoTypes.html#hipMemcpyKind	enum hipMemcpyKind		41
+nim	Dim3	hippoTypes.html#Dim3	object Dim3		49
+nim	BlockDim	hippoTypes.html#BlockDim	object BlockDim		53
+nim	BlockIdx	hippoTypes.html#BlockIdx	object BlockIdx		57
+nim	GridDim	hippoTypes.html#GridDim	object GridDim		61
+nim	ThreadIdx	hippoTypes.html#ThreadIdx	object ThreadIdx		65
+nim	newDim3	hippoTypes.html#newDim3,uint32_t,uint32_t,uint32_t	proc newDim3(x: uint32_t = 1; y: uint32_t = 1; z: uint32_t = 1): Dim3		70
+nim	hipMalloc	hippoTypes.html#hipMalloc,ptr.pointer,cint	proc hipMalloc(ptr: ptr pointer; size: cint): hipError_t		75
+nim	hipMemcpy	hippoTypes.html#hipMemcpy,pointer,pointer,cint,hipMemcpyKind	proc hipMemcpy(dst: pointer; src: pointer; size: cint; kind: hipMemcpyKind): hipError_t		76
+nim	hipFree	hippoTypes.html#hipFree,pointer	proc hipFree(ptr: pointer): hipError_t		77
+nim	hipLaunchKernel	hippoTypes.html#hipLaunchKernel,pointer,Dim3,Dim3,ptr.pointer	proc hipLaunchKernel(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;\n                args: ptr pointer): hipError_t		79
+nim	hipDeviceSynchronize	hippoTypes.html#hipDeviceSynchronize	proc hipDeviceSynchronize(): hipError_t		85
+nim	hipLaunchKernelGGL	hippoTypes.html#hipLaunchKernelGGL,proc,Dim3,Dim3,uint32_t,hipStream_t	proc hipLaunchKernelGGL(function_address: proc; numBlocks: Dim3; dimBlocks: Dim3;\n                   sharedMemBytes: uint32_t; stream: hipStream_t)		87
+nim	ConstCString	hippoTypes.html#ConstCString	object ConstCString		97
+nim	toCString	hippoTypes.html#toCString.c,ConstCString	converter toCString(self: ConstCString): cstring		98
+nim	toConstCString	hippoTypes.html#toConstCString.c,cstring	converter toConstCString(self: cstring): ConstCString		99
+nim	`$`	hippoTypes.html#$,ConstCString	proc `$`(self: ConstCString): string		100
+nim	hipGetErrorString	hippoTypes.html#hipGetErrorString,hipError_t	proc hipGetErrorString(err: hipError_t): ConstCString		101

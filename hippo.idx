@@ -1,0 +1,6 @@
+nimTitle	hippo	hippo.html	module src/hippo		0
+nim	handleError	hippo.html#handleError,hipError_t	proc handleError(err: hipError_t)		10
+nim	hippoGlobal	hippo.html#hippoGlobal.t,untyped	template hippoGlobal(body: untyped)		16
+nim	hippoDevice	hippo.html#hippoDevice.t,typed	template hippoDevice(body: typed)		26
+nim	hippoHost	hippo.html#hippoHost.t,typed	template hippoHost(body: typed)		36
+nim	launchKernel	hippo.html#launchKernel,proc,Dim3,Dim3,uint32,hipStream_t,	proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);\n             blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;\n             stream: hipStream_t = nil; args: tuple): hipError_t		43
