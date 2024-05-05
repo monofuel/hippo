@@ -21,7 +21,7 @@ jobs:
         echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/6.1 jammy main" | sudo tee --append /etc/apt/sources.list.d/rocm.list
         echo -e 'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600' | sudo tee /etc/apt/preferences.d/rocm-pin-600
         sudo apt-get update
-        sudo apt-get install -y hipcc rocm-device-libs nvidia-cuda-toolkit
+        sudo apt-get install -y hipcc rocm nvidia-cuda-toolkit
         echo "/opt/rocm/bin" >> $GITHUB_PATH
         echo "/usr/local/cuda/bin" >> $GITHUB_PATH
     
