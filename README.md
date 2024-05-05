@@ -11,7 +11,8 @@
   - hip supports both CUDA and HIP, so you can use this with either
   - for CUDA, you will need to have `nvcc` in your PATH
     - set the environment variable HIP_PLATFORM=nvidia for hipcc to build for nvidia
-    - [ ] currently, nvcc fails on an error about std=gnu++17. need to fix
+    - HIP nvidia compiling still needs work: https://github.com/monofuel/hippo/pull/1
+      - I got a hacky fix to work, but it needs to be polished up and requires small changes in the nim compiler
 - HIP-CPU is supported with the `-d:HippoRuntime=HIP_CPU` flag
   - note: you need to pull the HIP-CPU submodule to use this feature
   - does not require hipcc. works with gcc.
@@ -45,12 +46,7 @@ example config.nims:
 --clang.cpp.linkerexe:hipcc
 ```
 
-example for nvcc (untested):
-```
---cc:gcc
---clang.cpp.exe:nvcc
---clang.cpp.linkerexe:nvcc
-```
+nvcc handles compiler and linker arguments differently than clang, and requires changes to the nim compiler to work properly at the moment.
 
 
 ### Optional flags
@@ -85,9 +81,8 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
   - will be useful for debugging and testing
   - also useful for running on systems without a GPU
 - [ ] add pictures to project
-- [ ] setup automated testing build for HIP
-  - need a docker image with nim, hipcc, and nvcc
-- [ ] setup automated testing with hip-cpu
+- [x] setup automated testing build for HIP
+- [x] setup automated testing with hip-cpu
 - [ ] setup CI runners for both nvidia & amd GPUs for testing binaries
 - [ ] setup automation for building nim types from CUDA headers
 
