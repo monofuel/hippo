@@ -8,8 +8,7 @@ proc addKernel(a, b, c: ptr[cint]){.hippoGlobal.} =
     let aArray = cast[ptr UncheckedArray[cint]](a)
     let bArray = cast[ptr UncheckedArray[cint]](b)
     let cArray = cast[ptr UncheckedArray[cint]](c)
-    #cArray[tid] = aArray[tid] + bArray[tid]
-    cArray[0] = tid.cint + 5
+    cArray[tid] = aArray[tid] + bArray[tid]
 
 
 
@@ -39,12 +38,9 @@ proc main() =
   # launch kernel
   handleError(launchKernel(
     addkernel,
-    blockDim = newDim3(N.uint32,1,1),
-    gridDim = newDim3(1,1,1),
+    gridDim = newDim3(N.uint32),
     args = (dev_a, dev_b, dev_c)
   ))
-
-  handleError(hipDeviceSynchronize())
 
   # copy result back to host
   handleError(hipMemcpy(addr c[0], dev_c, sizeof(int32)*N, hipMemcpyDeviceToHost))

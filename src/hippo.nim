@@ -41,12 +41,11 @@ template hippoHost*(body: typed) =
 ## Kernel Execution
 proc launchKernel*(
   kernel: proc,
-  gridDim: Dim3 = newDim3(1, 1, 1),
-  blockDim: Dim3 = newDim3(1, 1, 1),
+  gridDim: Dim3 = newDim3(1,1,1), # default to a grid of 1 block
+  blockDim: Dim3 = newDim3(1,1,1),  # default to 1 thread per block
   args: tuple
 ): hipError_t =
   # launchKernel is designed to be similar to `kernel`<<<blockDim, gridDim>>>(args)
-  # which is syncronous and blocks until the kernel is finished
   var kernelArgs: seq[pointer]
   for key, arg in args.fieldPairs:
     kernelArgs.add(cast[pointer](addr arg))
@@ -59,5 +58,3 @@ proc launchKernel*(
   )
   if result != 0:
     return result
-  # Automatically syncronize after running the kernel
-  return hipDeviceSynchronize()
