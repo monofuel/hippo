@@ -22,19 +22,18 @@ jobs:
         sudo apt-get install -y hipcc nvidia-cuda-toolkit
     
     - name: Run Tests
-      - run: nimble test -y
-      - run: nimble test --gc:orc -y
+      run: |
+        nimble test -y
+        nimble test --gc:orc -y
 
     - name: Build Tests
-      - run: nim cpp tests/hip_cpu/vector_sum.nim
-      - run: nim cpp tests/hip/call_params_emit.nim
-      - run: nim cpp tests/hip/call_paramsnim
-      - run: nim cpp tests/hip/vector_sum.nim
+      run: |
+        nim cpp tests/hip_cpu/vector_sum.nim
+        nim cpp tests/hip/call_params_emit.nim
+        nim cpp tests/hip/call_paramsnim
+        nim cpp tests/hip/vector_sum.nim
 
     - name: Build Examples
-      - run: nim cpp examples/vector_sum_cpu.nim
-      - run: nim cpp examples/vector_sum.nim
-
-# TODO setup cpu builds
-# TODO setup gpu builds
-# TODO setup cpu tests
+      run: |
+        nim cpp examples/vector_sum_cpu.nim
+        nim cpp examples/vector_sum.nim
