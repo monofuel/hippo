@@ -8,12 +8,18 @@ proc addKernel(a, b, c: ptr[cint]){.hippoGlobal.} =
     let aArray = cast[ptr UncheckedArray[cint]](a)
     let bArray = cast[ptr UncheckedArray[cint]](b)
     let cArray = cast[ptr UncheckedArray[cint]](c)
-    cArray[tid] = aArray[tid] + bArray[tid]
+    #cArray[tid] = aArray[tid] + bArray[tid]
+    cArray[0] = tid.cint + 5
+
 
 
 proc main() =
   var a,b,c: array[N, int32]
-  var dev_a, dev_b, dev_c: ptr[int32]
+  var
+    dev_a: pointer
+    dev_b: pointer
+    dev_c: pointer
+
 
   # allocate gpu memory
   handleError(hipMalloc(cast[ptr pointer](addr dev_a), sizeof(int32)*N))
@@ -25,9 +31,10 @@ proc main() =
     a[i] = -i
     b[i] = i * i
 
+
   # copy data to device
-  handleError(hipMemcpy(dev_a, cast[ptr pointer](addr a), sizeof(int32)*N, hipMemcpyHostToDevice))
-  handleError(hipMemcpy(dev_b, cast[ptr pointer](addr b), sizeof(int32)*N, hipMemcpyHostToDevice))
+  handleError(hipMemcpy(dev_a, addr a[0], sizeof(int32)*N, hipMemcpyHostToDevice))
+  handleError(hipMemcpy(dev_b, addr b[0], sizeof(int32)*N, hipMemcpyHostToDevice))
 
   # launch kernel
   handleError(launchKernel(
@@ -37,8 +44,10 @@ proc main() =
     args = (dev_a, dev_b, dev_c)
   ))
 
+  handleError(hipDeviceSynchronize())
+
   # copy result back to host
-  handleError(hipMemcpy(cast[ptr pointer](addr c), dev_c, sizeof(int32)*N, hipMemcpyDeviceToHost))
+  handleError(hipMemcpy(addr c[0], dev_c, sizeof(int32)*N, hipMemcpyDeviceToHost))
 
   # display the results
   for i in 0..<N:

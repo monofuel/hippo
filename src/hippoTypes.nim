@@ -76,6 +76,7 @@ proc hipLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim
 # proc hipLaunchKernel*(function_address: pointer; numBlocks: dim3; dimBlocks: dim3;
 #                      args: ptr pointer; sharedMemBytes: csize_t; stream: hipStream_t): cint {.
 #     importcpp: "hipLaunchKernel(@)", header: "hip/hip_runtime.h".}
+proc hipDeviceSynchronize*(): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipDeviceSynchronize(@)".}
 
 proc hipLaunchKernelGGL*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;): hipError_t {.
     importcpp: "hipLaunchKernelGGL(@)", header: "hip/hip_runtime.h", varargs.}
