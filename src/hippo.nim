@@ -1,7 +1,7 @@
 ## HIP Library for Nim
 
 import
-  std/[strformat],
+  std/[strformat,strutils],
   ./hippoTypes
 
 export hippoTypes
@@ -51,7 +51,7 @@ proc launchKernel*(
   # launchKernel is designed to be similar to `kernel`<<<blockDim, gridDim>>>(args)
 
   # having some issues between hip and hip-cpu, so defining different versions of launchKernel
-  when HippoRuntime == "HIP":
+  when HippoRuntime.strip == "HIP":
     var kernelArgs: seq[pointer]
     for key, arg in args.fieldPairs:
       kernelArgs.add(cast[pointer](addr arg))
@@ -61,7 +61,7 @@ proc launchKernel*(
       blockDim,
       cast[ptr pointer](addr kernelArgs[0]),
     )
-  elif HippoRuntime == "HIP_CPU":
+  elif HippoRuntime.strip == "HIP_CPU":
     echo "executing kernel on CPU"
     hipLaunchKernelGGL(
       kernel,
@@ -76,6 +76,6 @@ proc launchKernel*(
     )
     result = hipDeviceSynchronize()
   else:
-    raise newException(Exception, "Unknown runtime")
+    raise newException(Exception, &"Unknown runtime: {HippoRuntime}")
   if result != 0:
     return result

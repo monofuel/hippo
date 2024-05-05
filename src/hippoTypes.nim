@@ -1,16 +1,17 @@
+import std/strutils
 
 # HippoRuntime can be set to "HIP", "HIP_CPU", or "CUDA"
 const HippoRuntime* {.strdefine.} = "HIP"
 
 ## Import the hip_runtime.h header, required for all HIP code
-when HippoRuntime == "HIP":
+when HippoRuntime.strip == "HIP":
   {.passC: "-I/opt/rocm/include".}
   {.emit: """
 #include "hip/hip_runtime.h"
 """}
   echo "Using HIP runtime"
 
-elif HippoRuntime == "HIP_CPU":
+elif HippoRuntime.strip == "HIP_CPU":
   {.passC: "-I./HIP-CPU/include/".}
   {.passL: "-ltbb".}
   {.passL: "-lstdc++".}
@@ -19,7 +20,7 @@ elif HippoRuntime == "HIP_CPU":
 """}
   echo "Using HIP CPU runtime"
 
-elif HippoRuntime == "CUDA":
+elif HippoRuntime.strip == "CUDA":
   # nvcc loads the CUDA runtime automatically
   # Note: i have not actually setup any CUDA stuff yet
   echo "Using CUDA runtime"

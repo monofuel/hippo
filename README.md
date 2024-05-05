@@ -1,19 +1,30 @@
 # Hippo
 
 - very much WORK IN PROGRESS
+- very basic kernels work that use block/thread indices
+- no support for shared memory yet
+
+- hippo *requires* that you use cpp. it will not work with c
+  - `nim cpp -r tests/hip/vector_sum.nim`
 
 - requires that `hipcc` is in your PATH
   - hip supports both CUDA and HIP, so you can use this with either
   - for CUDA, you will need to have `nvcc` in your PATH
+- HIP-CPU is supported with the `-d:HippoRuntime=HIP_CPU` flag
+  - does not require hipcc. works with gcc.
+  - you can write kernels and test them on cpu with breakpoints and everything!!
 
 ## Motivation
 
 - I want GPU compute (HIP / CUDA) to be a first-class citizen in Nim.
-- Ideally, I would like to support both CUDA and HIP, but I am starting with HIP since it can target both AMD and NVIDIA GPUs.
-  - however it is understandable to want to switch out with CUDA if you only care about NVIDIA GPUs
+- This library is built around using HIP, which supports compiling for both AMD and NVIDIA GPUs.
+  - for CUDA, hipcc is basically a wrapper around nvcc.
+  - in theory, this library could also support nvcc directly, but I have not worked on that yet.
+    - pls send me a H100 if you want me to work on that
 
 - initial example can be found at `tests/hip`
-- assuming the hipcc compiler is in your PATH, you can run the example with `nim cpp --cc:clang --clang.cpp.exe:hipcc --clang.cpp.linkerexe:hipcc call_params_emit.nim`
+  - assuming the hipcc compiler is in your PATH, you can run the example with `nim cpp -r vector_sum.nim`
+- cpu examples are at `tests/hip_cpu`
 
 ## Compiling
 
@@ -43,6 +54,7 @@ example for nvcc (untested):
 
 - `-d:HippoRuntime=HIP` (default) (requires hipcc)
 - `-d:HippoRuntime=HIP_CPU` for cpu-only usage (does not require hipcc)
+  - you must pull the HIP-CPU submodule to use this feature
 - no cuda features implemented yet, but should be technically possible.
 
 ## Pragmas

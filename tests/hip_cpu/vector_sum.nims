@@ -1,5 +1,6 @@
 --path:"../../src"
-# why this no work
-#--define:HippoRuntime=HIP_CPU
+--d: HippoRuntime:HIP_CPU
 --passC:"-I../../HIP-CPU/include"
-#--cc:clang
+--passC:"-I./HIP-CPU/include"
+--passL:"-ltbb"
+--passL:"-lstdc++"
