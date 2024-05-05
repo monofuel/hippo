@@ -7,7 +7,7 @@
 - hippo *requires* that you use cpp. it will not work with c
   - `nim cpp -r tests/hip/vector_sum.nim`
 
-- requires that `hipcc` is in your PATH
+- building for GPU requires that `hipcc` is in your PATH
   - hip supports both CUDA and HIP, so you can use this with either
   - for CUDA, you will need to have `nvcc` in your PATH
     - set the environment variable HIP_PLATFORM=nvidia for hipcc to build for nvidia
