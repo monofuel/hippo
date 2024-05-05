@@ -25,6 +25,12 @@ jobs:
       - run: nimble test -y
       - run: nimble test --gc:orc -y
 
+    - name: Build Tests
+      - run: nim cpp tests/hip_cpu/vector_sum.nim
+      - run: nim cpp tests/hip/call_params_emit.nim
+      - run: nim cpp tests/hip/call_paramsnim
+      - run: nim cpp tests/hip/vector_sum.nim
+
     - name: Build Examples
       - run: nim cpp examples/vector_sum_cpu.nim
       - run: nim cpp examples/vector_sum.nim
