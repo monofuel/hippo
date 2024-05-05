@@ -7,24 +7,24 @@ import
 export hippoTypes
 
 ## HIP Attributes
-template hippoGlobal*(body: typed) =
-  {.push stackTrace: off, checks: off, exportc.}
-  # TODO fix this
-  #var
-    #blockDim*: BlockDim
-    #blockIdx*: BlockIdx
-    #gridDem {.inject.}: GridDim
-    #threadIdx {.inject.}: ThreadIdx
-  {.push codegenDecl: "__global__ $# $#$#".}
+template hippoGlobal*(body: untyped) =
+  var
+    blockDim {.importc, inject, header: "hip/hip_runtime.h".}: BlockDim
+    blockIdx {.importc, inject, header: "hip/hip_runtime.h".}: BlockIdx
+    gridDim {.importc, inject, header: "hip/hip_runtime.h".}: GridDim
+    threadIdx {.importc, inject, header: "hip/hip_runtime.h".}: ThreadIdx
+  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__global__ $# $#$#".}
   body
-  {.pop}
   {.pop}
 
 template hippoDevice*(body: typed) =
-  {.push stackTrace: off, checks: off, exportc.}
-  {.push codegenDecl: "__device__ $# $#$#".}
+  var
+    blockDim {.importc, inject, header: "hip/hip_runtime.h".}: BlockDim
+    blockIdx {.importc, inject, header: "hip/hip_runtime.h".}: BlockIdx
+    gridDim {.importc, inject, header: "hip/hip_runtime.h".}: GridDim
+    threadIdx {.importc, inject, header: "hip/hip_runtime.h".}: ThreadIdx
+  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__device__ $# $#$#".}
   body
-  {.pop}
   {.pop}
 
 template hippoHost*(body: typed) =

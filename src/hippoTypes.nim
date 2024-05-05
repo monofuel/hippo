@@ -44,10 +44,22 @@ type
     x* {.importc: "x".}: uint32_t ## < x
     y* {.importc: "y".}: uint32_t ## < y
     z* {.importc: "z".}: uint32_t ## < z
-  #BlockDim* {.importcpp: "const __HIP_Coordinates<__HIP_BlockDim>", header: "hip/hip_runtime.h".} = Dim3
-  BlockIdx* {.importcpp: "const __HIP_Coordinates<__HIP_BlockIdx>", header: "hip/hip_runtime.h".} = Dim3
-  #GridDim* {.importcpp: "const __HIP_Coordinates<__HIP_GridDim>", header: "hip/hip_runtime.h".} = Dim3
-  #ThreadIdx* {.importcpp: "const __HIP_Coordinates<__HIP_ThreadIdx>", header: "hip/hip_runtime.h".} = Dim3
+  BlockDim* {.importcpp: "const __HIP_Coordinates<__HIP_BlockDim>", header: "hip/hip_runtime.h".} = object
+    x* {.importc: "x".}: uint32_t ## < x
+    y* {.importc: "y".}: uint32_t ## < y
+    z* {.importc: "z".}: uint32_t ## < z
+  BlockIdx* {.importcpp: "const __HIP_Coordinates<__HIP_BlockIdx>", header: "hip/hip_runtime.h".} = object
+    x* {.importc: "x".}: uint32_t ## < x
+    y* {.importc: "y".}: uint32_t ## < y
+    z* {.importc: "z".}: uint32_t ## < z
+  GridDim* {.importcpp: "const __HIP_Coordinates<__HIP_GridDim>", header: "hip/hip_runtime.h".} = object
+    x* {.importc: "x".}: uint32_t ## < x
+    y* {.importc: "y".}: uint32_t ## < y
+    z* {.importc: "z".}: uint32_t ## < z
+  ThreadIdx* {.importcpp: "const __HIP_Coordinates<__HIP_ThreadIdx>", header: "hip/hip_runtime.h".} = object
+    x* {.importc: "x".}: uint32_t ## < x
+    y* {.importc: "y".}: uint32_t ## < y
+    z* {.importc: "z".}: uint32_t ## < z
 
 proc newDim3*(x: uint32_t = 1; y: uint32_t = 1; z: uint32_t = 1): Dim3 =
   result.x = x
