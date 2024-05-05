@@ -1,5 +1,4 @@
 # vector_sums.nims is setup for hipcc to build for GPU
-
 import hippo
 
 const N: int32 = 10

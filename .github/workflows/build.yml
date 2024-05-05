@@ -43,6 +43,7 @@ jobs:
       run: |
         nim cpp examples/vector_sum_cpu.nim
         nim cpp examples/vector_sum.nim
+        HIP_PLATFORM=nvidia nim cpp examples/vector_sum.nim -o examples/vector_sum_nvidia
     
     - name: Execute CPU Example
       run: |
