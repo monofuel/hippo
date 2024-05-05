@@ -13,8 +13,9 @@
     - set the environment variable HIP_PLATFORM=nvidia for hipcc to build for nvidia
     - [ ] currently, nvcc fails on an error about std=gnu++17. need to fix
 - HIP-CPU is supported with the `-d:HippoRuntime=HIP_CPU` flag
+  - note: you need to pull the HIP-CPU submodule to use this feature
   - does not require hipcc. works with gcc.
-  - you can write kernels and test them on cpu with breakpoints and everything!!
+  - you can write kernels and test them on cpu with breakpoints and everything!
 
 ## Motivation
 
