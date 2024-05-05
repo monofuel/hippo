@@ -1,5 +1,25 @@
 # Hippo
 
+## Minimal Example
+
+```
+import hippo
+
+proc addKernel*(a, b: cint; c: ptr[cint]) {.hippoGlobal.} =
+  c[] = a + b
+
+var c: int32
+var dev_c: ptr[int32]
+handleError(hipMalloc(cast[ptr pointer](addr dev_c), sizeof(int32).cint))
+handleError(launchKernel(addKernel,args = (2,7,dev_c)))
+handleError(hipMemcpy(addr c, dev_c, sizeof(int32).cint, hipMemcpyDeviceToHost))
+echo "2 + 7 = ", c
+handleError(hipFree(dev_c))
+```
+
+
+## Notes
+
 - very much WORK IN PROGRESS
 - very basic kernels work that use block/thread indices
 - no support for shared memory yet
@@ -22,13 +42,14 @@
 
 - I want GPU compute (HIP / CUDA) to be a first-class citizen in Nim.
 - This library is built around using HIP, which supports compiling for both AMD and NVIDIA GPUs.
-  - for CUDA, hipcc is basically a wrapper around nvcc.
-  - in theory, this library could also support nvcc directly, but I have not worked on that yet.
-    - pls send me a H100 if you want me to work on that
+  - for CUDA, hipcc is basically a wrapper around `nvcc`.
 
 - initial example can be found at `tests/hip`
   - assuming the hipcc compiler is in your PATH, you can run the example with `nim cpp -r vector_sum.nim`
 - cpu examples are at `tests/hip_cpu`
+
+- in theory, this library could also directly support `nvcc` and `cuda_runtime.h` as well, but I have not worked on that yet.
+  - pls send me a H100 if you want me to work on that
 
 ## Compiling
 
