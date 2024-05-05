@@ -6,8 +6,8 @@ proc addKernel*(a, b: cint; c: ptr[cint]) {.hippoGlobal.} =
 
 proc main() =
   var c: int32
-  var dev_c: ptr[int32]
-  handleError(hipMalloc(cast[ptr pointer](addr dev_c), sizeof(int32).cint))
+  var dev_c: pointer
+  handleError(hipMalloc(addr dev_c, sizeof(int32).cint))
   handleError(launchKernel(
     addKernel,
     args = (2,7,dev_c)

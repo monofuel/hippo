@@ -1,24 +1,29 @@
 
+# HippoRuntime can be set to "HIP", "HIP_CPU", or "CUDA"
+const HippoRuntime* {.strdefine.} = "HIP"
+
 ## Import the hip_runtime.h header, required for all HIP code
-when defined(hippo_runtime):
-  # hippo_runtime can be set to "HIP" or "CUDA"
-  when hippo_runtime == "HIP":
-    {.emit: """
-#include "hip/hip_runtime.h"
-"""}
-    echo "Using HIP runtime"
-  elif hippo_runtime == "CUDA":
-    # nvcc loads the CUDA runtime automatically
-    # Note: i have not actually setup any CUDA stuff yet
-    echo "Using CUDA runtime"
-else:
-  # Default to HIP
+when HippoRuntime == "HIP":
   {.passC: "-I/opt/rocm/include".}
-  # {.header: "hip/hip_runtime.h".}
   {.emit: """
 #include "hip/hip_runtime.h"
 """}
   echo "Using HIP runtime"
+
+elif HippoRuntime == "HIP_CPU":
+  {.passC: "-I./HIP-CPU/include/".}
+  {.passL: "-ltbb".}
+  {.passL: "-lstdc++".}
+  {.emit: """
+#include "hip/hip_runtime.h"
+"""}
+  echo "Using HIP CPU runtime"
+
+elif HippoRuntime == "CUDA":
+  # nvcc loads the CUDA runtime automatically
+  # Note: i have not actually setup any CUDA stuff yet
+  echo "Using CUDA runtime"
+
 
 # TODO cuda runtime types
 
@@ -78,7 +83,13 @@ proc hipLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim
 #     importcpp: "hipLaunchKernel(@)", header: "hip/hip_runtime.h".}
 proc hipDeviceSynchronize*(): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipDeviceSynchronize(@)".}
 
-proc hipLaunchKernelGGL*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;): hipError_t {.
+proc hipLaunchKernelGGL*(
+  function_address: proc;
+  numBlocks: Dim3;
+  dimBlocks: Dim3;
+  sharedMemBytes: uint32_t;
+  stream: hipStream_t;
+  ) {.
     importcpp: "hipLaunchKernelGGL(@)", header: "hip/hip_runtime.h", varargs.}
 
 

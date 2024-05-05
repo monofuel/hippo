@@ -31,11 +31,18 @@ example config.nims:
 --clang.cpp.linkerexe:hipcc
 ```
 
-- [ ] TODO, figure out the flags needed to compile with nvcc. I'm not sure what `--cc` needs to be set to for compatible arguments
+example for nvcc (untested):
+```
+--cc:gcc
+--clang.cpp.exe:nvcc
+--clang.cpp.linkerexe:nvcc
+```
+
 
 ### Optional flags
 
-- `-d:hippo_runtime=HIP` (default)
+- `-d:HippoRuntime=HIP` (default) (requires hipcc)
+- `-d:HippoRuntime=HIP_CPU` for cpu-only usage (does not require hipcc)
 - no cuda features implemented yet, but should be technically possible.
 
 ## Pragmas
@@ -52,11 +59,16 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
 
 - [x] support c++ attributes like `__global__`, `__device__`
 - [x] support kernel execution syntax `<<<1,1>>>` somehow
-- [ ] figure out how to handle built-ins like block/thread indices
+- [x] figure out how to handle built-ins like block/thread indices
 - [ ] setup automation for building nim types from HIP headers
+  - the official hip_runtime.h headers are kinda wild
+  - hip-cpu headers might be easier to c2nim?
 
 - [ ] Ensure that every example from the book "CUDA by Example" can be run with this library
 
+- [ ] Add a compiler option to use [HIP-CPU](https://github.com/ROCm/HIP-CPU) to run HIP code on the CPU
+  - will be useful for debugging and testing
+  - also useful for running on systems without a GPU
 - [ ] add pictures to project
 - [ ] setup automated testing build for HIP
   - need a docker image with nim, hipcc, and nvcc
@@ -66,8 +78,5 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
 
 ## Stretch goals
 
-- [ ] Add a compiler option to use [HIP-CPU](https://github.com/ROCm/HIP-CPU) to run HIP code on the CPU
-  - will be useful for debugging and testing
-  - also useful for running on systems without a GPU
 - [ ] Test with [chipStar](https://github.com/CHIP-SPV/chipStar) verify it can run with openCL
 - [ ] Figure out some way to get this to work with WEBGPU
