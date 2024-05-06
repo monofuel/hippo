@@ -101,6 +101,7 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
 - [x] Add a compiler option to use [HIP-CPU](https://github.com/ROCm/HIP-CPU) to run HIP code on the CPU
   - will be useful for debugging and testing
   - also useful for running on systems without a GPU
+- [ ] helper functions to make hip/cuda calls more nim-y
 - [ ] add pictures to project
 - [x] setup automated testing build for HIP
 - [x] setup automated testing with hip-cpu
