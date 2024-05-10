@@ -1,6 +1,4 @@
---path:"../../src"
-
---passC:"-std=c++17"
+--path:"../src"
 --cc:clang
 --clang.cpp.exe:hipcc
 --clang.cpp.linkerexe:hipcc

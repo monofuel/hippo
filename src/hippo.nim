@@ -51,31 +51,31 @@ proc launchKernel*(
   # launchKernel is designed to be similar to `kernel`<<<blockDim, gridDim>>>(args)
 
   # having some issues between hip and hip-cpu, so defining different versions of launchKernel
-  when HippoRuntime.strip == "HIP":
-    var kernelArgs: seq[pointer]
-    for key, arg in args.fieldPairs:
-      kernelArgs.add(cast[pointer](addr arg))
-    result = hipLaunchKernel(
-      cast[pointer](kernel),
-      gridDim,
-      blockDim,
-      cast[ptr pointer](addr kernelArgs[0]),
-    )
-  elif HippoRuntime.strip == "HIP_CPU":
-    echo "executing kernel on CPU"
-    hipLaunchKernelGGL(
-      kernel,
-      gridDim,
-      blockDim,
-      0, # TODO
-      nil, # TODO
-      # TODO handle args properly
-      args[0],
-      args[1],
-      args[2]
-    )
-    result = hipDeviceSynchronize()
-  else:
-    raise newException(Exception, &"Unknown runtime: {HippoRuntime}")
+  # when HippoRuntime.strip == "HIP":
+  #   var kernelArgs: seq[pointer]
+  #   for key, arg in args.fieldPairs:
+  #     kernelArgs.add(cast[pointer](addr arg))
+  #   result = hipLaunchKernel(
+  #     cast[pointer](kernel),
+  #     gridDim,
+  #     blockDim,
+  #     cast[ptr pointer](addr kernelArgs[0]),
+  #   )
+  # elif HippoRuntime.strip == "HIP_CPU":
+  #echo "executing kernel on CPU"
+  hipLaunchKernelGGL(
+    kernel,
+    gridDim,
+    blockDim,
+    0, # TODO
+    nil, # TODO
+    # TODO handle args properly
+    cast[ptr[cint]](args[0]),
+    cast[ptr[cint]](args[1]),
+    cast[ptr[cint]](args[2])
+  )
+  result = hipDeviceSynchronize()
+  # else:
+  #   raise newException(Exception, &"Unknown runtime: {HippoRuntime}")
   if result != 0:
     return result

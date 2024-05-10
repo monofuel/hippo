@@ -1,4 +1,6 @@
-# vector_sums.nims is setup for hipcc to build for GPU
+# vector_sums.nims is setup for hipcc to build for NVIDIA
+# set HIP_RUNTIME=nvidia
+# NB. requires my special nim fork: https://github.com/monofuel/Nim/tree/hipcc-nvcc
 import hippo
 
 const N: int32 = 10
