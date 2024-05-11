@@ -1,5 +1,6 @@
 --path:"../../src"
 --define:"HippoRuntime:HIP"
+--define:"pixieNoSimd"
 --cc:clang
 --clang.cpp.exe:hipcc
 --clang.cpp.linkerexe:hipcc

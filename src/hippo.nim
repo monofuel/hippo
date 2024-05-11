@@ -57,17 +57,17 @@ template hippoMalloc*(size: int): pointer =
   ## Allocate memory on the GPU and return a pointer to it
   var p: pointer
   when HippoRuntime == "CUDA":
-    handleError(cudaMalloc(cast[ptr pointer](addr p), size))
+    handleError(cudaMalloc(cast[ptr pointer](addr p), size.cint))
   else:
-    handleError(hipMalloc(cast[ptr pointer](addr p), size))
+    handleError(hipMalloc(cast[ptr pointer](addr p), size.cint))
   p
 
 template hippoMemcpy*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind) =
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`
   when HippoRuntime == "CUDA":
-    handleError(cudaMemcpy(dst, src, size, kind))
+    handleError(cudaMemcpy(dst, src, size.cint, kind))
   else:
-    handleError(hipMemcpy(dst, src, size, kind))
+    handleError(hipMemcpy(dst, src, size.cint, kind))
 
 template hippoFree*(p: pointer) =
   ## Free memory on the GPU
