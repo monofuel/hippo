@@ -2,34 +2,43 @@ import hippo, boxy, pixie, opengl, windy
 
 const DIM = 1000
 
-type CuComplex = object
-  r: float
-  i: float
+# exportcpp is not needed, but makes the transpiled code more readable
+type CuComplex {.exportcpp.}= object
+  r: cfloat
+  i: cfloat
 
 proc newCuComplex(a,b: float): CuComplex {.hippoDevice.} =
   return CuComplex(r: a, i: b)
 
-proc magnitude2(this: CuComplex): float {.hippoDevice.} =
+proc magnitude2(this: CuComplex): cfloat {.hippoDevice.} =
   return this.r * this.r + this.i * this.i
 
-proc `*`(a,b: CuComplex): CuComplex {.hippoDevice.} =
+proc multiply(a,b: CuComplex): CuComplex {.hippoDevice.} =
   return newCuComplex(a.r*b.r - a.i*b.i, a.i*b.r + a.r*b.i)
 
-proc `+`(a,b: CuComplex): CuComplex {.hippoDevice.} =
+proc add(a,b: CuComplex): CuComplex {.hippoDevice.} =
   return newCuComplex(a.r+b.r, a.i+b.i)
+
+# proc `*`(a,b: CuComplex): CuComplex {.hippoDevice.} =
+#   return newCuComplex(a.r*b.r - a.i*b.i, a.i*b.r + a.r*b.i)
+
+# proc `+`(a,b: CuComplex): CuComplex {.hippoDevice.} =
+#   return newCuComplex(a.r+b.r, a.i+b.i)
 
 proc julia(x,y: int): int {.hippoDevice.} =
   const scale: float = 1.5
   let jx: float = scale * (DIM/2.float - x.float) / (DIM/2.float)
   let jy: float = scale * (DIM/2.float - y.float) / (DIM/2.float)
   let c = newCuComplex(-0.8, 0.156)
-  # var a = newCuComplex(jx, jy)
-  # for i in 0..<200:
-  #   # for 200 iterations, test if the function of a=a*a+c diverges
-  #   a = a * a + c
-  #   if (a.magnitude2() > 1000):
-  #     return 0
-  # # otherwise if the series converges, return 1 to say it is in the set
+  var a = newCuComplex(jx, jy)
+  for i in 0..<200:
+    # for 200 iterations, test if the function of a=a*a+c diverges
+    #a = a * a + c
+    a = multiply(a, a)
+    a = add(a, c)
+    if (a.magnitude2() > 1000):
+      return 0
+  # otherwise if the series converges, return 1 to say it is in the set
   return 1
 
 proc juliaKernel(p: pointer) {.hippoGlobal.} =
@@ -47,7 +56,7 @@ proc juliaKernel(p: pointer) {.hippoGlobal.} =
 
 
 proc displayUntilExit(image: Image) =
-  let windowSize = ivec2(1280, 800)
+  let windowSize = ivec2(DIM, DIM)
 
   let window = newWindow("Julia", windowSize)
   makeContextCurrent(window)
