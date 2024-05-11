@@ -1,5 +1,6 @@
 nimTitle	hippo	hippo.html	module src/hippo		0
-nim	HippoRuntime	hippo.html#HippoRuntime	const HippoRuntime		10
+nim	getHipPlatform	hippo.html#getHipPlatform	proc getHipPlatform(): string		5
+nim	HippoRuntime	hippo.html#HippoRuntime	const HippoRuntime		25
 nim	size_t	hippo.html#size_t	type size_t		5
 nim	uint8_t	hippo.html#uint8_t	type uint8_t		6
 nim	uint16_t	hippo.html#uint16_t	type uint16_t		7
@@ -25,8 +26,9 @@ nim	toCString	hippo.html#toCString.c,ConstCString	converter toCString(self: Cons
 nim	toConstCString	hippo.html#toConstCString.c,cstring	converter toConstCString(self: cstring): ConstCString		72
 nim	`$`	hippo.html#$,ConstCString	proc `$`(self: ConstCString): string		73
 nim	hipGetErrorString	hippo.html#hipGetErrorString,hipError_t	proc hipGetErrorString(err: hipError_t): ConstCString		74
+nim	hipGetLastError	hippo.html#hipGetLastError	proc hipGetLastError(): hipError_t		75
 nim	handleError	hippo.html#handleError,hipError_t	proc handleError(err: hipError_t)		78
 nim	hippoGlobal	hippo.html#hippoGlobal.t,untyped	template hippoGlobal(body: untyped)		84
 nim	hippoDevice	hippo.html#hippoDevice.t,typed	template hippoDevice(body: typed)		94
 nim	hippoHost	hippo.html#hippoHost.t,typed	template hippoHost(body: typed)		104
-nim	launchKernel	hippo.html#launchKernel,proc,Dim3,Dim3,uint32,hipStream_t,	proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);\n             blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;\n             stream: hipStream_t = nil; args: tuple): hipError_t		39
+nim	launchKernel	hippo.html#launchKernel,proc,Dim3,Dim3,uint32,hipStream_t,	proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);\n             blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;\n             stream: hipStream_t = nil; args: tuple): hipError_t		58

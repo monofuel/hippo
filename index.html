@@ -110,6 +110,10 @@
   <li><a class="reference" href="#%24%2CConstCString" title="`$`(self: ConstCString): string">`$`(self: ConstCString): string</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">getHipPlatform
+  <li><a class="reference" href="#getHipPlatform" title="getHipPlatform(): string">getHipPlatform(): string</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">handleError
   <li><a class="reference" href="#handleError%2ChipError_t" title="handleError(err: hipError_t)">handleError(err: hipError_t)</a></li>
 
@@ -124,6 +128,10 @@
 </ul>
 <ul class="simple nested-toc-section">hipGetErrorString
   <li><a class="reference" href="#hipGetErrorString%2ChipError_t" title="hipGetErrorString(err: hipError_t): ConstCString">hipGetErrorString(err: hipError_t): ConstCString</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hipGetLastError
+  <li><a class="reference" href="#hipGetLastError" title="hipGetLastError(): hipError_t">hipGetLastError(): hipError_t</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">hipLaunchKernel
@@ -392,8 +400,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L10" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L10" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L25" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L25" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -411,6 +419,21 @@
     
     <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L73" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L73" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="getHipPlatform-procs-all">
+  <div id="getHipPlatform">
+  <dt><pre><span class="Keyword">proc</span> <a href="#getHipPlatform"><span class="Identifier">getHipPlatform</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+                                <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadEnvEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">]</span><span class="Other">,</span>
+                                <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    getHipPlatform has to be ran at compile time, and gets the target platform for hipcc NVCC and HIPCC (when building for nvidia) require we pass compiler args in -Xcompiler=&quot;&quot; hipcc uses HIP_PLATFORM to determine amd / nvidia hipcc defaults to amd if amdclang++ or hip clang is found <a class="reference external" href="https://github.com/ROCm/llvm-project/blob/00fdfae9aeef14c905550601c2218a6b5962f48c/amd/hipcc/bin/hipvars.pm#L131">https://github.com/ROCm/llvm-project/blob/00fdfae9aeef14c905550601c2218a6b5962f48c/amd/hipcc/bin/hipvars.pm#L131</a>
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L5" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L5" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -467,6 +490,21 @@
     
     <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L74" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L74" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hipGetLastError-procs-all">
+  <div id="hipGetLastError">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipGetLastError"><span class="Identifier">hipGetLastError</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="hippo.html#hipError_t"><span class="Identifier">hipError_t</span></a> {.<span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span>
+                                     <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;hipGetLastError()&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+                                     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L75" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L75" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -543,8 +581,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L39" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L39" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L58" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L58" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -653,7 +691,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-05-11 03:51:36 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-05-11 05:11:30 UTC</small>
       </div>
     </div>
   </div>
