@@ -1,5 +1,8 @@
 # Hippo
 
+<img src="tests/hip/julia.png">
+A Julia Set fractal generated with HIP
+
 ## Minimal HIP Example
 
 ```

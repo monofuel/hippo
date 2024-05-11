@@ -92,6 +92,9 @@ proc main() =
     args = (devBitmap,)
   )
   hippoMemcpy(addr image.data[0], devBitmap, image.getSize(), HippoMemcpyDeviceToHost)
+
+  image.writeFile("julia.png")
+
   displayUntilExit(image)
   hippoFree(devBitmap)
 
