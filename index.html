@@ -172,9 +172,9 @@
 <ul class="simple nested-toc-section">launchKernel
   <li><a class="reference" href="#launchKernel%2Cproc%2CDim3%2CDim3%2Cuint32%2CHippoStream%2C" title="launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);
              blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;
-             stream: HippoStream = nil; args: tuple)">launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);
+             stream: HippoStream = nil; args: tuple): HippoError">launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);
              blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;
-             stream: HippoStream = nil; args: tuple)</a></li>
+             stream: HippoStream = nil; args: tuple): HippoError</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">newDim3
@@ -219,6 +219,14 @@
 </ul>
 <ul class="simple nested-toc-section">hippoHost
   <li><a class="reference" href="#hippoHost.t%2Ctyped" title="hippoHost(body: typed)">hippoHost(body: typed)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hippoLaunchKernel
+  <li><a class="reference" href="#hippoLaunchKernel.t%2Cproc%2CDim3%2CDim3%2Cuint32%2CHippoStream%2C" title="hippoLaunchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);
+                  blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;
+                  stream: HippoStream = nil; args: tuple)">hippoLaunchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);
+                  blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;
+                  stream: HippoStream = nil; args: tuple)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">hippoMalloc
@@ -680,7 +688,7 @@
   <div id="launchKernel,proc,Dim3,Dim3,uint32,HippoStream,">
   <dt><pre><span class="Keyword">proc</span> <a href="#launchKernel%2Cproc%2CDim3%2CDim3%2Cuint32%2CHippoStream%2C"><span class="Identifier">launchKernel</span></a><span class="Other">(</span><span class="Identifier">kernel</span><span class="Other">:</span> <span class="Keyword">proc</span><span class="Other">;</span> <span class="Identifier">gridDim</span><span class="Other">:</span> <a href="hippo.html#Dim3"><span class="Identifier">Dim3</span></a> <span class="Other">=</span> <span class="Identifier">newDim3</span><span class="Other">(</span><span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">;</span>
                   <span class="Identifier">blockDim</span><span class="Other">:</span> <a href="hippo.html#Dim3"><span class="Identifier">Dim3</span></a> <span class="Other">=</span> <span class="Identifier">newDim3</span><span class="Other">(</span><span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">;</span> <span class="Identifier">sharedMemBytes</span><span class="Other">:</span> <span class="Identifier">uint32</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span>
-                  <span class="Identifier">stream</span><span class="Other">:</span> <a href="hippo.html#HippoStream"><span class="Identifier">HippoStream</span></a> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">)</span></pre></dt>
+                  <span class="Identifier">stream</span><span class="Other">:</span> <a href="hippo.html#HippoStream"><span class="Identifier">HippoStream</span></a> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">)</span><span class="Other">:</span> <a href="hippo.html#HippoError"><span class="Identifier">HippoError</span></a></pre></dt>
   <dd>
     
     
@@ -797,6 +805,22 @@
 </div>
 
 </div>
+<div id="hippoLaunchKernel-templates-all">
+  <div id="hippoLaunchKernel.t,proc,Dim3,Dim3,uint32,HippoStream,">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoLaunchKernel.t%2Cproc%2CDim3%2CDim3%2Cuint32%2CHippoStream%2C"><span class="Identifier">hippoLaunchKernel</span></a><span class="Other">(</span><span class="Identifier">kernel</span><span class="Other">:</span> <span class="Keyword">proc</span><span class="Other">;</span> <span class="Identifier">gridDim</span><span class="Other">:</span> <a href="hippo.html#Dim3"><span class="Identifier">Dim3</span></a> <span class="Other">=</span> <span class="Identifier">newDim3</span><span class="Other">(</span><span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">;</span>
+                           <span class="Identifier">blockDim</span><span class="Other">:</span> <a href="hippo.html#Dim3"><span class="Identifier">Dim3</span></a> <span class="Other">=</span> <span class="Identifier">newDim3</span><span class="Other">(</span><span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">;</span>
+                           <span class="Identifier">sharedMemBytes</span><span class="Other">:</span> <span class="Identifier">uint32</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span>
+                           <span class="Identifier">stream</span><span class="Other">:</span> <a href="hippo.html#HippoStream"><span class="Identifier">HippoStream</span></a> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L154" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L154" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
 <div id="hippoMalloc-templates-all">
   <div id="hippoMalloc.t,int">
   <dt><pre><span class="Keyword">template</span> <a href="#hippoMalloc.t%2Cint"><span class="Identifier">hippoMalloc</span></a><span class="Other">(</span><span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">pointer</span></pre></dt>
@@ -834,7 +858,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-05-11 19:01:47 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-05-11 19:06:08 UTC</small>
       </div>
     </div>
   </div>
