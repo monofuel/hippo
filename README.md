@@ -60,10 +60,10 @@ handleError(hipFree(dev_c))
 ## Compiling
 
 - by default, hipcc will build for the GPU detected in your system.
-- If you need to build for various GPUs, you can use --passC:"--offload-arch=gfx1100" to specify the GPU target
-  - for example, to build for a 7900 xtx, you would use --passC:"--offload-arch=gfx1100"
-  - for a radeon w7500, you would use --passC:"--offload-arch=gfx1102"
-  - for a geforce 1650 ti, you would use --passC:"--gpu-architecture=sm_75" 
+- If you need to build for various GPUs, you can use `--passC:"--offload-arch=gfx1100"` to specify the GPU target
+  - for example, to build for a 7900 xtx, you would use `--passC:"--offload-arch=gfx1100"`
+  - for a radeon w7500, you would use `--passC:"--offload-arch=gfx1102"`
+  - for a geforce 1650 ti, you would use `--passC:"--gpu-architecture=sm_75"`
     - You also have to set the `HIP_PLATFORM=nvidia` environment variable to build for nvidia GPUs if you don't have an nvidia GPU in your system
     - hipcc will pick nvcc by default if you have nvcc but do not have the amd rocm stack installed
 
