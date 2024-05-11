@@ -1,2 +1,0 @@
---define:"HippoRuntime:HIP_CPU"
---path:"../../src"

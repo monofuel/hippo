@@ -86,6 +86,7 @@ proc handleError*(err: cudaError_t) =
 ## Hippo Types
 type HippoStream* = cudaStream_t
 type HippoError* = cudaError_t
+type HippoMemcpyKind* = cudaMemcpyKind
 
 ## HIP Attributes
 template hippoGlobal*(body: untyped) =

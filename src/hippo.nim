@@ -52,7 +52,32 @@ else:
 
 
 
-# Kernel Execution
+## Hippo Templates
+## nim wrappers around hip and cuda functions
+
+template hippoMalloc*(p: var pointer, size: int): HippoError =
+  ## Allocate memory on the GPU, and place the pointer in `p`
+  when HippoRuntime == "CUDA":
+    cudaMalloc(cast[ptr pointer](addr p), size)
+  else:
+    hipMalloc(cast[ptr pointer](addr p), size)
+
+template hippoMemcpy*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind): HippoError =
+  ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`
+  when HippoRuntime == "CUDA":
+    cudaMemcpy(dst, src, size, kind)
+  else:
+    hipMemcpy(dst, src, size, kind)
+
+template hippoFree*(p: pointer): HippoError =
+  ## Free memory on the GPU
+  when HippoRuntime == "CUDA":
+    cudaFree(p)
+  else:
+    hipFree(p)
+
+
+## Kernel Execution
 
 proc launchKernel*(
   kernel: proc,

@@ -83,6 +83,7 @@ proc handleError*(err: hipError_t) =
 ## Hippo Types
 type HippoStream* = hipStream_t
 type HippoError* = hipError_t
+type HippoMemcpyKind* = hipMemcpyKind
 
 ## HIP Attributes
 template hippoGlobal*(body: untyped) =
