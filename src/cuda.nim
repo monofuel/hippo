@@ -73,3 +73,4 @@ converter toCString*(self: ConstCString): cstring {.importc: "(char*)", noconv, 
 converter toConstCString*(self: cstring): ConstCString {.importc: "(const char*)", noconv, nodecl.}
 proc `$`*(self: ConstCString): string = $(self.toCString())
 proc cudaGetErrorString*(err: cudaError_t): ConstCString {.header: "cuda_runtime.h",importcpp: "cudaGetErrorString(@)".}
+proc cudaGetLastError*(): cudaError_t {.header: "cuda_runtime.h",importcpp: "cudaGetLastError()".}

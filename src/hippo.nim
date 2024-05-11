@@ -1,6 +1,21 @@
 ## HIP Library for Nim
 import
-  std/[strformat]
+  std/[strformat, os]
+
+proc getHipPlatform*(): string =
+  ## getHipPlatform has to be ran at compile time, and gets the target platform for hipcc
+  ## NVCC and HIPCC (when building for nvidia) require we pass compiler args in -Xcompiler=""
+  ## hipcc uses HIP_PLATFORM to determine amd / nvidia
+  ## hipcc defaults to amd if amdclang++ or hip clang is found
+  ## https://github.com/ROCm/llvm-project/blob/00fdfae9aeef14c905550601c2218a6b5962f48c/amd/hipcc/bin/hipvars.pm#L131
+  let 
+    clangPath = getEnv("HIP_CLANG_PATH", "") / "clang++"
+    amdClangPath = "/opt/rocm/bin/amdclang++"
+    defaultPlatform = if (fileExists(clangPath) or fileExists(amdClangPath)): "amd" else: "nvidia"
+    hipPlatform = getEnv("HIP_PLATFORM", defaultPlatform)
+  result = hipPlatform
+
+const HipPlatform = getHipPlatform()
 
 # HippoRuntime can be set to "HIP", "HIP_CPU", or "CUDA"
 # HIP hipcc will auto detect the runtime of the build system
@@ -8,6 +23,10 @@ import
 # CUDA will use nvcc
 
 const HippoRuntime* {.strdefine.} = "HIP"
+
+echo &"DEBUG: Using Hippo Runtime: {HippoRuntime}"
+if HippoRuntime == "HIP":
+  echo &"DEBUG: Using HIP Platform: {HipPlatform}"
 
 when HippoRuntime == "HIP_CPU":
   # Intel TBB is required for HIP-CPU
@@ -46,8 +65,11 @@ proc launchKernel*(
 ): hipError_t =
   # launchKernel is designed to be similar to `kernel`<<<blockDim, gridDim>>>(args)
 
+  # this function is horrible but it works
+  # needs to be refactored to handle all the different runtimes and arguments better
+
   # having some issues between hip and hip-cpu, so defining different versions of launchKernel
-  when HippoRuntime == "HIP":
+  when HippoRuntime == "HIP" and HipPlatform == "amd":
     echo "executing HIP"
     var kernelArgs: seq[pointer]
     for key, arg in args.fieldPairs:
@@ -58,6 +80,18 @@ proc launchKernel*(
       blockDim,
       cast[ptr pointer](addr kernelArgs[0]),
     )
+  elif HippoRuntime == "HIP" and HipPlatform == "nvidia":
+    hipLaunchKernelGGL(
+      kernel,
+      gridDim,
+      blockDim,
+      0, # TODO
+      nil, # TODO
+      # TODO handle args properly
+      cast[ptr[cint]](args[0]),
+      cast[ptr[cint]](args[1]),
+      cast[ptr[cint]](args[2])
+      )
   elif HippoRuntime == "HIP_CPU":
     echo "executing kernel on CPU"
     hipLaunchKernelGGL(
@@ -71,7 +105,18 @@ proc launchKernel*(
       args[1],
       args[2]
     )
-    result = hipDeviceSynchronize()
+    result = hipGetLastError()
+  elif HippoRuntime == "CUDA":
+    raise newException(Exception, &"CUDA not implemented yet")
+    # echo "executing CUDA"
+    # result = cudaLaunchKernel(
+    #   kernel,
+    #   gridDim,
+    #   blockDim,
+    #   sharedMemBytes,
+    #   stream,
+    #   args
+    # )
   else:
     raise newException(Exception, &"Unknown runtime: {HippoRuntime}")
   if result != 0:

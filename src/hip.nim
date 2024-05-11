@@ -72,7 +72,7 @@ converter toCString*(self: ConstCString): cstring {.importc: "(char*)", noconv, 
 converter toConstCString*(self: cstring): ConstCString {.importc: "(const char*)", noconv, nodecl.}
 proc `$`*(self: ConstCString): string = $(self.toCString())
 proc hipGetErrorString*(err: hipError_t): ConstCString {.header: "hip/hip_runtime.h",importcpp: "hipGetErrorString(@)".}
-
+proc hipGetLastError*(): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipGetLastError()".}
 
 ## Error Helpers
 proc handleError*(err: hipError_t) =
