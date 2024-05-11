@@ -1,10 +1,41 @@
 ## HIP Library for Nim
-
 import
-  std/[strformat,strutils],
-  ./hippoTypes
+  std/[strformat,strutils]
 
-export hippoTypes
+# HippoRuntime can be set to "HIP", "HIP_CPU", or "CUDA"
+# HIP hipcc will auto detect the runtime of the build system
+# HIP_CPU will use the HIP-CPU runtime header
+# CUDA will use nvcc
+
+const HippoRuntime* {.strdefine.} = "HIP"
+
+## Import the hip_runtime.h header, required for all HIP code
+when HippoRuntime.strip == "HIP":
+  {.passC: "-I/opt/rocm/include".}
+  {.emit: """
+#include "hip/hip_runtime.h"
+"""}
+  echo "Using HIP runtime"
+  import hip
+  export hip
+
+elif HippoRuntime.strip == "HIP_CPU":
+  {.passC: "-I./HIP-CPU/include/".}
+  {.passL: "-ltbb".}
+  {.passL: "-lstdc++".}
+  {.emit: """
+#include "hip/hip_runtime.h"
+"""}
+  echo "Using HIP CPU runtime"
+  import hip
+  export hip
+
+elif HippoRuntime.strip == "CUDA":
+  # nvcc loads the CUDA runtime automatically
+  # Note: i have not actually setup any CUDA stuff yet
+  echo "Using CUDA runtime"
+  import cuda
+  export cuda
 
 ## Error Helpers
 proc handleError*(err: hipError_t) =
