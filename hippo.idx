@@ -30,7 +30,11 @@ nim	hipGetLastError	hippo.html#hipGetLastError	proc hipGetLastError(): hipError_
 nim	handleError	hippo.html#handleError,hipError_t	proc handleError(err: hipError_t)		78
 nim	HippoStream	hippo.html#HippoStream	type HippoStream		84
 nim	HippoError	hippo.html#HippoError	type HippoError		85
-nim	hippoGlobal	hippo.html#hippoGlobal.t,untyped	template hippoGlobal(body: untyped)		88
-nim	hippoDevice	hippo.html#hippoDevice.t,typed	template hippoDevice(body: typed)		98
-nim	hippoHost	hippo.html#hippoHost.t,typed	template hippoHost(body: typed)		108
-nim	launchKernel	hippo.html#launchKernel,proc,Dim3,Dim3,uint32,HippoStream,	proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);\n             blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;\n             stream: HippoStream = nil; args: tuple): HippoError		57
+nim	HippoMemcpyKind	hippo.html#HippoMemcpyKind	type HippoMemcpyKind		86
+nim	hippoGlobal	hippo.html#hippoGlobal.t,untyped	template hippoGlobal(body: untyped)		89
+nim	hippoDevice	hippo.html#hippoDevice.t,typed	template hippoDevice(body: typed)		99
+nim	hippoHost	hippo.html#hippoHost.t,typed	template hippoHost(body: typed)		109
+nim	hippoMalloc	hippo.html#hippoMalloc.t,pointer,int	template hippoMalloc(p: var pointer; size: int): HippoError		58
+nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,pointer,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind): HippoError		65
+nim	hippoFree	hippo.html#hippoFree.t,pointer	template hippoFree(p: pointer): HippoError		72
+nim	launchKernel	hippo.html#launchKernel,proc,Dim3,Dim3,uint32,HippoStream,	proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);\n             blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;\n             stream: HippoStream = nil; args: tuple): HippoError		82
