@@ -86,8 +86,7 @@ proc launchKernel*(
   sharedMemBytes: uint32 = 0,
   stream: HippoStream = nil,
   args: tuple
-) =
-  var err: HippoError
+): HippoError =
   # launchKernel is designed to be similar to `kernel`<<<blockDim, gridDim>>>(args)
 
   # this function is horrible but it works
@@ -100,7 +99,7 @@ proc launchKernel*(
     var kernelArgs: seq[pointer]
     for key, arg in args.fieldPairs:
       kernelArgs.add(cast[pointer](addr arg))
-    err = hipLaunchKernel(
+    result = hipLaunchKernel(
       cast[pointer](kernel),
       gridDim,
       blockDim,
@@ -119,7 +118,7 @@ proc launchKernel*(
       cast[ptr[cint]](args[1]),
       cast[ptr[cint]](args[2])
       )
-    err = hipGetLastError()
+    result = hipGetLastError()
   elif HippoRuntime == "HIP_CPU":
     # TODO fix args on this branch
     echo "executing kernel on CPU"
@@ -134,14 +133,14 @@ proc launchKernel*(
       args[1],
       args[2]
     )
-    err = hipGetLastError()
+    result = hipGetLastError()
   elif HippoRuntime == "CUDA":
     # This branch works for all args
     echo "executing CUDA"
     var kernelArgs: seq[pointer]
     for key, arg in args.fieldPairs:
       kernelArgs.add(cast[pointer](addr arg))
-    err = cudaLaunchKernel(
+    result = cudaLaunchKernel(
       kernel,
       gridDim,
       blockDim,
@@ -151,4 +150,13 @@ proc launchKernel*(
     )
   else:
     raise newException(Exception, &"Unknown runtime: {HippoRuntime}")
-  handleError(err)
+
+template hippoLaunchKernel*(
+  kernel: proc,
+  gridDim: Dim3 = newDim3(1,1,1), # default to a grid of 1 block
+  blockDim: Dim3 = newDim3(1,1,1),  # default to 1 thread per block
+  sharedMemBytes: uint32 = 0,
+  stream: HippoStream = nil,
+  args: tuple
+) =
+  handleError(launchKernel(kernel, gridDim, blockDim, sharedMemBytes, stream, args))

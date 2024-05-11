@@ -31,7 +31,7 @@ proc main() =
   hippoMemcpy(dev_b, addr b[0], sizeof(int32)*N, hipMemcpyHostToDevice)
 
   # launch kernel
-  launchKernel(
+  hippoLaunchKernel(
     addkernel,
     gridDim = newDim3(N.uint32),
     args = (dev_a, dev_b, dev_c)

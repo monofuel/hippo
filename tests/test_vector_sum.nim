@@ -37,7 +37,7 @@ suite "vector_sum":
     hippoMemcpy(dev_b, addr b[0], sizeof(int32)*N, hipMemcpyHostToDevice)
 
     # launch kernel
-    launchKernel(
+    hippoLaunchKernel(
       addKernelBlock,
       gridDim = newDim3(N.uint32),
       args = (dev_a, dev_b, dev_c)
@@ -74,7 +74,7 @@ suite "vector_sum":
     hippoMemcpy(dev_b, addr b[0], sizeof(int32)*N, hipMemcpyHostToDevice)
 
     # launch kernel
-    launchKernel(
+    hippoLaunchKernel(
       addKernelThread,
       blockDim = newDim3(N.uint32),
       args = (dev_a, dev_b, dev_c)
