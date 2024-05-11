@@ -1,32 +1,32 @@
 nimTitle	hippo	hippo.html	module src/hippo		0
 nim	HippoRuntime	hippo.html#HippoRuntime	const HippoRuntime		10
-nim	size_t	hippo.html#size_t	type size_t		4
-nim	uint8_t	hippo.html#uint8_t	type uint8_t		5
-nim	uint16_t	hippo.html#uint16_t	type uint16_t		6
-nim	uint32_t	hippo.html#uint32_t	type uint32_t		7
-nim	uint64_t	hippo.html#uint64_t	type uint64_t		8
-nim	hipStream_t	hippo.html#hipStream_t	type hipStream_t		9
-nim	hipError_t	hippo.html#hipError_t	type hipError_t		10
-nim	hipMemcpyKind	hippo.html#hipMemcpyKind	enum hipMemcpyKind		13
-nim	Dim3	hippo.html#Dim3	object Dim3		21
-nim	BlockDim	hippo.html#BlockDim	object BlockDim		25
-nim	BlockIdx	hippo.html#BlockIdx	object BlockIdx		29
-nim	GridDim	hippo.html#GridDim	object GridDim		33
-nim	ThreadIdx	hippo.html#ThreadIdx	object ThreadIdx		37
-nim	newDim3	hippo.html#newDim3,uint32_t,uint32_t,uint32_t	proc newDim3(x: uint32_t = 1; y: uint32_t = 1; z: uint32_t = 1): Dim3		42
-nim	hipMalloc	hippo.html#hipMalloc,ptr.pointer,cint	proc hipMalloc(ptr: ptr pointer; size: cint): hipError_t		47
-nim	hipMemcpy	hippo.html#hipMemcpy,pointer,pointer,cint,hipMemcpyKind	proc hipMemcpy(dst: pointer; src: pointer; size: cint; kind: hipMemcpyKind): hipError_t		48
-nim	hipFree	hippo.html#hipFree,pointer	proc hipFree(ptr: pointer): hipError_t		49
-nim	hipLaunchKernel	hippo.html#hipLaunchKernel,pointer,Dim3,Dim3,ptr.pointer	proc hipLaunchKernel(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;\n                args: ptr pointer): hipError_t		51
-nim	hipDeviceSynchronize	hippo.html#hipDeviceSynchronize	proc hipDeviceSynchronize(): hipError_t		57
-nim	hipLaunchKernelGGL	hippo.html#hipLaunchKernelGGL,proc,Dim3,Dim3,uint32_t,hipStream_t	proc hipLaunchKernelGGL(function_address: proc; numBlocks: Dim3; dimBlocks: Dim3;\n                   sharedMemBytes: uint32_t; stream: hipStream_t)		59
-nim	ConstCString	hippo.html#ConstCString	object ConstCString		69
-nim	toCString	hippo.html#toCString.c,ConstCString	converter toCString(self: ConstCString): cstring		70
-nim	toConstCString	hippo.html#toConstCString.c,cstring	converter toConstCString(self: cstring): ConstCString		71
-nim	`$`	hippo.html#$,ConstCString	proc `$`(self: ConstCString): string		72
-nim	hipGetErrorString	hippo.html#hipGetErrorString,hipError_t	proc hipGetErrorString(err: hipError_t): ConstCString		73
-nim	handleError	hippo.html#handleError,hipError_t	proc handleError(err: hipError_t)		29
-nim	hippoGlobal	hippo.html#hippoGlobal.t,untyped	template hippoGlobal(body: untyped)		35
-nim	hippoDevice	hippo.html#hippoDevice.t,typed	template hippoDevice(body: typed)		45
-nim	hippoHost	hippo.html#hippoHost.t,typed	template hippoHost(body: typed)		55
-nim	launchKernel	hippo.html#launchKernel,proc,Dim3,Dim3,uint32,hipStream_t,	proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);\n             blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;\n             stream: hipStream_t = nil; args: tuple): hipError_t		62
+nim	size_t	hippo.html#size_t	type size_t		5
+nim	uint8_t	hippo.html#uint8_t	type uint8_t		6
+nim	uint16_t	hippo.html#uint16_t	type uint16_t		7
+nim	uint32_t	hippo.html#uint32_t	type uint32_t		8
+nim	uint64_t	hippo.html#uint64_t	type uint64_t		9
+nim	hipStream_t	hippo.html#hipStream_t	type hipStream_t		10
+nim	hipError_t	hippo.html#hipError_t	type hipError_t		11
+nim	hipMemcpyKind	hippo.html#hipMemcpyKind	enum hipMemcpyKind		14
+nim	Dim3	hippo.html#Dim3	object Dim3		22
+nim	BlockDim	hippo.html#BlockDim	object BlockDim		26
+nim	BlockIdx	hippo.html#BlockIdx	object BlockIdx		30
+nim	GridDim	hippo.html#GridDim	object GridDim		34
+nim	ThreadIdx	hippo.html#ThreadIdx	object ThreadIdx		38
+nim	newDim3	hippo.html#newDim3,uint32_t,uint32_t,uint32_t	proc newDim3(x: uint32_t = 1; y: uint32_t = 1; z: uint32_t = 1): Dim3		43
+nim	hipMalloc	hippo.html#hipMalloc,ptr.pointer,cint	proc hipMalloc(ptr: ptr pointer; size: cint): hipError_t		48
+nim	hipMemcpy	hippo.html#hipMemcpy,pointer,pointer,cint,hipMemcpyKind	proc hipMemcpy(dst: pointer; src: pointer; size: cint; kind: hipMemcpyKind): hipError_t		49
+nim	hipFree	hippo.html#hipFree,pointer	proc hipFree(ptr: pointer): hipError_t		50
+nim	hipLaunchKernel	hippo.html#hipLaunchKernel,pointer,Dim3,Dim3,ptr.pointer	proc hipLaunchKernel(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;\n                args: ptr pointer): hipError_t		52
+nim	hipDeviceSynchronize	hippo.html#hipDeviceSynchronize	proc hipDeviceSynchronize(): hipError_t		58
+nim	hipLaunchKernelGGL	hippo.html#hipLaunchKernelGGL,proc,Dim3,Dim3,uint32_t,hipStream_t	proc hipLaunchKernelGGL(function_address: proc; numBlocks: Dim3; dimBlocks: Dim3;\n                   sharedMemBytes: uint32_t; stream: hipStream_t)		60
+nim	ConstCString	hippo.html#ConstCString	object ConstCString		70
+nim	toCString	hippo.html#toCString.c,ConstCString	converter toCString(self: ConstCString): cstring		71
+nim	toConstCString	hippo.html#toConstCString.c,cstring	converter toConstCString(self: cstring): ConstCString		72
+nim	`$`	hippo.html#$,ConstCString	proc `$`(self: ConstCString): string		73
+nim	hipGetErrorString	hippo.html#hipGetErrorString,hipError_t	proc hipGetErrorString(err: hipError_t): ConstCString		74
+nim	handleError	hippo.html#handleError,hipError_t	proc handleError(err: hipError_t)		78
+nim	hippoGlobal	hippo.html#hippoGlobal.t,untyped	template hippoGlobal(body: untyped)		84
+nim	hippoDevice	hippo.html#hippoDevice.t,typed	template hippoDevice(body: typed)		94
+nim	hippoHost	hippo.html#hippoHost.t,typed	template hippoHost(body: typed)		104
+nim	launchKernel	hippo.html#launchKernel,proc,Dim3,Dim3,uint32,hipStream_t,	proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);\n             blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;\n             stream: hipStream_t = nil; args: tuple): hipError_t		39
