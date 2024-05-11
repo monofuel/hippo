@@ -30,7 +30,7 @@ handleError(hipFree(dev_c))
   - You can make separate projects for the C and C++ parts and link them together. (I have not tested this yet, would love examples if you do this!)
 
 - building for GPU requires that `hipcc` is in your PATH
-  - hip supports both CUDA and HIP, so you can use this with either
+  - HIP supports both CUDA and ROCM, so you can use this with either
   - for CUDA, you will need to have `nvcc` in your PATH as well as `hipcc`
     - set the environment variable HIP_PLATFORM=nvidia for hipcc to build for nvidia
     - HIP nvidia compiling still needs work: https://github.com/monofuel/hippo/pull/1
