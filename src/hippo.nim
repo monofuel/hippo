@@ -1,6 +1,6 @@
 ## HIP Library for Nim
 import
-  std/[strformat,strutils]
+  std/[strformat]
 
 # HippoRuntime can be set to "HIP", "HIP_CPU", or "CUDA"
 # HIP hipcc will auto detect the runtime of the build system
@@ -9,33 +9,21 @@ import
 
 const HippoRuntime* {.strdefine.} = "HIP"
 
-## Import the hip_runtime.h header, required for all HIP code
-when HippoRuntime.strip == "HIP":
-  {.passC: "-I/opt/rocm/include".}
-  {.emit: """
-#include "hip/hip_runtime.h"
-"""}
-  echo "Using HIP runtime"
-  import hip
-  export hip
-
-elif HippoRuntime.strip == "HIP_CPU":
-  {.passC: "-I./HIP-CPU/include/".}
+when HippoRuntime == "HIP_CPU":
   {.passL: "-ltbb".}
   {.passL: "-lstdc++".}
-  {.emit: """
-#include "hip/hip_runtime.h"
-"""}
+  {.passC: "-I./HIP-CPU/include/".}
+  # {.compile: "../HIP-CPU/include/hip/hip_runtime.h".}
   echo "Using HIP CPU runtime"
-  import hip
-  export hip
-
-elif HippoRuntime.strip == "CUDA":
+  include hip
+elif HippoRuntime == "CUDA":
   # nvcc loads the CUDA runtime automatically
   # Note: i have not actually setup any CUDA stuff yet
   echo "Using CUDA runtime"
-  import cuda
-  export cuda
+  include cuda
+else:
+  echo "Using HIP runtime"
+  include hip
 
 ## Error Helpers
 proc handleError*(err: hipError_t) =
@@ -82,7 +70,8 @@ proc launchKernel*(
   # launchKernel is designed to be similar to `kernel`<<<blockDim, gridDim>>>(args)
 
   # having some issues between hip and hip-cpu, so defining different versions of launchKernel
-  when HippoRuntime.strip == "HIP":
+  when HippoRuntime == "HIP":
+    echo "executing HIP"
     var kernelArgs: seq[pointer]
     for key, arg in args.fieldPairs:
       kernelArgs.add(cast[pointer](addr arg))
@@ -92,7 +81,7 @@ proc launchKernel*(
       blockDim,
       cast[ptr pointer](addr kernelArgs[0]),
     )
-  elif HippoRuntime.strip == "HIP_CPU":
+  elif HippoRuntime == "HIP_CPU":
     echo "executing kernel on CPU"
     hipLaunchKernelGGL(
       kernel,
