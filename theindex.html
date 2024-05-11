@@ -102,6 +102,10 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoDevice(body: typed)" href="hippo.html#hippoDevice.t%2Ctyped">hippo: template hippoDevice(body: typed)</a></li>
           </ul></dd>
+<dt><a name="HippoError" href="#HippoError"><span>HippoError:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: type HippoError" href="hippo.html#HippoError">hippo: type HippoError</a></li>
+          </ul></dd>
 <dt><a name="hippoGlobal" href="#hippoGlobal"><span>hippoGlobal:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoGlobal(body: untyped)" href="hippo.html#hippoGlobal.t%2Cuntyped">hippo: template hippoGlobal(body: untyped)</a></li>
@@ -114,6 +118,10 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: const HippoRuntime" href="hippo.html#HippoRuntime">hippo: const HippoRuntime</a></li>
           </ul></dd>
+<dt><a name="HippoStream" href="#HippoStream"><span>HippoStream:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: type HippoStream" href="hippo.html#HippoStream">hippo: type HippoStream</a></li>
+          </ul></dd>
 <dt><a name="hipStream_t" href="#hipStream_t"><span>hipStream_t:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: type hipStream_t" href="hippo.html#hipStream_t">hippo: type hipStream_t</a></li>
@@ -122,9 +130,9 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);
              blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;
-             stream: hipStream_t = nil; args: tuple): hipError_t" href="hippo.html#launchKernel%2Cproc%2CDim3%2CDim3%2Cuint32%2ChipStream_t%2C">hippo: proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);
+             stream: HippoStream = nil; args: tuple): HippoError" href="hippo.html#launchKernel%2Cproc%2CDim3%2CDim3%2Cuint32%2CHippoStream%2C">hippo: proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);
              blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;
-             stream: hipStream_t = nil; args: tuple): hipError_t</a></li>
+             stream: HippoStream = nil; args: tuple): HippoError</a></li>
           </ul></dd>
 <dt><a name="newDim3" href="#newDim3"><span>newDim3:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -166,7 +174,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-05-11 05:14:04 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-05-11 18:12:45 UTC</small>
       </div>
     </div>
   </div>

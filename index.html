@@ -78,6 +78,8 @@
   hipMemcpyDeviceToHost = 2, ## &lt; Device-to-Host Copy
   hipMemcpyDeviceToDevice = 3, ## &lt; Device-to-Device Copy
   hipMemcpyDefault = 4       ## &lt; Runtime will automatically determine copy-kind based on virtual addresses.">hipMemcpyKind</a></li>
+<li><a class="reference" href="#HippoError" title="HippoError = hipError_t">HippoError</a></li>
+<li><a class="reference" href="#HippoStream" title="HippoStream = hipStream_t">HippoStream</a></li>
 <li><a class="reference" href="#hipStream_t" title="hipStream_t = pointer">hipStream_t</a></li>
 <li><a class="reference" href="#size_t" title="size_t = uint64">size_t</a></li>
 <li><a class="reference" href="#ThreadIdx" title="ThreadIdx {.importcpp: &quot;const __HIP_Coordinates&lt;__HIP_ThreadIdx&gt;&quot;,
@@ -155,11 +157,11 @@
 
 </ul>
 <ul class="simple nested-toc-section">launchKernel
-  <li><a class="reference" href="#launchKernel%2Cproc%2CDim3%2CDim3%2Cuint32%2ChipStream_t%2C" title="launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);
+  <li><a class="reference" href="#launchKernel%2Cproc%2CDim3%2CDim3%2Cuint32%2CHippoStream%2C" title="launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);
              blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;
-             stream: hipStream_t = nil; args: tuple): hipError_t">launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);
+             stream: HippoStream = nil; args: tuple): HippoError">launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);
              blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;
-             stream: hipStream_t = nil; args: tuple): hipError_t</a></li>
+             stream: HippoStream = nil; args: tuple): HippoError</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">newDim3
@@ -216,7 +218,7 @@
 
     <div id="tocRoot"></div>
     
-    <p class="module-desc">HIP Library for NimError HelpersHIP Attributes</p>
+    <p class="module-desc">HIP Library for NimError HelpersHippo TypesHIP Attributes</p>
     <div class="section" id="7">
   <h1><a class="toc-backref" href="#7">Types</a></h1>
   <dl class="item">
@@ -311,6 +313,26 @@
     
     <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L14" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L14" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="HippoError">
+  <dt><pre><a href="hippo.html#HippoError"><span class="Identifier">HippoError</span></a> <span class="Other">=</span> <a href="hippo.html#hipError_t"><span class="Identifier">hipError_t</span></a></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L85" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L85" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="HippoStream">
+  <dt><pre><a href="hippo.html#HippoStream"><span class="Identifier">HippoStream</span></a> <span class="Other">=</span> <a href="hippo.html#hipStream_t"><span class="Identifier">hipStream_t</span></a></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L84" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L84" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -574,15 +596,15 @@
 
 </div>
 <div id="launchKernel-procs-all">
-  <div id="launchKernel,proc,Dim3,Dim3,uint32,hipStream_t,">
-  <dt><pre><span class="Keyword">proc</span> <a href="#launchKernel%2Cproc%2CDim3%2CDim3%2Cuint32%2ChipStream_t%2C"><span class="Identifier">launchKernel</span></a><span class="Other">(</span><span class="Identifier">kernel</span><span class="Other">:</span> <span class="Keyword">proc</span><span class="Other">;</span> <span class="Identifier">gridDim</span><span class="Other">:</span> <a href="hippo.html#Dim3"><span class="Identifier">Dim3</span></a> <span class="Other">=</span> <span class="Identifier">newDim3</span><span class="Other">(</span><span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">;</span>
+  <div id="launchKernel,proc,Dim3,Dim3,uint32,HippoStream,">
+  <dt><pre><span class="Keyword">proc</span> <a href="#launchKernel%2Cproc%2CDim3%2CDim3%2Cuint32%2CHippoStream%2C"><span class="Identifier">launchKernel</span></a><span class="Other">(</span><span class="Identifier">kernel</span><span class="Other">:</span> <span class="Keyword">proc</span><span class="Other">;</span> <span class="Identifier">gridDim</span><span class="Other">:</span> <a href="hippo.html#Dim3"><span class="Identifier">Dim3</span></a> <span class="Other">=</span> <span class="Identifier">newDim3</span><span class="Other">(</span><span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">;</span>
                   <span class="Identifier">blockDim</span><span class="Other">:</span> <a href="hippo.html#Dim3"><span class="Identifier">Dim3</span></a> <span class="Other">=</span> <span class="Identifier">newDim3</span><span class="Other">(</span><span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">;</span> <span class="Identifier">sharedMemBytes</span><span class="Other">:</span> <span class="Identifier">uint32</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span>
-                  <span class="Identifier">stream</span><span class="Other">:</span> <a href="hippo.html#hipStream_t"><span class="Identifier">hipStream_t</span></a> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">)</span><span class="Other">:</span> <a href="hippo.html#hipError_t"><span class="Identifier">hipError_t</span></a></pre></dt>
+                  <span class="Identifier">stream</span><span class="Other">:</span> <a href="hippo.html#HippoStream"><span class="Identifier">HippoStream</span></a> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">)</span><span class="Other">:</span> <a href="hippo.html#HippoError"><span class="Identifier">HippoError</span></a></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L58" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L58" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L57" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L57" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -648,8 +670,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L94" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L94" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L98" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L98" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -661,8 +683,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L84" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L84" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L88" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L88" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -674,8 +696,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L104" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L104" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L108" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L108" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -691,7 +713,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-05-11 05:14:04 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-05-11 18:12:45 UTC</small>
       </div>
     </div>
   </div>
