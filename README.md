@@ -22,6 +22,7 @@ handleError(hipFree(dev_c))
 - There are 3 sets of function prefixes.
 - `hippo*` prefixed functions are friendly nim interfaces for either HIP or CUDA
   - This is the recommended way to use this library, as it is the most nim-like
+  - These functions check for errors and raise them as exceptions
 - `hip*` prefixed functions are the raw HIP C++ functions
 - `cuda*` prefixed functions are the raw CUDA C functions
 

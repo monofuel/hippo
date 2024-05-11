@@ -86,22 +86,18 @@ type HippoError* = hipError_t
 type HippoMemcpyKind* = hipMemcpyKind
 
 ## HIP Attributes
+let
+  blockDim* {.importc, inject, header: "hip/hip_runtime.h".}: BlockDim
+  blockIdx* {.importc, inject, header: "hip/hip_runtime.h".}: BlockIdx
+  gridDim* {.importc, inject, header: "hip/hip_runtime.h".}: GridDim
+  threadIdx* {.importc, inject, header: "hip/hip_runtime.h".}: ThreadIdx
+
 template hippoGlobal*(body: untyped) =
-  var
-    blockDim {.importc, inject, header: "hip/hip_runtime.h".}: BlockDim
-    blockIdx {.importc, inject, header: "hip/hip_runtime.h".}: BlockIdx
-    gridDim {.importc, inject, header: "hip/hip_runtime.h".}: GridDim
-    threadIdx {.importc, inject, header: "hip/hip_runtime.h".}: ThreadIdx
   {.push stackTrace: off, checks: off, exportc, codegenDecl: "__global__ $# $#$#".}
   body
   {.pop}
 
 template hippoDevice*(body: typed) =
-  var
-    blockDim {.importc, inject, header: "hip/hip_runtime.h".}: BlockDim
-    blockIdx {.importc, inject, header: "hip/hip_runtime.h".}: BlockIdx
-    gridDim {.importc, inject, header: "hip/hip_runtime.h".}: GridDim
-    threadIdx {.importc, inject, header: "hip/hip_runtime.h".}: ThreadIdx
   {.push stackTrace: off, checks: off, exportc, codegenDecl: "__device__ $# $#$#".}
   body
   {.pop}

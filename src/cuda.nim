@@ -88,23 +88,19 @@ type HippoStream* = cudaStream_t
 type HippoError* = cudaError_t
 type HippoMemcpyKind* = cudaMemcpyKind
 
-## HIP Attributes
+## CUDA Attributes
+let
+  blockDim* {.importc, inject, header: "cuda_runtime.h".}: BlockDim
+  blockIdx* {.importc, inject, header: "cuda_runtime.h".}: BlockIdx
+  gridDim* {.importc, inject, header: "cuda_runtime.h".}: GridDim
+  threadIdx* {.importc, inject, header: "cuda_runtime.h".}: ThreadIdx
+
 template hippoGlobal*(body: untyped) =
-  var
-    blockDim {.importc, inject, header: "cuda_runtime.h".}: BlockDim
-    blockIdx {.importc, inject, header: "cuda_runtime.h".}: BlockIdx
-    gridDim {.importc, inject, header: "cuda_runtime.h".}: GridDim
-    threadIdx {.importc, inject, header: "cuda_runtime.h".}: ThreadIdx
   {.push stackTrace: off, checks: off, exportc, codegenDecl: "__global__ $# $#$#".}
   body
   {.pop}
 
 template hippoDevice*(body: typed) =
-  var
-    blockDim {.importc, inject, header: "cuda_runtime.h".}: BlockDim
-    blockIdx {.importc, inject, header: "cuda_runtime.h".}: BlockIdx
-    gridDim {.importc, inject, header: "cuda_runtime.h".}: GridDim
-    threadIdx {.importc, inject, header: "cuda_runtime.h".}: ThreadIdx
   {.push stackTrace: off, checks: off, exportc, codegenDecl: "__device__ $# $#$#".}
   body
   {.pop}

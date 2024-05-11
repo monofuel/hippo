@@ -50,31 +50,31 @@ else:
   echo "DEBUG: Using HIP runtime"
   include hip
 
-
-
 ## Hippo Templates
 ## nim wrappers around hip and cuda functions
 
-template hippoMalloc*(p: var pointer, size: int): HippoError =
-  ## Allocate memory on the GPU, and place the pointer in `p`
+template hippoMalloc*(size: int): pointer =
+  ## Allocate memory on the GPU and return a pointer to it
+  var p: pointer
   when HippoRuntime == "CUDA":
-    cudaMalloc(cast[ptr pointer](addr p), size)
+    handleError(cudaMalloc(cast[ptr pointer](addr p), size))
   else:
-    hipMalloc(cast[ptr pointer](addr p), size)
+    handleError(hipMalloc(cast[ptr pointer](addr p), size))
+  p
 
-template hippoMemcpy*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind): HippoError =
+template hippoMemcpy*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind) =
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`
   when HippoRuntime == "CUDA":
-    cudaMemcpy(dst, src, size, kind)
+    handleError(cudaMemcpy(dst, src, size, kind))
   else:
-    hipMemcpy(dst, src, size, kind)
+    handleError(hipMemcpy(dst, src, size, kind))
 
-template hippoFree*(p: pointer): HippoError =
+template hippoFree*(p: pointer) =
   ## Free memory on the GPU
   when HippoRuntime == "CUDA":
-    cudaFree(p)
+    handleError(cudaFree(p))
   else:
-    hipFree(p)
+    handleError(hipFree(p))
 
 
 ## Kernel Execution
@@ -86,7 +86,8 @@ proc launchKernel*(
   sharedMemBytes: uint32 = 0,
   stream: HippoStream = nil,
   args: tuple
-): HippoError =
+) =
+  var err: HippoError
   # launchKernel is designed to be similar to `kernel`<<<blockDim, gridDim>>>(args)
 
   # this function is horrible but it works
@@ -99,7 +100,7 @@ proc launchKernel*(
     var kernelArgs: seq[pointer]
     for key, arg in args.fieldPairs:
       kernelArgs.add(cast[pointer](addr arg))
-    result = hipLaunchKernel(
+    err = hipLaunchKernel(
       cast[pointer](kernel),
       gridDim,
       blockDim,
@@ -118,6 +119,7 @@ proc launchKernel*(
       cast[ptr[cint]](args[1]),
       cast[ptr[cint]](args[2])
       )
+    err = hipGetLastError()
   elif HippoRuntime == "HIP_CPU":
     # TODO fix args on this branch
     echo "executing kernel on CPU"
@@ -132,14 +134,14 @@ proc launchKernel*(
       args[1],
       args[2]
     )
-    result = hipGetLastError()
+    err = hipGetLastError()
   elif HippoRuntime == "CUDA":
     # This branch works for all args
     echo "executing CUDA"
     var kernelArgs: seq[pointer]
     for key, arg in args.fieldPairs:
       kernelArgs.add(cast[pointer](addr arg))
-    result = cudaLaunchKernel(
+    err = cudaLaunchKernel(
       kernel,
       gridDim,
       blockDim,
@@ -149,5 +151,4 @@ proc launchKernel*(
     )
   else:
     raise newException(Exception, &"Unknown runtime: {HippoRuntime}")
-  if result != 0:
-    return result
+  handleError(err)
