@@ -38,7 +38,7 @@ handleError(hipFree(dev_c))
 - HIP-CPU is supported with the `-d:HippoRuntime=HIP_CPU` flag
   - note: you need to pull the HIP-CPU git submodule to use this feature
   - does not require hipcc. works with gcc.
-  - you can write kernels and test them on cpu with breakpoints and everything!
+  - you can write kernels and test them on cpu with echos and breakpoints and everything!
 
 ## Motivation
 
