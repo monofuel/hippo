@@ -1,6 +1,6 @@
 # Hippo
 
-## Minimal Example
+## Minimal HIP Example
 
 ```
 import hippo
@@ -21,6 +21,7 @@ handleError(hipFree(dev_c))
 
 - There are 3 sets of function prefixes.
 - `hippo*` prefixed functions are friendly nim interfaces for either HIP or CUDA
+  - This is the recommended way to use this library, as it is the most nim-like
 - `hip*` prefixed functions are the raw HIP C++ functions
 - `cuda*` prefixed functions are the raw CUDA C functions
 
@@ -53,12 +54,8 @@ handleError(hipFree(dev_c))
 - This library is built around using HIP, which supports compiling for both AMD and NVIDIA GPUs.
   - for CUDA, hipcc is basically a wrapper around `nvcc`.
 
-- initial example can be found at `tests/hip`
+- examples for each platform can be found in the [examples directory](examples/)
   - assuming the hipcc compiler is in your PATH, you can run the example with `nim cpp -r vector_sum.nim`
-- cpu examples are at `tests/hip_cpu`
-
-- in theory, this library could also directly support `nvcc` and `cuda_runtime.h` as well, but I have not worked on that yet.
-  - pls send me a H100 if you want me to work on that
 
 ## Compiling
 
@@ -68,35 +65,28 @@ handleError(hipFree(dev_c))
   - for a radeon w7500, you would use --passC:"--offload-arch=gfx1102"
   - for a geforce 1650 ti, you would use --passC:"--gpu-architecture=sm_75" 
     - You also have to set the `HIP_PLATFORM=nvidia` environment variable to build for nvidia GPUs if you don't have an nvidia GPU in your system
+    - hipcc will pick nvcc by default if you have nvcc but do not have the amd rocm stack installed
 
 
-### Required flags
+### Required flags for HIP
 
-You must compile with nim cpp for c++
-You must also set the compiler type to 'clang' and the exe to 'hipcc'
+- You must compile with nim cpp for c++
+- Please refer to the [examples](examples/) for the nim compiler settings needed for each target
 
-example cli: `nim cpp --cc:clang --clang.cpp.exe:hipcc --clang.cpp.linkerexe:hipcc filename.nim`
-
-example config.nims:
-```
---cc:clang
---clang.cpp.exe:hipcc
---clang.cpp.linkerexe:hipcc
-```
-
-nvcc handles compiler and linker arguments differently than clang, and requires changes to the nim compiler to work properly at the moment.
-
+- The HIP Nvidia and the CUDA targets currently require some changes to the nim compiler
+  - I have an experimental branch here [Nim](https://github.com/monofuel/Nim/tree/hipcc-nvcc)
 
 ### Optional flags
 
 - `-d:HippoRuntime=HIP` (default) (requires hipcc)
+  - If you want to build HIP for nvidia, you might need to set the environment variable `HIP_PLATFORM=nvidia` as well
 - `-d:HippoRuntime=HIP_CPU` for cpu-only usage (does not require hipcc)
   - you must pull the HIP-CPU submodule to use this feature
-- no cuda features implemented yet, but should be technically possible.
+- `-d:HippoRuntime=CUDA` (requires nvcc)
 
 ## Pragmas
 
-- all pragmas are prefixed with `hippo` to avoid conflicts
+- all pragmas are prefixed with `hippo`
 
 basic kernel example:
 ```
@@ -109,20 +99,18 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
 - [x] support c++ attributes like `__global__`, `__device__`
 - [x] support kernel execution syntax `<<<1,1>>>` somehow
 - [x] figure out how to handle built-ins like block/thread indices
-- [ ] setup automation for building nim types from HIP headers
-  - the official hip_runtime.h headers are kinda wild
-  - hip-cpu headers might be easier to c2nim?
-
-- [ ] Ensure that every example from the book "CUDA by Example" can be run with this library
-
 - [x] Add a compiler option to use [HIP-CPU](https://github.com/ROCm/HIP-CPU) to run HIP code on the CPU
   - will be useful for debugging and testing
   - also useful for running on systems without a GPU
-- [ ] helper functions to make hip/cuda calls more nim-y
-- [ ] add pictures to project
+- [x] helper functions to make hip/cuda calls more nim-y
 - [x] setup automated testing build for HIP
 - [x] setup automated testing with hip-cpu
+- [ ] Ensure that every example from the book "CUDA by Example" can be run with this library
+- [ ] add pictures to project
 - [ ] setup CI runners for both nvidia & amd GPUs for testing binaries
+- [ ] setup automation for building nim types from HIP headers
+  - the official hip_runtime.h headers are kinda wild
+  - hip-cpu headers might be easier to c2nim?
 - [ ] setup automation for building nim types from CUDA headers
 
 ## Stretch goals
