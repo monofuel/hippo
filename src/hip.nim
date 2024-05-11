@@ -1,4 +1,5 @@
 # HIP runtime C++ FFI
+import std/strformat
 
 type
   size_t* = uint64
@@ -71,3 +72,36 @@ converter toCString*(self: ConstCString): cstring {.importc: "(char*)", noconv, 
 converter toConstCString*(self: cstring): ConstCString {.importc: "(const char*)", noconv, nodecl.}
 proc `$`*(self: ConstCString): string = $(self.toCString())
 proc hipGetErrorString*(err: hipError_t): ConstCString {.header: "hip/hip_runtime.h",importcpp: "hipGetErrorString(@)".}
+
+
+## Error Helpers
+proc handleError*(err: hipError_t) =
+  if err != 0:
+    var cstr = hipGetErrorString(err).toCString
+    raise newException(Exception, &"HIP Error: " & $cstr)
+
+## HIP Attributes
+template hippoGlobal*(body: untyped) =
+  var
+    blockDim {.importc, inject, header: "hip/hip_runtime.h".}: BlockDim
+    blockIdx {.importc, inject, header: "hip/hip_runtime.h".}: BlockIdx
+    gridDim {.importc, inject, header: "hip/hip_runtime.h".}: GridDim
+    threadIdx {.importc, inject, header: "hip/hip_runtime.h".}: ThreadIdx
+  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__global__ $# $#$#".}
+  body
+  {.pop}
+
+template hippoDevice*(body: typed) =
+  var
+    blockDim {.importc, inject, header: "hip/hip_runtime.h".}: BlockDim
+    blockIdx {.importc, inject, header: "hip/hip_runtime.h".}: BlockIdx
+    gridDim {.importc, inject, header: "hip/hip_runtime.h".}: GridDim
+    threadIdx {.importc, inject, header: "hip/hip_runtime.h".}: ThreadIdx
+  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__device__ $# $#$#".}
+  body
+  {.pop}
+
+template hippoHost*(body: typed) =
+  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__host__ $# $#$#".}
+  body
+  {.pop}

@@ -10,52 +10,29 @@ import
 const HippoRuntime* {.strdefine.} = "HIP"
 
 when HippoRuntime == "HIP_CPU":
+  # Intel TBB is required for HIP-CPU
   {.passL: "-ltbb".}
-  {.passL: "-lstdc++".}
-  {.passC: "-I./HIP-CPU/include/".}
-  # {.compile: "../HIP-CPU/include/hip/hip_runtime.h".}
-  echo "Using HIP CPU runtime"
+  # I forgot when I had to use stdc++? maybe it's needed?
+  # {.passL: "-lstdc++".}
+
+  # hip.nim expects hip/hip_runtime.h to be in the include path
+  # for HIP-CPU, we want to dynamically set the include path
+  # the include path is in this library, but it needs to be imported into the user's project
+  const
+    hipIncludePath = staticExec("pwd") & "/../HIP-CPU/include"
+  {.passC: "-I" & hipIncludePath.}
+  echo "DEBUG: Using HIP CPU runtime"
   include hip
 elif HippoRuntime == "CUDA":
   # nvcc loads the CUDA runtime automatically
   # Note: i have not actually setup any CUDA stuff yet
-  echo "Using CUDA runtime"
+  echo "DEBUG: Using CUDA runtime"
   include cuda
 else:
-  echo "Using HIP runtime"
+  echo "DEBUG: Using HIP runtime"
   include hip
 
-## Error Helpers
-proc handleError*(err: hipError_t) =
-  if err != 0:
-    var cstr = hipGetErrorString(err).toCString
-    raise newException(Exception, &"HIP Error: " & $cstr)
 
-## HIP Attributes
-template hippoGlobal*(body: untyped) =
-  var
-    blockDim {.importc, inject, header: "hip/hip_runtime.h".}: BlockDim
-    blockIdx {.importc, inject, header: "hip/hip_runtime.h".}: BlockIdx
-    gridDim {.importc, inject, header: "hip/hip_runtime.h".}: GridDim
-    threadIdx {.importc, inject, header: "hip/hip_runtime.h".}: ThreadIdx
-  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__global__ $# $#$#".}
-  body
-  {.pop}
-
-template hippoDevice*(body: typed) =
-  var
-    blockDim {.importc, inject, header: "hip/hip_runtime.h".}: BlockDim
-    blockIdx {.importc, inject, header: "hip/hip_runtime.h".}: BlockIdx
-    gridDim {.importc, inject, header: "hip/hip_runtime.h".}: GridDim
-    threadIdx {.importc, inject, header: "hip/hip_runtime.h".}: ThreadIdx
-  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__device__ $# $#$#".}
-  body
-  {.pop}
-
-template hippoHost*(body: typed) =
-  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__host__ $# $#$#".}
-  body
-  {.pop}
 
 # Kernel Execution
 

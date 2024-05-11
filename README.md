@@ -26,6 +26,8 @@ handleError(hipFree(dev_c))
 
 - hippo *requires* that you use cpp. it will not work with c
   - `nim cpp -r tests/hip/vector_sum.nim`
+  - The HIP Runtime is a C++ library, and so is the CUDA Runtime. As such, we can't do anything about this.
+  - You can make separate projects for the C and C++ parts and link them together. (I have not tested this yet, would love examples if you do this!)
 
 - building for GPU requires that `hipcc` is in your PATH
   - hip supports both CUDA and HIP, so you can use this with either
@@ -34,7 +36,7 @@ handleError(hipFree(dev_c))
     - HIP nvidia compiling still needs work: https://github.com/monofuel/hippo/pull/1
       - I got a hacky fix to work, but it needs to be polished up and requires small changes in the nim compiler
 - HIP-CPU is supported with the `-d:HippoRuntime=HIP_CPU` flag
-  - note: you need to pull the HIP-CPU submodule to use this feature
+  - note: you need to pull the HIP-CPU git submodule to use this feature
   - does not require hipcc. works with gcc.
   - you can write kernels and test them on cpu with breakpoints and everything!
 
@@ -52,6 +54,12 @@ handleError(hipFree(dev_c))
   - pls send me a H100 if you want me to work on that
 
 ## Compiling
+
+- by default, hipcc will build for the GPU detected in your system.
+- If you need to build for various GPUs, you can use --passC:"--offload-arch=gfx1100" to specify the GPU target
+  - for example, to build for a 7900 xtx, you would use --passC:"--offload-arch=gfx1100"
+  - for a radeon w7500, you would use --passC:"--offload-arch=gfx1102"
+
 
 ### Required flags
 

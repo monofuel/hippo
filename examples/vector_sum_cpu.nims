@@ -1,6 +1,2 @@
 --define:"HippoRuntime:HIP_CPU"
 --path:"../src"
---passC:"-I../HIP-CPU/include"
---passC:"-I./HIP-CPU/include"
---passL:"-ltbb"
---passL:"-lstdc++"
