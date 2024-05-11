@@ -88,6 +88,14 @@ type HippoStream* = cudaStream_t
 type HippoError* = cudaError_t
 type HippoMemcpyKind* = cudaMemcpyKind
 
+const
+  HippoMemcpyHostToHost* = cudaMemcpyHostToHost
+  HippoMemcpyHostToDevice* = cudaMemcpyHostToDevice
+  HippoMemcpyDeviceToHost* = cudaMemcpyDeviceToHost
+  HippoMemcpyDeviceToDevice* = cudaMemcpyDeviceToDevice
+  HippoMemcpyDefault* = cudaMemcpyDefault
+
+
 ## CUDA Attributes
 let
   blockDim* {.importc, inject, header: "cuda_runtime.h".}: BlockDim

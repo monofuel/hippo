@@ -85,6 +85,13 @@ type HippoStream* = hipStream_t
 type HippoError* = hipError_t
 type HippoMemcpyKind* = hipMemcpyKind
 
+const
+  HippoMemcpyHostToHost* = hipMemcpyHostToHost
+  HippoMemcpyHostToDevice* = hipMemcpyHostToDevice
+  HippoMemcpyDeviceToHost* = hipMemcpyDeviceToHost
+  HippoMemcpyDeviceToDevice* = hipMemcpyDeviceToDevice
+  HippoMemcpyDefault* = hipMemcpyDefault
+
 ## HIP Attributes
 let
   blockDim* {.importc, inject, header: "hip/hip_runtime.h".}: BlockDim

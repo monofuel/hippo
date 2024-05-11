@@ -1,5 +1,5 @@
 --path:"../../src"
-
+--define:"HippoRuntime:HIP"
 --cc:clang
 --clang.cpp.exe:hipcc
 --clang.cpp.linkerexe:hipcc
