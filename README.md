@@ -17,6 +17,12 @@ echo "2 + 7 = ", c
 handleError(hipFree(dev_c))
 ```
 
+## Functions
+
+- There are 2 sets of function prefixes.
+- `hip*` prefixed functions are the raw HIP C++ functions
+- `cuda*` prefixed functions are the raw CUDA C functions
+
 
 ## Notes
 

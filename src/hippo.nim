@@ -43,8 +43,7 @@ when HippoRuntime == "HIP_CPU":
   echo "DEBUG: Using HIP CPU runtime"
   include hip
 elif HippoRuntime == "CUDA":
-  # nvcc loads the CUDA runtime automatically
-  # Note: i have not actually setup any CUDA stuff yet
+  # nvcc loads the CUDA runtime header automatically
   echo "DEBUG: Using CUDA runtime"
   include cuda
 else:
@@ -60,9 +59,9 @@ proc launchKernel*(
   gridDim: Dim3 = newDim3(1,1,1), # default to a grid of 1 block
   blockDim: Dim3 = newDim3(1,1,1),  # default to 1 thread per block
   sharedMemBytes: uint32 = 0,
-  stream: hipStream_t = nil,
+  stream: HippoStream = nil,
   args: tuple
-): hipError_t =
+): HippoError =
   # launchKernel is designed to be similar to `kernel`<<<blockDim, gridDim>>>(args)
 
   # this function is horrible but it works
@@ -70,6 +69,7 @@ proc launchKernel*(
 
   # having some issues between hip and hip-cpu, so defining different versions of launchKernel
   when HippoRuntime == "HIP" and HipPlatform == "amd":
+    # This branch works for all args
     echo "executing HIP"
     var kernelArgs: seq[pointer]
     for key, arg in args.fieldPairs:
@@ -81,6 +81,7 @@ proc launchKernel*(
       cast[ptr pointer](addr kernelArgs[0]),
     )
   elif HippoRuntime == "HIP" and HipPlatform == "nvidia":
+    # TODO fix args on this branch
     hipLaunchKernelGGL(
       kernel,
       gridDim,
@@ -93,6 +94,7 @@ proc launchKernel*(
       cast[ptr[cint]](args[2])
       )
   elif HippoRuntime == "HIP_CPU":
+    # TODO fix args on this branch
     echo "executing kernel on CPU"
     hipLaunchKernelGGL(
       kernel,
@@ -107,16 +109,19 @@ proc launchKernel*(
     )
     result = hipGetLastError()
   elif HippoRuntime == "CUDA":
-    raise newException(Exception, &"CUDA not implemented yet")
-    # echo "executing CUDA"
-    # result = cudaLaunchKernel(
-    #   kernel,
-    #   gridDim,
-    #   blockDim,
-    #   sharedMemBytes,
-    #   stream,
-    #   args
-    # )
+    # This branch works for all args
+    echo "executing CUDA"
+    var kernelArgs: seq[pointer]
+    for key, arg in args.fieldPairs:
+      kernelArgs.add(cast[pointer](addr arg))
+    result = cudaLaunchKernel(
+      kernel,
+      gridDim,
+      blockDim,
+      cast[ptr pointer](addr kernelArgs[0])
+      #sharedMemBytes,
+      #stream
+    )
   else:
     raise newException(Exception, &"Unknown runtime: {HippoRuntime}")
   if result != 0:

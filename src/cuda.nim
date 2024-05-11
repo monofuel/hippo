@@ -1,6 +1,5 @@
 # CUDA runtime C++ FFI
-
-# TODO I have not tested these cuda types yet
+import std/strformat
 
 type
   size_t* = uint64
@@ -53,6 +52,9 @@ proc cudaFree*(`ptr`: pointer): cudaError_t {.header: "cuda_runtime.h",importcpp
 proc cudaLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;
                      args: ptr pointer): cudaError_t {.
     importcpp: "cudaLaunchKernel(@)", header: "cuda_runtime.h".}
+proc cudaLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;
+                     args: ptr pointer, sharedMemBytes: uint32_t, stream: cudaStream_t): cudaError_t {.
+    importcpp: "cudaLaunchKernel(@)", header: "cuda_runtime.h".}
 # proc cudaLaunchKernel*(function_address: pointer; numBlocks: dim3; dimBlocks: dim3;
 #                      args: ptr pointer; sharedMemBytes: csize_t; stream: cudaStream_t): cint {.
 #     importcpp: "cudaLaunchKernel(@)", header: "cuda_runtime.h".}
@@ -74,3 +76,39 @@ converter toConstCString*(self: cstring): ConstCString {.importc: "(const char*)
 proc `$`*(self: ConstCString): string = $(self.toCString())
 proc cudaGetErrorString*(err: cudaError_t): ConstCString {.header: "cuda_runtime.h",importcpp: "cudaGetErrorString(@)".}
 proc cudaGetLastError*(): cudaError_t {.header: "cuda_runtime.h",importcpp: "cudaGetLastError()".}
+
+## Error Helpers
+proc handleError*(err: cudaError_t) =
+  if err != 0:
+    var cstr = cudaGetErrorString(err).toCString
+    raise newException(Exception, &"CUDA Error: " & $cstr)
+
+## Hippo Types
+type HippoStream* = cudaStream_t
+type HippoError* = cudaError_t
+
+## HIP Attributes
+template hippoGlobal*(body: untyped) =
+  var
+    blockDim {.importc, inject, header: "cuda_runtime.h".}: BlockDim
+    blockIdx {.importc, inject, header: "cuda_runtime.h".}: BlockIdx
+    gridDim {.importc, inject, header: "cuda_runtime.h".}: GridDim
+    threadIdx {.importc, inject, header: "cuda_runtime.h".}: ThreadIdx
+  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__global__ $# $#$#".}
+  body
+  {.pop}
+
+template hippoDevice*(body: typed) =
+  var
+    blockDim {.importc, inject, header: "cuda_runtime.h".}: BlockDim
+    blockIdx {.importc, inject, header: "cuda_runtime.h".}: BlockIdx
+    gridDim {.importc, inject, header: "cuda_runtime.h".}: GridDim
+    threadIdx {.importc, inject, header: "cuda_runtime.h".}: ThreadIdx
+  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__device__ $# $#$#".}
+  body
+  {.pop}
+
+template hippoHost*(body: typed) =
+  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__host__ $# $#$#".}
+  body
+  {.pop}

@@ -80,6 +80,10 @@ proc handleError*(err: hipError_t) =
     var cstr = hipGetErrorString(err).toCString
     raise newException(Exception, &"HIP Error: " & $cstr)
 
+## Hippo Types
+type HippoStream* = hipStream_t
+type HippoError* = hipError_t
+
 ## HIP Attributes
 template hippoGlobal*(body: untyped) =
   var
