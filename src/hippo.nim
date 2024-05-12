@@ -57,9 +57,9 @@ template hippoMalloc*(size: int): pointer =
   ## Allocate memory on the GPU and return a pointer to it
   var p: pointer
   when HippoRuntime == "CUDA":
-    handleError(cudaMalloc(cast[ptr pointer](addr p), size.cint))
+    handleError(cudaMalloc(addr p, size.cint))
   else:
-    handleError(hipMalloc(cast[ptr pointer](addr p), size.cint))
+    handleError(hipMalloc(addr p, size.cint))
   p
 
 template hippoMemcpy*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind) =
