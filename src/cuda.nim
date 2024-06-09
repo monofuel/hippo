@@ -59,6 +59,8 @@ proc cudaLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Di
 #                      args: ptr pointer; sharedMemBytes: csize_t; stream: cudaStream_t): cint {.
 #     importcpp: "cudaLaunchKernel(@)", header: "cuda_runtime.h".}
 proc cudaDeviceSynchronize*(): cudaError_t {.header: "cuda_runtime.h",importcpp: "cudaDeviceSynchronize(@)".}
+proc cudaSyncthreads*() {.importcpp: "__syncthreads()", header: "cuda_runtime.h".}
+proc hippoSyncthreads*() {.importcpp: "__syncthreads()", header: "cuda_runtime.h".}
 
 proc cudaLaunchKernelGGL*(
   function_address: proc;
@@ -115,5 +117,10 @@ template hippoDevice*(body: typed) =
 
 template hippoHost*(body: typed) =
   {.push stackTrace: off, checks: off, exportc, codegenDecl: "__host__ $# $#$#".}
+  body
+  {.pop}
+
+template hippoShared*(body: typed) =
+  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__shared__ $# $#$#".}
   body
   {.pop}

@@ -56,6 +56,8 @@ proc hipLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim
 #                      args: ptr pointer; sharedMemBytes: csize_t; stream: hipStream_t): cint {.
 #     importcpp: "hipLaunchKernel(@)", header: "hip/hip_runtime.h".}
 proc hipDeviceSynchronize*(): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipDeviceSynchronize(@)".}
+proc hipSyncthreads*() {.importcpp: "__syncthreads()", header: "hip/hip_runtime.h".}
+proc hippoSyncthreads*() {.importcpp: "__syncthreads()", header: "hip/hip_runtime.h".}
 
 proc hipLaunchKernelGGL*(
   function_address: proc;
@@ -111,5 +113,10 @@ template hippoDevice*(body: typed) =
 
 template hippoHost*(body: typed) =
   {.push stackTrace: off, checks: off, exportc, codegenDecl: "__host__ $# $#$#".}
+  body
+  {.pop}
+
+template hippoShared*(body: typed) =
+  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__shared__ $# $#$#".}
   body
   {.pop}
