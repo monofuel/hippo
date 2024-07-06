@@ -1,5 +1,5 @@
 # CUDA runtime C++ FFI
-import std/strformat
+import std/strformat, macros
 
 type
   size_t* = uint64
@@ -105,22 +105,36 @@ let
   gridDim* {.importc, inject, header: "cuda_runtime.h".}: GridDim
   threadIdx* {.importc, inject, header: "cuda_runtime.h".}: ThreadIdx
 
-template hippoGlobal*(body: untyped) =
-  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__global__ $# $#$#".}
-  body
-  {.pop}
+macro hippoGlobal*(fn: untyped): untyped =
+  let globalPragma: NimNode = quote:
+    {. exportc, codegenDecl: "__global__ $# $#$#".}
 
-template hippoDevice*(body: typed) =
-  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__device__ $# $#$#".}
-  body
-  {.pop}
+  fn.addPragma(globalPragma[0])
+  fn.addPragma(globalPragma[1])
+  quote do:
+    {.push stackTrace: off, checks: off.}
+    `fn`
+    {.pop.}
 
-template hippoHost*(body: typed) =
-  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__host__ $# $#$#".}
-  body
-  {.pop}
+macro hippoDevice*(fn: untyped): untyped =
+  let globalPragma: NimNode = quote:
+    {. exportc, codegenDecl: "__device__ $# $#$#".}
 
-template hippoShared*(body: typed) =
-  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__shared__ $# $#$#".}
-  body
-  {.pop}
+  fn.addPragma(globalPragma[0])
+  fn.addPragma(globalPragma[1])
+  quote do:
+    {.push stackTrace: off, checks: off.}
+    `fn`
+    {.pop.}
+
+
+macro hippoHost*(fn: untyped): untyped =
+  let globalPragma: NimNode = quote:
+    {. exportc, codegenDecl: "__host__ $# $#$#".}
+
+  fn.addPragma(globalPragma[0])
+  fn.addPragma(globalPragma[1])
+  quote do:
+    {.push stackTrace: off, checks: off.}
+    `fn`
+    {.pop.}

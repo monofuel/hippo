@@ -7,6 +7,9 @@ const
   ThreadsPerBlock: int = 256
   BlocksPerGrid: int = min(32, ((N + ThreadsPerBlock - 1) div ThreadsPerBlock))
 
+# TODO improve this
+{.pragma: hippoShared, exportc, codegenDecl: "__shared__ $# $#".}
+
 proc dot(a, b, c: ptr[cfloat]){.hippoGlobal.} =
   
   var cache {.hippoShared.}: ptr[cfloat]
