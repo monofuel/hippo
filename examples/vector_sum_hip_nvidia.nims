@@ -1,4 +1,6 @@
 --path:"../src"
---cc:hipcc
+--cc:nvcc
+--nvcc.cpp.exe:hipcc
+--nvcc.cpp.linkerexe:hipcc
 --define:"useMalloc"
 --passL:"-lstdc++"
