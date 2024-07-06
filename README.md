@@ -34,23 +34,26 @@ handleError(hipFree(dev_c))
 
 - very much WORK IN PROGRESS
 - very basic kernels work that use block/thread indices
-- no support for shared memory yet
+- no support for shared memory yet (almost there)
+
+- there are examples for several different targets in the examples directory.
+- building for HIP requires that `hipcc` is in your PATH
+- [vector_sum_cuda.nims](examples/vector_sum_hippo.nims) example .nims for building with hipcc
+- [vector_sum_hippo.nims](examples/vector_sum_cuda.nims) example .nims for building with nvcc for cuda
+- [vector_sum_hip_nvidia.nims](examples/vector_sum_hip_nvidia.nims) example .nims for building with hipcc with the cuda backend
+  - tell nim that you want the 'nvcc' compiler settings to get the right arguments, but swap out the compiler executable for hipcc
+  - you might also need to have HIP_PLATFORM=nvidia set in your environment
+- [vector_sum_cpu.nims](examples/vector_sum_cpu.nims) example .nims for building with the HIP-CPU backend (no hipcc required)
+
+- HIP-CPU is supported with the `-d:HippoRuntime=HIP_CPU` flag
+  - note: you need to pull the HIP-CPU git submodule to use this feature
+  - does not require hipcc. works with gcc.
+  - you can write kernels and test them on cpu with echos and breakpoints and everything!
 
 - hippo *requires* that you use cpp. it will not work with c
   - `nim cpp -r tests/hip/vector_sum.nim`
   - The HIP Runtime is a C++ library, and so is the CUDA Runtime. As such, we can't do anything about this.
   - You can make separate projects for the C and C++ parts and link them together. (I have not tested this yet, would love examples if you do this!)
-
-- building for GPU requires that `hipcc` is in your PATH
-  - HIP supports both CUDA and ROCM, so you can use this with either
-  - for CUDA, you will need to have `nvcc` in your PATH as well as `hipcc`
-    - set the environment variable HIP_PLATFORM=nvidia for hipcc to build for nvidia
-    - HIP nvidia compiling still needs work: https://github.com/monofuel/hippo/pull/1
-      - I got a hacky fix to work, but it needs to be polished up and requires small changes in the nim compiler
-- HIP-CPU is supported with the `-d:HippoRuntime=HIP_CPU` flag
-  - note: you need to pull the HIP-CPU git submodule to use this feature
-  - does not require hipcc. works with gcc.
-  - you can write kernels and test them on cpu with echos and breakpoints and everything!
 
 ## Motivation
 
