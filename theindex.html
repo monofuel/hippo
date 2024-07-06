@@ -12,10 +12,10 @@
 <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAB3RJTUUH4QQQEwksSS9ZWwAAAk1JREFUWMPtll2ITVEUx39nn/O7Y5qR8f05wtCUUr6ZIS++8pEnkZInPImneaCQ5METNdOkeFBKUhMPRIkHKfEuUZSUlGlKPN2TrgfncpvmnntnmlEyq1Z7t89/rf9a6+y99oZxGZf/XeIq61EdtgKXgdXA0xrYAvBjOIF1AI9zvjcC74BSpndrJPkBWDScTF8Aa4E3wDlgHbASaANmVqlcCnwHvgDvgVfAJ+AikAAvgfVZwLnSVZHZaOuKoQi3ZOMi4NkYkpe1p4J7A8BpYAD49hfIy/oqG0+hLomiKP2L5L+1ubn5115S+3OAn4EnwBlgMzCjyt6ZAnQCJ4A7wOs88iRJHvw50HoujuPBoCKwHWiosy8MdfZnAdcHk8dxXFJ3VQbQlCTJvRBCGdRbD4M6uc5glpY3eAihpN5S5w12diSEcCCEcKUO4ljdr15T76ur1FDDLIQQ3qv71EdDOe3Kxj3leRXyk+pxdWnFWod6Wt2bY3de3aSuUHcPBVimHs7mK9WrmeOF6lR1o9qnzskh2ar2qm1qizpfXaPeVGdlmGN5pb09qMxz1Xb1kLqgzn1RyH7JUXW52lr5e/Kqi9qpto7V1atuUzfnARrV7jEib1T76gG2qxdGmXyiekkt1GswPTtek0aBfJp6YySGBfWg2tPQ0FAYgf1stUfdmdcjarbYJEniKIq6gY/Aw+zWHAC+p2labGpqiorFYgGYCEzN7oQdQClN07O1/EfDyGgC0ALMBdYAi4FyK+4H3gLPsxfR1zRNi+NP7nH5J+QntnXe5B5mpfQAAAAASUVORK5CYII=">
 
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="nimdoc.out.css?v=2.0.4">
+<link rel="stylesheet" type="text/css" href="nimdoc.out.css?v=2.0.8">
 
 <!-- JS -->
-<script type="text/javascript" src="dochack.js?v=2.0.4"></script>
+<script type="text/javascript" src="dochack.js?v=2.0.8"></script>
 </head>
 <body>
   <div class="document" id="documentId">
@@ -112,7 +112,7 @@
           </ul></dd>
 <dt><a name="hippoDevice" href="#hippoDevice"><span>hippoDevice:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="hippo: template hippoDevice(body: typed)" href="hippo.html#hippoDevice.t%2Ctyped">hippo: template hippoDevice(body: typed)</a></li>
+          data-doc-search-tag="hippo: macro hippoDevice(fn: untyped): untyped" href="hippo.html#hippoDevice.m%2Cuntyped">hippo: macro hippoDevice(fn: untyped): untyped</a></li>
           </ul></dd>
 <dt><a name="HippoError" href="#HippoError"><span>HippoError:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -124,11 +124,11 @@
           </ul></dd>
 <dt><a name="hippoGlobal" href="#hippoGlobal"><span>hippoGlobal:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="hippo: template hippoGlobal(body: untyped)" href="hippo.html#hippoGlobal.t%2Cuntyped">hippo: template hippoGlobal(body: untyped)</a></li>
+          data-doc-search-tag="hippo: macro hippoGlobal(fn: untyped): untyped" href="hippo.html#hippoGlobal.m%2Cuntyped">hippo: macro hippoGlobal(fn: untyped): untyped</a></li>
           </ul></dd>
 <dt><a name="hippoHost" href="#hippoHost"><span>hippoHost:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="hippo: template hippoHost(body: typed)" href="hippo.html#hippoHost.t%2Ctyped">hippo: template hippoHost(body: typed)</a></li>
+          data-doc-search-tag="hippo: macro hippoHost(fn: untyped): untyped" href="hippo.html#hippoHost.m%2Cuntyped">hippo: macro hippoHost(fn: untyped): untyped</a></li>
           </ul></dd>
 <dt><a name="hippoLaunchKernel" href="#hippoLaunchKernel"><span>hippoLaunchKernel:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -178,9 +178,17 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: type HippoStream" href="hippo.html#HippoStream">hippo: type HippoStream</a></li>
           </ul></dd>
+<dt><a name="hippoSyncthreads" href="#hippoSyncthreads"><span>hippoSyncthreads:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hippoSyncthreads()" href="hippo.html#hippoSyncthreads">hippo: proc hippoSyncthreads()</a></li>
+          </ul></dd>
 <dt><a name="hipStream_t" href="#hipStream_t"><span>hipStream_t:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: type hipStream_t" href="hippo.html#hipStream_t">hippo: type hipStream_t</a></li>
+          </ul></dd>
+<dt><a name="hipSyncthreads" href="#hipSyncthreads"><span>hipSyncthreads:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipSyncthreads()" href="hippo.html#hipSyncthreads">hippo: proc hipSyncthreads()</a></li>
           </ul></dd>
 <dt><a name="launchKernel" href="#launchKernel"><span>launchKernel:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -234,7 +242,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-05-12 02:52:14 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-07-06 04:23:42 UTC</small>
       </div>
     </div>
   </div>
