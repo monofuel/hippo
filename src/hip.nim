@@ -1,5 +1,5 @@
 # HIP runtime C++ FFI
-import std/strformat
+import std/strformat, macros
 
 type
   size_t* = uint64
@@ -56,6 +56,8 @@ proc hipLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim
 #                      args: ptr pointer; sharedMemBytes: csize_t; stream: hipStream_t): cint {.
 #     importcpp: "hipLaunchKernel(@)", header: "hip/hip_runtime.h".}
 proc hipDeviceSynchronize*(): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipDeviceSynchronize(@)".}
+proc hipSyncthreads*() {.importcpp: "__syncthreads()", header: "hip/hip_runtime.h".}
+proc hippoSyncthreads*() {.importcpp: "__syncthreads()", header: "hip/hip_runtime.h".}
 
 proc hipLaunchKernelGGL*(
   function_address: proc;
@@ -99,17 +101,36 @@ let
   gridDim* {.importc, inject, header: "hip/hip_runtime.h".}: GridDim
   threadIdx* {.importc, inject, header: "hip/hip_runtime.h".}: ThreadIdx
 
-template hippoGlobal*(body: untyped) =
-  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__global__ $# $#$#".}
-  body
-  {.pop}
+macro hippoGlobal*(fn: untyped): untyped =
+  let globalPragma: NimNode = quote:
+    {. exportc, codegenDecl: "__global__ $# $#$#".}
 
-template hippoDevice*(body: typed) =
-  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__device__ $# $#$#".}
-  body
-  {.pop}
+  fn.addPragma(globalPragma[0])
+  fn.addPragma(globalPragma[1])
+  quote do:
+    {.push stackTrace: off, checks: off.}
+    `fn`
+    {.pop.}
 
-template hippoHost*(body: typed) =
-  {.push stackTrace: off, checks: off, exportc, codegenDecl: "__host__ $# $#$#".}
-  body
-  {.pop}
+macro hippoDevice*(fn: untyped): untyped =
+  let globalPragma: NimNode = quote:
+    {. exportc, codegenDecl: "__device__ $# $#$#".}
+
+  fn.addPragma(globalPragma[0])
+  fn.addPragma(globalPragma[1])
+  quote do:
+    {.push stackTrace: off, checks: off.}
+    `fn`
+    {.pop.}
+
+
+macro hippoHost*(fn: untyped): untyped =
+  let globalPragma: NimNode = quote:
+    {. exportc, codegenDecl: "__host__ $# $#$#".}
+
+  fn.addPragma(globalPragma[0])
+  fn.addPragma(globalPragma[1])
+  quote do:
+    {.push stackTrace: off, checks: off.}
+    `fn`
+    {.pop.}

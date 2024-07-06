@@ -83,7 +83,7 @@ proc launchKernel*(
   kernel: proc,
   gridDim: Dim3 = newDim3(1,1,1), # default to a grid of 1 block
   blockDim: Dim3 = newDim3(1,1,1),  # default to 1 thread per block
-  sharedMemBytes: uint32 = 0,
+  sharedMemBytes: uint32 = 0, # TODO dynamic shared memory
   stream: HippoStream = nil,
   args: tuple
 ): HippoError =
