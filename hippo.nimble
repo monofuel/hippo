@@ -1,11 +1,11 @@
-version     = "0.0.1"
+version     = "0.0.2"
 author      = "Andrew Brower"
 description = "HIP library for Nim"
 license     = "MIT"
 
 srcDir = "src"
 
-requires "nim >= 2.0.0"
+requires "nim >= 2.1.9"
 
 
 task test, "Run all tests":

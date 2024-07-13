@@ -5,6 +5,9 @@ A Julia Set fractal generated with HIP
 
 ## Minimal HIP Example
 
+- IMPORTANT: requires at least nim 2.1.9 for gpu usage
+- `--cc:nvcc` and `--cc:hipcc`
+
 ```
 import hippo
 
@@ -74,14 +77,12 @@ handleError(hipFree(dev_c))
     - You also have to set the `HIP_PLATFORM=nvidia` environment variable to build for nvidia GPUs if you don't have an nvidia GPU in your system
     - hipcc will pick nvcc by default if you have nvcc but do not have the amd rocm stack installed
 
+- If you want to build for CPU with `-d:"HippoRuntime:HIP_CPU"`, you must have intel tbb libraries installed. `yum install -y tbb-devel`
 
 ### Required flags for HIP
 
 - You must compile with nim cpp for c++
 - Please refer to the [examples](examples/) for the nim compiler settings needed for each target
-
-- The HIP Nvidia and the CUDA targets currently require some changes to the nim compiler
-  - I have an experimental branch here [Nim](https://github.com/monofuel/Nim/tree/hipcc-nvcc)
 
 ### Optional flags
 

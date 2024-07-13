@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+      {
+          "label": "nim: build current file (for debugging)",
+          "command": "nim",
+          "args": [
+              "cpp",
+              "-g",
+              "--define:HippoRuntime=HIP_CPU",
+              "--debugger:native",
+              "-o:${workspaceRoot}/bin/${fileBasenameNoExtension}",
+              "${relativeFile}"
+          ],
+          "options": {
+              "cwd": "${workspaceRoot}"
+          },
+          "type": "shell",
+      }
+  ]
+}
