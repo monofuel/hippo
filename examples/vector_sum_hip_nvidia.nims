@@ -3,4 +3,4 @@
 --nvcc.cpp.exe:hipcc
 --nvcc.cpp.linkerexe:hipcc
 --define:"useMalloc"
---passL:"-lstdc++"
+--passC:"-isystem \"/opt/rocm/include\""
