@@ -2,6 +2,8 @@
 import
   std/[strformat, os]
 
+## TODO should do some auto detection based on if cc is set to hipcc or nvcc
+
 proc getHipPlatform*(): string =
   ## getHipPlatform has to be ran at compile time, and gets the target platform for hipcc
   ## NVCC and HIPCC (when building for nvidia) require we pass compiler args in -Xcompiler=""

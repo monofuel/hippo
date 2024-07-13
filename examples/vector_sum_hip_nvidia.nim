@@ -1,6 +1,8 @@
+# this example builds hip for nvidia
 # vector_sum_hip_nvidia.nims is setup for hipcc with HIP_PLATFORM=nvidia to build for GPU
-# requires https://github.com/monofuel/Nim/tree/hipcc-nvcc at the moment
+# requires nim >= 2.1.9
 # HIP_PLATFORM=nvidia nim cpp -r examples/vector_sum_hip_nvidia.nim
+# only use hip or hippo functions (maps to hip)
 
 import hippo
 

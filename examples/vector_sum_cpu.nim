@@ -1,4 +1,8 @@
 # vector_sums_cpu.nims is setup to use HIP-CPU
+# does not need hipcc or nvcc
+# --define:"HippoRuntime:HIP_CPU"
+# cannot use cuda functions. use hip or hippo (maps to hip)
+
 import hippo
 
 const N: int32 = 10

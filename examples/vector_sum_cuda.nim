@@ -1,6 +1,8 @@
+# this example uses raw cuda functions and compiles with nvcc (no hip involved)
 # vector_sum_cuda.nims is setup with nvcc to build for GPU
-# requires https://github.com/monofuel/Nim/tree/cudacc-nvcc at the moment
+# requires nim >= 2.1.9
 # nim cpp -r examples/vector_sum_cuda.nim
+# when using nvcc, can only use cuda functions or hippo functions (maps to cuda)
 
 import hippo
 

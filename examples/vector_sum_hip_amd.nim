@@ -1,4 +1,7 @@
-# vector_sums.nims is setup for hipcc to build for GPU
+# this example uses raw hip functions and compiles with hipcc
+# vector_sum_hip_amd.nims is setup for hipcc to build for AMD
+# nip cpp -r examples/vector_sum_hip_amd.nim
+# only use hip or hippo functions (maps to hip)
 
 import hippo
 

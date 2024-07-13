@@ -3,6 +3,4 @@
 --define:"pixieNoSimd"
 --define:"zippyNoSimd"
 --define:"crunchyNoSimd"
---cc:clang
---clang.cpp.exe:hipcc
---clang.cpp.linkerexe:hipcc
+--cc:hipcc

@@ -6,7 +6,7 @@ A Julia Set fractal generated with HIP
 ## Minimal HIP Example
 
 - IMPORTANT: requires at least nim 2.1.9 for gpu usage
-- `--cc:nvcc` and `--cc:hipcc`
+  - nim 2.1.9 added `--cc:nvcc` and `--cc:hipcc`
 
 ```
 import hippo

@@ -1,4 +1,6 @@
-# vector_sums_hippo.nims is setup for hipcc to build for GPU
+# vector_sums_hippo.nims is setup for hipcc to build for amd
+# but it should work with either --cc:hipcc or --cc:nvcc
+# hippo functions will translate to cuda or hip automatically depending on which is compiled for
 
 import hippo
 

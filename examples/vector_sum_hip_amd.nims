@@ -1,0 +1,3 @@
+--path:"../src"
+--cc:hipcc
+--define:"HippoRuntime:AMD"
