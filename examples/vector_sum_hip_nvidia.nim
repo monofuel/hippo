@@ -4,6 +4,10 @@
 # HIP_PLATFORM=nvidia nim cpp -r examples/vector_sum_hip_nvidia.nim
 # only use hip or hippo functions (maps to hip)
 
+# TODO this example is actually broken, hipcc does not like the `-x cu` flag, but does need -Xcompiler.
+# there's not currently a way to override compileTmpl to fix this
+# hipcc wants `-x c++` or for x cu to not be set.
+
 import hippo
 
 const N: int32 = 10
