@@ -1,6 +1,6 @@
 nimTitle	hippo	hippo.html	module src/hippo		0
-nim	getHipPlatform	hippo.html#getHipPlatform	proc getHipPlatform(): string		5
-nim	HippoRuntime	hippo.html#HippoRuntime	const HippoRuntime		25
+nim	getHipPlatform	hippo.html#getHipPlatform	proc getHipPlatform(): string		7
+nim	HippoRuntime	hippo.html#HippoRuntime	const HippoRuntime		27
 nim	size_t	hippo.html#size_t	type size_t		5
 nim	uint8_t	hippo.html#uint8_t	type uint8_t		6
 nim	uint16_t	hippo.html#uint16_t	type uint16_t		7
@@ -45,8 +45,8 @@ nim	threadIdx	hippo.html#threadIdx_2	let threadIdx		102
 nim	hippoGlobal	hippo.html#hippoGlobal.m,untyped	macro hippoGlobal(fn: untyped): untyped		104
 nim	hippoDevice	hippo.html#hippoDevice.m,untyped	macro hippoDevice(fn: untyped): untyped		115
 nim	hippoHost	hippo.html#hippoHost.m,untyped	macro hippoHost(fn: untyped): untyped		127
-nim	hippoMalloc	hippo.html#hippoMalloc.t,int	template hippoMalloc(size: int): pointer		56
-nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,pointer,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)		65
-nim	hippoFree	hippo.html#hippoFree.t,pointer	template hippoFree(p: pointer)		72
-nim	launchKernel	hippo.html#launchKernel,proc,Dim3,Dim3,uint32,HippoStream,	proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);\n             blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;\n             stream: HippoStream = nil; args: tuple): HippoError		82
-nim	hippoLaunchKernel	hippo.html#hippoLaunchKernel.t,proc,Dim3,Dim3,uint32,HippoStream,	template hippoLaunchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);\n                  blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;\n                  stream: HippoStream = nil; args: tuple)		154
+nim	hippoMalloc	hippo.html#hippoMalloc.t,int	template hippoMalloc(size: int): pointer		58
+nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,pointer,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)		67
+nim	hippoFree	hippo.html#hippoFree.t,pointer	template hippoFree(p: pointer)		74
+nim	launchKernel	hippo.html#launchKernel,proc,Dim3,Dim3,uint32,HippoStream,	proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);\n             blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;\n             stream: HippoStream = nil; args: tuple): HippoError		84
+nim	hippoLaunchKernel	hippo.html#hippoLaunchKernel.t,proc,Dim3,Dim3,uint32,HippoStream,	template hippoLaunchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);\n                  blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;\n                  stream: HippoStream = nil; args: tuple)		156
