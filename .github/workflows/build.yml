@@ -14,6 +14,7 @@ jobs:
         submodules: recursive
     - uses: jiro4989/setup-nim-action@v2
       with:
+       nim-version: '2.1.9'
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Install dependencies
       run: |
