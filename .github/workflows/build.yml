@@ -14,8 +14,7 @@ jobs:
         submodules: recursive
     - uses: jiro4989/setup-nim-action@v2
       with:
-        # TODO update nim-version when a stable release > 2.1.9 comes out
-        nim-version: 'stable'
+        nim-version: 'devel'
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Install dependencies
       run: |
@@ -37,10 +36,10 @@ jobs:
     - name: Build Examples
       run: |
         nim cpp examples/vector_sum_cpu.nim
-        #nim cpp examples/vector_sum_cuda.nim
-        #nim cpp examples/vector_sum_hippo.nim
-        #nim cpp examples/vector_sum_hip_amd.nim
-        #nim cpp examples/vector_sum_hip_nvida.nim
+        nim cpp examples/vector_sum_cuda.nim
+        nim cpp examples/vector_sum_hippo.nim
+        nim cpp examples/vector_sum_hip_amd.nim
+        nim cpp examples/vector_sum_hip_nvida.nim
     
     - name: Execute CPU Example
       run: |
