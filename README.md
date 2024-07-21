@@ -32,12 +32,21 @@ handleError(hipFree(dev_c))
 - `hip*` prefixed functions are the raw HIP C++ functions
 - `cuda*` prefixed functions are the raw CUDA C functions
 
+## Pragmas
+
+- all pragmas are prefixed with `hippo` and can be used for hip or cuda to assign attributes like `__global__` or `__shared__`
+
+basic kernel example:
+```
+proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
+  c[] = a + b
+```
 
 ## Notes
 
-- very much WORK IN PROGRESS
+- work in progress!
 - very basic kernels work that use block/thread indices
-- no support for shared memory yet (almost there)
+- shared memory works
 
 - there are examples for several different targets in the examples directory.
 - building for HIP requires that `hipcc` is in your PATH
@@ -91,16 +100,6 @@ handleError(hipFree(dev_c))
 - `-d:HippoRuntime=HIP_CPU` for cpu-only usage (does not require hipcc)
   - you must pull the HIP-CPU submodule to use this feature
 - `-d:HippoRuntime=CUDA` (requires nvcc)
-
-## Pragmas
-
-- all pragmas are prefixed with `hippo`
-
-basic kernel example:
-```
-proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
-  c[] = a + b
-```
 
 ## Feature todo list
 
