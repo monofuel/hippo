@@ -7,17 +7,8 @@ const
   ThreadsPerBlock: int = 256
   BlocksPerGrid: int = min(32, ((N + ThreadsPerBlock - 1) div ThreadsPerBlock))
 
-# TODO improve this
-{.pragma: hippoShared, exportc, codegenDecl: "__shared__ $# $#".}
-
 proc dot(a, b, c: ptr[float64]){.hippoGlobal.} =
-  
-  #var cache {.hippoShared.}: ptr[float64]
-  #var cache {.importc: "cache"}: ptr[float64]
-  # __shared__ float cache[threadsPerBlock
-  {.emit:["""__shared__ float cache[256];"""].}
-  let cache {.codeGenDecl:"" importc noinit.}: ptr UncheckedArray[float64]
-  #var cache {.hippoShared.}: ptr[float64]
+  var cache {.hippoShared.}: array[256, float]
 
   # TODO figure out how to do this properly
   let aArray = cast[ptr UncheckedArray[float64]](a)

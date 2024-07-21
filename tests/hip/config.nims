@@ -4,3 +4,4 @@
 --define:"zippyNoSimd"
 --define:"crunchyNoSimd"
 --cc:hipcc
+--define:"useMalloc"

@@ -162,3 +162,48 @@ template hippoLaunchKernel*(
   args: tuple
 ) =
   handleError(launchKernel(kernel, gridDim, blockDim, sharedMemBytes, stream, args))
+
+
+## Macros
+
+macro hippoGlobal*(fn: untyped): untyped =
+  let globalPragma: NimNode = quote:
+    {. exportc, codegenDecl: "__global__ $# $#$#".}
+
+  fn.addPragma(globalPragma[0])
+  fn.addPragma(globalPragma[1])
+  quote do:
+    {.push stackTrace: off, checks: off.}
+    `fn`
+    {.pop.}
+
+macro hippoDevice*(fn: untyped): untyped =
+  let globalPragma: NimNode = quote:
+    {. exportc, codegenDecl: "__device__ $# $#$#".}
+
+  fn.addPragma(globalPragma[0])
+  fn.addPragma(globalPragma[1])
+  quote do:
+    {.push stackTrace: off, checks: off.}
+    `fn`
+    {.pop.}
+
+
+macro hippoHost*(fn: untyped): untyped =
+  let globalPragma: NimNode = quote:
+    {. exportc, codegenDecl: "__host__ $# $#$#".}
+
+  fn.addPragma(globalPragma[0])
+  fn.addPragma(globalPragma[1])
+  quote do:
+    {.push stackTrace: off, checks: off.}
+    `fn`
+    {.pop.}
+
+
+## {.hippoShared.} pragma for shared GPU memory
+macro hippoShared*(v: untyped): untyped =
+  quote do:
+    {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__shared__ $# $#".}
+    `v`
+    {.pop.}
