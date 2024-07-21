@@ -113,13 +113,19 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
 - [x] helper functions to make hip/cuda calls more nim-y
 - [x] setup automated testing build for HIP
 - [x] setup automated testing with hip-cpu
+- [x] support `__shared__` w/ a dot product test
+- [x] add pictures to project
 - [ ] Ensure that every example from the book "CUDA by Example" can be run with this library
-- [ ] add pictures to project
+  - [x] chapter 4 vector + julia set
+  - [x] chapter 5 shared memory + thread syncing dot product
+  - [ ] chapter 6 constant memory + events
+  - [ ] chapter 7 texture memory (this API changed in recent cuda, might skip)
+  - [ ] chapter 8 graphics interoperability with [boxy](https://github.com/treeform/boxy/blob/master/examples/basic_glut.nim)
+  - [ ] chapter 9 atomics
+  - [ ] chapter 10 streams
+  - [ ] chapter 11 multi-gpu
+  - [ ] Advanced Atomics
 - [ ] setup CI runners for both nvidia & amd GPUs for testing binaries
-- [ ] setup automation for building nim types from HIP headers
-  - the official hip_runtime.h headers are kinda wild
-  - hip-cpu headers might be easier to c2nim?
-- [ ] setup automation for building nim types from CUDA headers
 
 ## Stretch goals
 
