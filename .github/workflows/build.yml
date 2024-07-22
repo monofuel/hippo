@@ -39,7 +39,7 @@ jobs:
         nim cpp examples/vector_sum_cuda.nim
         nim cpp examples/vector_sum_hippo.nim
         nim cpp examples/vector_sum_hip_amd.nim
-        nim cpp examples/vector_sum_hip_nvida.nim
+        nim cpp examples/vector_sum_hip_nvidia.nim
     
     - name: Execute CPU Example
       run: |
