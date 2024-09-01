@@ -41,12 +41,13 @@ nim	blockDim	hippo.html#blockDim_2	let blockDim		99
 nim	blockIdx	hippo.html#blockIdx_2	let blockIdx		100
 nim	gridDim	hippo.html#gridDim_2	let gridDim		101
 nim	threadIdx	hippo.html#threadIdx_2	let threadIdx		102
-nim	hippoMalloc	hippo.html#hippoMalloc.t,int	template hippoMalloc(size: int): GpuMemory		76
-nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,pointer,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)		87
-nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,GpuMemory,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: GpuMemory; size: int; kind: HippoMemcpyKind)		96
-nim	hippoMemcpy	hippo.html#hippoMemcpy.t,GpuMemory,pointer,int,hipMemcpyKind	template hippoMemcpy(dst: GpuMemory; src: pointer; size: int; kind: HippoMemcpyKind)		104
-nim	hippoMemcpy	hippo.html#hippoMemcpy.t,GpuMemory,GpuMemory,int,hipMemcpyKind	template hippoMemcpy(dst: GpuMemory; src: GpuMemory; size: int; kind: HippoMemcpyKind)		112
-nim	hippoFree	hippo.html#hippoFree.t,pointer	template hippoFree(p: pointer)		120
+nim	hippoMalloc	hippo.html#hippoMalloc.t,int	template hippoMalloc(size: int): GpuRef		77
+nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,pointer,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)		88
+nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,GpuRef,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: GpuRef; size: int; kind: HippoMemcpyKind)		97
+nim	hippoMemcpy	hippo.html#hippoMemcpy.t,GpuRef,pointer,int,hipMemcpyKind	template hippoMemcpy(dst: GpuRef; src: pointer; size: int; kind: HippoMemcpyKind)		105
+nim	hippoMemcpy	hippo.html#hippoMemcpy.t,GpuRef,GpuRef,int,hipMemcpyKind	template hippoMemcpy(dst: GpuRef; src: GpuRef; size: int; kind: HippoMemcpyKind)		113
+nim	hippoFree	hippo.html#hippoFree.t,pointer	template hippoFree(p: pointer)		121
+nim	`=destroy`	hippo.html#=destroy,GpuMemory	proc `=destroy`(mem: var GpuMemory)		128
 nim	launchKernel	hippo.html#launchKernel,proc,Dim3,Dim3,uint32,HippoStream,	proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);\n             blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;\n             stream: HippoStream = nil; args: tuple): HippoError		137
 nim	hippoLaunchKernel	hippo.html#hippoLaunchKernel.t,proc,Dim3,Dim3,uint32,HippoStream,	template hippoLaunchKernel(kernel: proc; ## The GPU kernel procedure to launch\n                  gridDim: Dim3 = newDim3(1, 1, 1); ## default to a grid of 1 block\n                  blockDim: Dim3 = newDim3(1, 1, 1); ## default to 1 thread per block\n                  sharedMemBytes: uint32 = 0; ## dynamic shared memory amount to allocate\n                  stream: HippoStream = nil; ## Which device stream to run under (defaults to null)\n                  args: tuple)		209
 nim	hippoGlobal	hippo.html#hippoGlobal.m,untyped	macro hippoGlobal(fn: untyped): untyped		225
@@ -54,4 +55,4 @@ nim	hippoDevice	hippo.html#hippoDevice.m,untyped	macro hippoDevice(fn: untyped):
 nim	hippoHost	hippo.html#hippoHost.m,untyped	macro hippoHost(fn: untyped): untyped		251
 nim	hippoShared	hippo.html#hippoShared.m,untyped	macro hippoShared(v: untyped): untyped		264
 nim	hippoConstant	hippo.html#hippoConstant.m,untyped	macro hippoConstant(v: untyped): untyped		274
-nimgrp	hippomemcpy	hippo.html#hippoMemcpy-templates-all	template		87
+nimgrp	hippomemcpy	hippo.html#hippoMemcpy-templates-all	template		88

@@ -134,6 +134,10 @@
   <li><a class="reference" href="#%24%2CConstCString" title="`$`(self: ConstCString): string">`$`(self: ConstCString): string</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">=destroy
+  <li><a class="reference" href="#%3Ddestroy%2CGpuMemory" title="`=destroy`(mem: var GpuMemory)">`=destroy`(mem: var GpuMemory)</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">handleError
   <li><a class="reference" href="#handleError%2ChipError_t" title="handleError(err: hipError_t)">handleError(err: hipError_t)</a></li>
 
@@ -265,13 +269,13 @@
 
 </ul>
 <ul class="simple nested-toc-section">hippoMalloc
-  <li><a class="reference" href="#hippoMalloc.t%2Cint" title="hippoMalloc(size: int): GpuMemory">hippoMalloc(size: int): GpuMemory</a></li>
+  <li><a class="reference" href="#hippoMalloc.t%2Cint" title="hippoMalloc(size: int): GpuRef">hippoMalloc(size: int): GpuRef</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">hippoMemcpy
-  <li><a class="reference" href="#hippoMemcpy.t%2CGpuMemory%2CGpuMemory%2Cint%2ChipMemcpyKind" title="hippoMemcpy(dst: GpuMemory; src: GpuMemory; size: int; kind: HippoMemcpyKind)">hippoMemcpy(dst: GpuMemory; src: GpuMemory; size: int; kind: HippoMemcpyKind)</a></li>
-<li><a class="reference" href="#hippoMemcpy.t%2CGpuMemory%2Cpointer%2Cint%2ChipMemcpyKind" title="hippoMemcpy(dst: GpuMemory; src: pointer; size: int; kind: HippoMemcpyKind)">hippoMemcpy(dst: GpuMemory; src: pointer; size: int; kind: HippoMemcpyKind)</a></li>
-<li><a class="reference" href="#hippoMemcpy.t%2Cpointer%2CGpuMemory%2Cint%2ChipMemcpyKind" title="hippoMemcpy(dst: pointer; src: GpuMemory; size: int; kind: HippoMemcpyKind)">hippoMemcpy(dst: pointer; src: GpuMemory; size: int; kind: HippoMemcpyKind)</a></li>
+  <li><a class="reference" href="#hippoMemcpy.t%2CGpuRef%2CGpuRef%2Cint%2ChipMemcpyKind" title="hippoMemcpy(dst: GpuRef; src: GpuRef; size: int; kind: HippoMemcpyKind)">hippoMemcpy(dst: GpuRef; src: GpuRef; size: int; kind: HippoMemcpyKind)</a></li>
+<li><a class="reference" href="#hippoMemcpy.t%2CGpuRef%2Cpointer%2Cint%2ChipMemcpyKind" title="hippoMemcpy(dst: GpuRef; src: pointer; size: int; kind: HippoMemcpyKind)">hippoMemcpy(dst: GpuRef; src: pointer; size: int; kind: HippoMemcpyKind)</a></li>
+<li><a class="reference" href="#hippoMemcpy.t%2Cpointer%2CGpuRef%2Cint%2ChipMemcpyKind" title="hippoMemcpy(dst: pointer; src: GpuRef; size: int; kind: HippoMemcpyKind)">hippoMemcpy(dst: pointer; src: GpuRef; size: int; kind: HippoMemcpyKind)</a></li>
 <li><a class="reference" href="#hippoMemcpy.t%2Cpointer%2Cpointer%2Cint%2ChipMemcpyKind" title="hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)">hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)</a></li>
 
 </ul>
@@ -626,6 +630,19 @@
 </div>
 
 </div>
+<div id="=destroy-procs-all">
+  <div id="=destroy,GpuMemory">
+  <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CGpuMemory"><span class="Identifier">`=destroy`</span></a><span class="Other">(</span><span class="Identifier">mem</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">GpuMemory</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    Automatically free device memory when the object goes out of scope
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L128" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L128" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
 <div id="handleError-procs-all">
   <div id="handleError,hipError_t">
   <dt><pre><span class="Keyword">proc</span> <a href="#handleError%2ChipError_t"><span class="Identifier">handleError</span></a><span class="Other">(</span><span class="Identifier">err</span><span class="Other">:</span> <a href="hippo.html#hipError_t"><span class="Identifier">hipError_t</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
@@ -936,8 +953,8 @@
   <dd>
     
     Free memory on the GPU
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L120" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L120" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L121" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L121" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -963,48 +980,45 @@
 </div>
 <div id="hippoMalloc-templates-all">
   <div id="hippoMalloc.t,int">
-  <dt><pre><span class="Keyword">template</span> <a href="#hippoMalloc.t%2Cint"><span class="Identifier">hippoMalloc</span></a><span class="Other">(</span><span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GpuMemory</span></pre></dt>
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoMalloc.t%2Cint"><span class="Identifier">hippoMalloc</span></a><span class="Other">(</span><span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GpuRef</span></pre></dt>
   <dd>
     
     Allocate memory on the GPU and return a GpuMemory object. GpuMemory is a wrapper around Gpu allocated pointers. It will automatically free the memory when it goes out of scope.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L76" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L76" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L77" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L77" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="hippoMemcpy-templates-all">
-  <div id="hippoMemcpy.t,GpuMemory,GpuMemory,int,hipMemcpyKind">
-  <dt><pre><span class="Keyword">template</span> <a href="#hippoMemcpy.t%2CGpuMemory%2CGpuMemory%2Cint%2ChipMemcpyKind"><span class="Identifier">hippoMemcpy</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Identifier">GpuMemory</span><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <span class="Identifier">GpuMemory</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span>
-                     <span class="Identifier">kind</span><span class="Other">:</span> <a href="hippo.html#HippoMemcpyKind"><span class="Identifier">HippoMemcpyKind</span></a><span class="Other">)</span></pre></dt>
+  <div id="hippoMemcpy.t,GpuRef,GpuRef,int,hipMemcpyKind">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoMemcpy.t%2CGpuRef%2CGpuRef%2Cint%2ChipMemcpyKind"><span class="Identifier">hippoMemcpy</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Identifier">GpuRef</span><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <span class="Identifier">GpuRef</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">kind</span><span class="Other">:</span> <a href="hippo.html#HippoMemcpyKind"><span class="Identifier">HippoMemcpyKind</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
     device -&gt; device memory copy Copy memory from <tt class="docutils literal"><span class="pre"><span class="Identifier">src</span></span></tt> to <tt class="docutils literal"><span class="pre"><span class="Identifier">dst</span></span></tt>. direction of device and host is determined by <tt class="docutils literal"><span class="pre"><span class="Identifier">kind</span></span></tt>.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L112" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L112" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L113" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L113" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="hippoMemcpy.t,GpuMemory,pointer,int,hipMemcpyKind">
-  <dt><pre><span class="Keyword">template</span> <a href="#hippoMemcpy.t%2CGpuMemory%2Cpointer%2Cint%2ChipMemcpyKind"><span class="Identifier">hippoMemcpy</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Identifier">GpuMemory</span><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span>
-                     <span class="Identifier">kind</span><span class="Other">:</span> <a href="hippo.html#HippoMemcpyKind"><span class="Identifier">HippoMemcpyKind</span></a><span class="Other">)</span></pre></dt>
+<div id="hippoMemcpy.t,GpuRef,pointer,int,hipMemcpyKind">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoMemcpy.t%2CGpuRef%2Cpointer%2Cint%2ChipMemcpyKind"><span class="Identifier">hippoMemcpy</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Identifier">GpuRef</span><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">kind</span><span class="Other">:</span> <a href="hippo.html#HippoMemcpyKind"><span class="Identifier">HippoMemcpyKind</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
     device -&gt; host memory copy Copy memory from <tt class="docutils literal"><span class="pre"><span class="Identifier">src</span></span></tt> to <tt class="docutils literal"><span class="pre"><span class="Identifier">dst</span></span></tt>. direction of device and host is determined by <tt class="docutils literal"><span class="pre"><span class="Identifier">kind</span></span></tt>.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L104" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L104" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L105" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L105" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="hippoMemcpy.t,pointer,GpuMemory,int,hipMemcpyKind">
-  <dt><pre><span class="Keyword">template</span> <a href="#hippoMemcpy.t%2Cpointer%2CGpuMemory%2Cint%2ChipMemcpyKind"><span class="Identifier">hippoMemcpy</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <span class="Identifier">GpuMemory</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span>
-                     <span class="Identifier">kind</span><span class="Other">:</span> <a href="hippo.html#HippoMemcpyKind"><span class="Identifier">HippoMemcpyKind</span></a><span class="Other">)</span></pre></dt>
+<div id="hippoMemcpy.t,pointer,GpuRef,int,hipMemcpyKind">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoMemcpy.t%2Cpointer%2CGpuRef%2Cint%2ChipMemcpyKind"><span class="Identifier">hippoMemcpy</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <span class="Identifier">GpuRef</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">kind</span><span class="Other">:</span> <a href="hippo.html#HippoMemcpyKind"><span class="Identifier">HippoMemcpyKind</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
     host -&gt; device memory copy Copy memory from <tt class="docutils literal"><span class="pre"><span class="Identifier">src</span></span></tt> to <tt class="docutils literal"><span class="pre"><span class="Identifier">dst</span></span></tt>. direction of device and host is determined by <tt class="docutils literal"><span class="pre"><span class="Identifier">kind</span></span></tt>.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L96" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L96" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L97" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L97" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1014,8 +1028,8 @@
   <dd>
     
     host -&gt; host memory copy hippoMemcpy is broken out as 4 separate templates to make it easier to work with GpuMemory objects Copy memory from <tt class="docutils literal"><span class="pre"><span class="Identifier">src</span></span></tt> to <tt class="docutils literal"><span class="pre"><span class="Identifier">dst</span></span></tt>. direction of device and host is determined by <tt class="docutils literal"><span class="pre"><span class="Identifier">kind</span></span></tt>.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L87" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L87" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L88" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L88" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1031,7 +1045,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-09-01 21:43:20 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-09-01 21:59:04 UTC</small>
       </div>
     </div>
   </div>
