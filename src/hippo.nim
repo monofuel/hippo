@@ -12,6 +12,10 @@ import
 ## - `cuda*` prefixed functions are the raw CUDA C functions
 
 
+# -------------------
+# Compiler Specifics
+# this section is for special cases to add libraries or change includes depending on what compiler and settings are being used.
+
 proc getHipPlatform(): string =
   ## getHipPlatform is a compile time specific function, and gets the target platform for hipcc.
   ## NVCC and HIPCC (when building for nvidia) require that we pass compiler args in -Xcompiler="".
@@ -60,8 +64,10 @@ else:
   echo "DEBUG: Using HIP runtime"
   include hip
 
+# -------------------
 # Hippo Templates
-# nim wrappers around hip and cuda functions
+# nim wrappers around hip and cuda functions.
+# these hippo* functions need to be nim-friendly and warp around the raw hip and cuda functions.
 
 template hippoMalloc*(size: int): pointer =
   ## Allocate memory on the GPU and return a pointer to it
@@ -86,7 +92,7 @@ template hippoFree*(p: pointer) =
   else:
     handleError(hipFree(p))
 
-
+# -------------------
 # Kernel Execution
 
 proc launchKernel*(
@@ -172,7 +178,9 @@ template hippoLaunchKernel*(
   handleError(launchKernel(kernel, gridDim, blockDim, sharedMemBytes, stream, args))
 
 
+# -------------------
 # Macros
+# these Nim macros wrap around the attributes required by cuda and hip (which are identical, and as such are here and not in hip.nim or cuda.nim).
 
 macro hippoGlobal*(fn: untyped): untyped =
   let globalPragma: NimNode = quote:
@@ -208,10 +216,23 @@ macro hippoHost*(fn: untyped): untyped =
     `fn`
     {.pop.}
 
-
-# {.hippoShared.} pragma for shared GPU memory
 macro hippoShared*(v: untyped): untyped =
+  ## Declared a variable as static shared memory
+  ## Shared memory is shared between threads in the same block
+  ## It is faster than global memory, but is limited in size. They are located on-chip.
+  ## eg: `var cache {.hippoShared.}: array[256, float]`
   quote do:
     {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__shared__ $# $#".}
+    `v`
+    {.pop.}
+
+macro hippoConstant*(v: untyped): untyped =
+  ## Declared a variable as a constant
+  ## Constants are read-only globals that are cached on-chip
+  ## constants are useful for data that is being read by all threads in a warp at the same time
+  ## if each thread in a warp accesses different addresses in constant memory, the accesses are serialized and this may cause a 16x slowdown
+  ## eg: `const N {.hippoConstant.} = 1024`
+  quote do:
+    {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__constant__ $# $#".}
     `v`
     {.pop.}
