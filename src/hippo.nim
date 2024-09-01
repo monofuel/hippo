@@ -168,13 +168,14 @@ proc launchKernel*(
     raise newException(Exception, &"Unknown runtime: {HippoRuntime}")
 
 template hippoLaunchKernel*(
-  kernel: proc,
-  gridDim: Dim3 = newDim3(1,1,1), # default to a grid of 1 block
-  blockDim: Dim3 = newDim3(1,1,1),  # default to 1 thread per block
-  sharedMemBytes: uint32 = 0,
-  stream: HippoStream = nil,
-  args: tuple
+  kernel: proc,                     ## The GPU kernel procedure to launch
+  gridDim: Dim3 = newDim3(1,1,1),   ## default to a grid of 1 block
+  blockDim: Dim3 = newDim3(1,1,1),  ## default to 1 thread per block
+  sharedMemBytes: uint32 = 0,       ## dynamic shared memory amount to allocate
+  stream: HippoStream = nil,        ## Which device stream to run under (defaults to null)
+  args: tuple,                      ## Arguments to pass to the GPU kernel
 ) =
+  ## Launch a kernel on the GPU and check for errors
   handleError(launchKernel(kernel, gridDim, blockDim, sharedMemBytes, stream, args))
 
 
@@ -183,6 +184,7 @@ template hippoLaunchKernel*(
 # these Nim macros wrap around the attributes required by cuda and hip (which are identical, and as such are here and not in hip.nim or cuda.nim).
 
 macro hippoGlobal*(fn: untyped): untyped =
+  ## Declare a function as `__global__`. global functions are called from the host and run on the device.
   let globalPragma: NimNode = quote:
     {. exportc, codegenDecl: "__global__ $# $#$#".}
 
@@ -194,6 +196,8 @@ macro hippoGlobal*(fn: untyped): untyped =
     {.pop.}
 
 macro hippoDevice*(fn: untyped): untyped =
+  ## Declare fuctions for use on the `__device__` (the gpu),
+  ## to be called by either `device` or `global` functions.
   let globalPragma: NimNode = quote:
     {. exportc, codegenDecl: "__device__ $# $#$#".}
 
@@ -206,6 +210,8 @@ macro hippoDevice*(fn: untyped): untyped =
 
 
 macro hippoHost*(fn: untyped): untyped =
+  ## Explicitly declare a function as a `__host__` function (cpu side).
+  ## All functions default to `host` functions, so this is not required.
   let globalPragma: NimNode = quote:
     {. exportc, codegenDecl: "__host__ $# $#$#".}
 
@@ -217,8 +223,8 @@ macro hippoHost*(fn: untyped): untyped =
     {.pop.}
 
 macro hippoShared*(v: untyped): untyped =
-  ## Declared a variable as static shared memory
-  ## Shared memory is shared between threads in the same block
+  ## Declared a variable as static shared memory `__shared__`.
+  ## Shared memory is shared between threads in the same block.
   ## It is faster than global memory, but is limited in size. They are located on-chip.
   ## eg: `var cache {.hippoShared.}: array[256, float]`
   quote do:
@@ -227,10 +233,11 @@ macro hippoShared*(v: untyped): untyped =
     {.pop.}
 
 macro hippoConstant*(v: untyped): untyped =
-  ## Declared a variable as a constant
-  ## Constants are read-only globals that are cached on-chip
-  ## constants are useful for data that is being read by all threads in a warp at the same time
-  ## if each thread in a warp accesses different addresses in constant memory, the accesses are serialized and this may cause a 16x slowdown
+  ## Declared a variable as `__constant__`.
+  ## Constants are read-only globals that are cached on-chip.
+  ## constants are useful for data that is being read by all threads in a warp at the same time.
+  ## if each thread in a warp accesses different addresses in constant memory,
+  ## the accesses are serialized and this may cause a 16x slowdown.
   ## eg: `const N {.hippoConstant.} = 1024`
   quote do:
     {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__constant__ $# $#".}
