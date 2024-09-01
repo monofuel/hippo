@@ -75,7 +75,7 @@ type
   GpuRef = ref GpuMemory
 
 template hippoMalloc*(size: int): GpuRef =
-  ## Allocate memory on the GPU and return a GpuMemory object.
+  ## Allocate memory on the GPU and return a GpuRef object.
   ## GpuMemory is a wrapper around Gpu allocated pointers.
   ## It will automatically free the memory when it goes out of scope.
   var g = GpuRef()
@@ -87,7 +87,7 @@ template hippoMalloc*(size: int): GpuRef =
 
 template hippoMemcpy*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind) =
   ## host -> host memory copy
-  ## hippoMemcpy is broken out as 4 separate templates to make it easier to work with GpuMemory objects
+  ## hippoMemcpy is broken out as 4 separate templates to make it easier to work with GpuRef objects
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
     handleError(cudaMemcpy(dst, src, size.cint, kind))
