@@ -7,8 +7,9 @@ A Julia Set fractal generated with HIP
 
 ## Minimal HIP Example
 
-- IMPORTANT: requires at least nim 2.1.9 for gpu usage
+- IMPORTANT: requires at least nim 2.1.9 for gpu usage, and must compile with `nim cpp`
   - nim 2.1.9 added `--cc:nvcc` and `--cc:hipcc`
+  - `nim cpp` is required for both HIP and CUDA. `nim c` will not work. If you get spooky errors, make sure you are using `nim cpp`.
 
 ```
 import hippo
