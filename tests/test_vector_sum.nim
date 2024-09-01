@@ -40,7 +40,7 @@ suite "vector_sum":
     hippoLaunchKernel(
       addKernelBlock,
       gridDim = newDim3(N.uint32),
-      args = (dev_a, dev_b, dev_c)
+      args = (dev_a.p, dev_b.p, dev_c.p)
     )
 
     # copy result back to host
@@ -50,7 +50,7 @@ suite "vector_sum":
     for i in 0..<N:
       let expected = a[i] + b[i]
       assert(c[i] == expected, &"{a[i]} + {b[i]} = {c[i]} != {expected}")
-
+      
   test "threads":
     var a,b,c: array[N, int32]
 
@@ -72,7 +72,7 @@ suite "vector_sum":
     hippoLaunchKernel(
       addKernelThread,
       blockDim = newDim3(N.uint32),
-      args = (dev_a, dev_b, dev_c)
+      args = (dev_a.p, dev_b.p, dev_c.p)
     )
 
     # copy result back to host

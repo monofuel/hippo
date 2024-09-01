@@ -72,12 +72,13 @@ else:
 type
   GpuMemory = object ## Wrapper around gpu memory for automatic cleanup
     p*: pointer
+  GpuRef = ref GpuMemory
 
-template hippoMalloc*(size: int): GpuMemory =
+template hippoMalloc*(size: int): GpuRef =
   ## Allocate memory on the GPU and return a GpuMemory object.
   ## GpuMemory is a wrapper around Gpu allocated pointers.
   ## It will automatically free the memory when it goes out of scope.
-  var g = GpuMemory()
+  var g = GpuRef()
   when HippoRuntime == "CUDA":
     handleError(cudaMalloc(addr g.p, size.cint))
   else:
@@ -93,7 +94,7 @@ template hippoMemcpy*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKi
   else:
     handleError(hipMemcpy(dst, src, size.cint, kind))
 
-template hippoMemcpy*(dst: pointer, src: GpuMemory, size: int, kind: HippoMemcpyKind) =
+template hippoMemcpy*(dst: pointer, src: GpuRef, size: int, kind: HippoMemcpyKind) =
   ## host -> device memory copy
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
@@ -101,7 +102,7 @@ template hippoMemcpy*(dst: pointer, src: GpuMemory, size: int, kind: HippoMemcpy
   else:
     handleError(hipMemcpy(dst, src.p, size.cint, kind))
 
-template hippoMemcpy*(dst: GpuMemory, src: pointer, size: int, kind: HippoMemcpyKind) =
+template hippoMemcpy*(dst: GpuRef, src: pointer, size: int, kind: HippoMemcpyKind) =
   ## device -> host memory copy
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
@@ -109,7 +110,7 @@ template hippoMemcpy*(dst: GpuMemory, src: pointer, size: int, kind: HippoMemcpy
   else:
     handleError(hipMemcpy(dst.p, src, size.cint, kind))
 
-template hippoMemcpy*(dst: GpuMemory, src: GpuMemory, size: int, kind: HippoMemcpyKind) =
+template hippoMemcpy*(dst: GpuRef, src: GpuRef, size: int, kind: HippoMemcpyKind) =
   ## device -> device memory copy
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
@@ -124,9 +125,8 @@ template hippoFree*(p: pointer) =
   else:
     handleError(hipFree(p))
 
-proc `=destroy`(mem: var GpuMemory) =
+proc `=destroy`*(mem: var GpuMemory) =
   ## Automatically free device memory when the object goes out of scope
-  echo "AUTO FREE"
   if mem.p != nil:
     hippoFree(mem.p)
     mem.p = nil
