@@ -70,7 +70,7 @@ else:
 # these hippo* functions need to be nim-friendly and warp around the raw hip and cuda functions.
 
 template hippoMalloc*(size: int): pointer =
-  ## Allocate memory on the GPU and return a pointer to it
+  ## Allocate memory on the GPU and return a pointer to it.
   var p: pointer
   when HippoRuntime == "CUDA":
     handleError(cudaMalloc(addr p, size.cint))
@@ -79,7 +79,7 @@ template hippoMalloc*(size: int): pointer =
   p
 
 template hippoMemcpy*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind) =
-  ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`
+  ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
     handleError(cudaMemcpy(dst, src, size.cint, kind))
   else:
@@ -99,7 +99,7 @@ proc launchKernel*(
   kernel: proc,
   gridDim: Dim3 = newDim3(1,1,1), # default to a grid of 1 block
   blockDim: Dim3 = newDim3(1,1,1),  # default to 1 thread per block
-  sharedMemBytes: uint32 = 0, # TODO dynamic shared memory
+  sharedMemBytes: uint32 = 0,
   stream: HippoStream = nil,
   args: tuple
 ): HippoError =
