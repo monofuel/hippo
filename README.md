@@ -3,6 +3,8 @@
 <img src="tests/hip/julia.png">
 A Julia Set fractal generated with HIP
 
+- [Documentation](https://monofuel.github.io/hippo/)
+
 ## Minimal HIP Example
 
 - IMPORTANT: requires at least nim 2.1.9 for gpu usage
