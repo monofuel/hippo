@@ -74,7 +74,9 @@ type
     p*: pointer
 
 template hippoMalloc*(size: int): GpuMemory =
-  ## Allocate memory on the GPU and return a pointer to it.
+  ## Allocate memory on the GPU and return a GpuMemory object.
+  ## GpuMemory is a wrapper around Gpu allocated pointers.
+  ## It will automatically free the memory when it goes out of scope.
   var g = GpuMemory()
   when HippoRuntime == "CUDA":
     handleError(cudaMalloc(addr g.p, size.cint))
