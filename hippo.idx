@@ -45,9 +45,9 @@ nim	hippoMalloc	hippo.html#hippoMalloc.t,int	template hippoMalloc(size: int): po
 nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,pointer,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)		81
 nim	hippoFree	hippo.html#hippoFree.t,pointer	template hippoFree(p: pointer)		88
 nim	launchKernel	hippo.html#launchKernel,proc,Dim3,Dim3,uint32,HippoStream,	proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);\n             blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;\n             stream: HippoStream = nil; args: tuple): HippoError		98
-nim	hippoLaunchKernel	hippo.html#hippoLaunchKernel.t,proc,Dim3,Dim3,uint32,HippoStream,	template hippoLaunchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);\n                  blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;\n                  stream: HippoStream = nil; args: tuple)		170
-nim	hippoGlobal	hippo.html#hippoGlobal.m,untyped	macro hippoGlobal(fn: untyped): untyped		185
-nim	hippoDevice	hippo.html#hippoDevice.m,untyped	macro hippoDevice(fn: untyped): untyped		196
-nim	hippoHost	hippo.html#hippoHost.m,untyped	macro hippoHost(fn: untyped): untyped		208
-nim	hippoShared	hippo.html#hippoShared.m,untyped	macro hippoShared(v: untyped): untyped		219
-nim	hippoConstant	hippo.html#hippoConstant.m,untyped	macro hippoConstant(v: untyped): untyped		229
+nim	hippoLaunchKernel	hippo.html#hippoLaunchKernel.t,proc,Dim3,Dim3,uint32,HippoStream,	template hippoLaunchKernel(kernel: proc; ## The GPU kernel procedure to launch\n                  gridDim: Dim3 = newDim3(1, 1, 1); ## default to a grid of 1 block\n                  blockDim: Dim3 = newDim3(1, 1, 1); ## default to 1 thread per block\n                  sharedMemBytes: uint32 = 0; ## dynamic shared memory amount to allocate\n                  stream: HippoStream = nil; ## Which device stream to run under (defaults to null)\n                  args: tuple)		170
+nim	hippoGlobal	hippo.html#hippoGlobal.m,untyped	macro hippoGlobal(fn: untyped): untyped		186
+nim	hippoDevice	hippo.html#hippoDevice.m,untyped	macro hippoDevice(fn: untyped): untyped		198
+nim	hippoHost	hippo.html#hippoHost.m,untyped	macro hippoHost(fn: untyped): untyped		212
+nim	hippoShared	hippo.html#hippoShared.m,untyped	macro hippoShared(v: untyped): untyped		225
+nim	hippoConstant	hippo.html#hippoConstant.m,untyped	macro hippoConstant(v: untyped): untyped		235
