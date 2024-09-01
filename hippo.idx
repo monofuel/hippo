@@ -1,5 +1,4 @@
 nimTitle	hippo	hippo.html	module src/hippo		0
-nim	getHipPlatform	hippo.html#getHipPlatform	proc getHipPlatform(): string		15
 nim	HippoRuntime	hippo.html#HippoRuntime	const HippoRuntime		35
 nim	size_t	hippo.html#size_t	type size_t		5
 nim	uint8_t	hippo.html#uint8_t	type uint8_t		6
