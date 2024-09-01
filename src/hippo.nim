@@ -1,22 +1,22 @@
 import
   std/[strformat, os]
 
-# Nim Library to enable writing CUDA and HIP kernels in Nim
-# All cuda and hip structures and functions are re-exported and can be used
-#
-# - There are 3 sets of function prefixes.
-# - `hippo*` prefixed functions are friendly nim interfaces for either HIP or CUDA
-#   - This is the recommended way to use this library, as it is the most nim-like
-#   - These functions check for errors and raise them as exceptions
-# - `hip*` prefixed functions are the raw HIP C++ functions
-# - `cuda*` prefixed functions are the raw CUDA C functions
+## Nim Library to enable writing CUDA and HIP kernels in Nim
+## All cuda and hip structures and functions are re-exported and can be used
+##
+## - There are 3 sets of function prefixes.
+## - `hippo*` prefixed functions are friendly nim interfaces for either HIP or CUDA
+##   - This is the recommended way to use this library, as it is the most nim-like
+##   - These functions check for errors and raise them as exceptions
+## - `hip*` prefixed functions are the raw HIP C++ functions
+## - `cuda*` prefixed functions are the raw CUDA C functions
 
 
-proc getHipPlatform*(): string =
-  ## getHipPlatform has to be ran at compile time, and gets the target platform for hipcc
-  ## NVCC and HIPCC (when building for nvidia) require we pass compiler args in -Xcompiler=""
-  ## hipcc uses HIP_PLATFORM to determine amd / nvidia
-  ## hipcc defaults to amd if amdclang++ or hip clang is found
+proc getHipPlatform(): string =
+  ## getHipPlatform is a compile time specific function, and gets the target platform for hipcc.
+  ## NVCC and HIPCC (when building for nvidia) require that we pass compiler args in -Xcompiler="".
+  ## hipcc uses HIP_PLATFORM to determine amd / nvidia.
+  ## hipcc defaults to amd if amdclang++ or hip clang is found.
   ## https://github.com/ROCm/llvm-project/blob/00fdfae9aeef14c905550601c2218a6b5962f48c/amd/hipcc/bin/hipvars.pm#L131
   let 
     clangPath = getEnv("HIP_CLANG_PATH", "") / "clang++"

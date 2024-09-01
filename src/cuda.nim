@@ -79,13 +79,13 @@ proc `$`*(self: ConstCString): string = $(self.toCString())
 proc cudaGetErrorString*(err: cudaError_t): ConstCString {.header: "cuda_runtime.h",importcpp: "cudaGetErrorString(@)".}
 proc cudaGetLastError*(): cudaError_t {.header: "cuda_runtime.h",importcpp: "cudaGetLastError()".}
 
-## Error Helpers
+# Error Helpers
 proc handleError*(err: cudaError_t) =
   if err != 0:
     var cstr = cudaGetErrorString(err).toCString
     raise newException(Exception, &"CUDA Error: " & $cstr)
 
-## Hippo Types
+# Hippo Types
 type HippoStream* = cudaStream_t
 type HippoError* = cudaError_t
 type HippoMemcpyKind* = cudaMemcpyKind
@@ -98,7 +98,7 @@ const
   HippoMemcpyDefault* = cudaMemcpyDefault
 
 
-## CUDA Attributes
+# CUDA Attributes
 let
   blockDim* {.importc, inject, header: "cuda_runtime.h".}: BlockDim
   blockIdx* {.importc, inject, header: "cuda_runtime.h".}: BlockIdx

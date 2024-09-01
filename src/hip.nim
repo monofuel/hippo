@@ -76,13 +76,13 @@ proc `$`*(self: ConstCString): string = $(self.toCString())
 proc hipGetErrorString*(err: hipError_t): ConstCString {.header: "hip/hip_runtime.h",importcpp: "hipGetErrorString(@)".}
 proc hipGetLastError*(): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipGetLastError()".}
 
-## Error Helpers
+# Error Helpers
 proc handleError*(err: hipError_t) =
   if err != 0:
     var cstr = hipGetErrorString(err).toCString
     raise newException(Exception, &"HIP Error: " & $cstr)
 
-## Hippo Types
+# Hippo Types
 type HippoStream* = hipStream_t
 type HippoError* = hipError_t
 type HippoMemcpyKind* = hipMemcpyKind
@@ -94,7 +94,7 @@ const
   HippoMemcpyDeviceToDevice* = hipMemcpyDeviceToDevice
   HippoMemcpyDefault* = hipMemcpyDefault
 
-## HIP Attributes
+# HIP Attributes
 let
   blockDim* {.importc, inject, header: "hip/hip_runtime.h".}: BlockDim
   blockIdx* {.importc, inject, header: "hip/hip_runtime.h".}: BlockIdx
