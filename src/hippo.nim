@@ -60,8 +60,8 @@ else:
   echo "DEBUG: Using HIP runtime"
   include hip
 
-## Hippo Templates
-## nim wrappers around hip and cuda functions
+# Hippo Templates
+# nim wrappers around hip and cuda functions
 
 template hippoMalloc*(size: int): pointer =
   ## Allocate memory on the GPU and return a pointer to it
@@ -87,7 +87,7 @@ template hippoFree*(p: pointer) =
     handleError(hipFree(p))
 
 
-## Kernel Execution
+# Kernel Execution
 
 proc launchKernel*(
   kernel: proc,
@@ -172,7 +172,7 @@ template hippoLaunchKernel*(
   handleError(launchKernel(kernel, gridDim, blockDim, sharedMemBytes, stream, args))
 
 
-## Macros
+# Macros
 
 macro hippoGlobal*(fn: untyped): untyped =
   let globalPragma: NimNode = quote:
@@ -209,7 +209,7 @@ macro hippoHost*(fn: untyped): untyped =
     {.pop.}
 
 
-## {.hippoShared.} pragma for shared GPU memory
+# {.hippoShared.} pragma for shared GPU memory
 macro hippoShared*(v: untyped): untyped =
   quote do:
     {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__shared__ $# $#".}
