@@ -1,8 +1,16 @@
-## HIP Library for Nim
 import
   std/[strformat, os]
 
-## TODO should do some auto detection based on if cc is set to hipcc or nvcc
+# Nim Library to enable writing CUDA and HIP kernels in Nim
+# All cuda and hip structures and functions are re-exported and can be used
+#
+# - There are 3 sets of function prefixes.
+# - `hippo*` prefixed functions are friendly nim interfaces for either HIP or CUDA
+#   - This is the recommended way to use this library, as it is the most nim-like
+#   - These functions check for errors and raise them as exceptions
+# - `hip*` prefixed functions are the raw HIP C++ functions
+# - `cuda*` prefixed functions are the raw CUDA C functions
+
 
 proc getHipPlatform*(): string =
   ## getHipPlatform has to be ran at compile time, and gets the target platform for hipcc
