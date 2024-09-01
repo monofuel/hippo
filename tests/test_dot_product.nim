@@ -78,7 +78,3 @@ suite "dot product":
       result = x * (x + 1) * (2 * x + 1) / 6
     
     echo fmt"Does GPU value {c:e} = {2 * sum_squares((N - 1)):e}?"
-
-    hippoFree(dev_a)
-    hippoFree(dev_b)
-    hippoFree(dev_partial_c)

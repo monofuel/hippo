@@ -51,11 +51,6 @@ suite "vector_sum":
       let expected = a[i] + b[i]
       assert(c[i] == expected, &"{a[i]} + {b[i]} = {c[i]} != {expected}")
 
-    # free gpu memory
-    hippoFree(dev_a)
-    hippoFree(dev_b)
-    hippoFree(dev_c)
-
   test "threads":
     var a,b,c: array[N, int32]
 
@@ -87,8 +82,3 @@ suite "vector_sum":
     for i in 0..<N:
       let expected = a[i] + b[i]
       assert(c[i] == expected, &"{a[i]} + {b[i]} = {c[i]} != {expected}")
-
-    # free gpu memory
-    hippoFree(dev_a)
-    hippoFree(dev_b)
-    hippoFree(dev_c)

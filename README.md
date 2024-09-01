@@ -103,6 +103,13 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
   - you must pull the HIP-CPU submodule to use this feature
 - `-d:HippoRuntime=CUDA` (requires nvcc)
 
+## Testing
+
+- `nimble test` to run CPU-only test with HIP_CPU
+  - This is what is currently ran on Github CI
+- `nimble test_amd` to compile with hipcc and run on your AMD GPU
+- `nimble test_cuda` to compile with nvcc and run on your NVIDIA GPU
+
 ## Feature todo list
 
 - [x] support c++ attributes like `__global__`, `__device__`

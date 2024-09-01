@@ -96,7 +96,6 @@ proc main() =
   image.writeFile("julia.png")
 
   displayUntilExit(image)
-  hippoFree(devBitmap)
 
 
 when isMainModule:

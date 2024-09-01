@@ -69,21 +69,51 @@ else:
 # nim wrappers around hip and cuda functions.
 # these hippo* functions need to be nim-friendly and warp around the raw hip and cuda functions.
 
-template hippoMalloc*(size: int): pointer =
+type
+  GpuMemory = object ## Wrapper around gpu memory for automatic cleanup
+    p*: pointer
+
+template hippoMalloc*(size: int): GpuMemory =
   ## Allocate memory on the GPU and return a pointer to it.
-  var p: pointer
+  var g = GpuMemory()
   when HippoRuntime == "CUDA":
-    handleError(cudaMalloc(addr p, size.cint))
+    handleError(cudaMalloc(addr g.p, size.cint))
   else:
-    handleError(hipMalloc(addr p, size.cint))
-  p
+    handleError(hipMalloc(addr g.p, size.cint))
+  g
 
 template hippoMemcpy*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind) =
+  ## host -> host memory copy
+  ## hippoMemcpy is broken out as 4 separate templates to make it easier to work with GpuMemory objects
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
     handleError(cudaMemcpy(dst, src, size.cint, kind))
   else:
     handleError(hipMemcpy(dst, src, size.cint, kind))
+
+template hippoMemcpy*(dst: pointer, src: GpuMemory, size: int, kind: HippoMemcpyKind) =
+  ## host -> device memory copy
+  ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
+  when HippoRuntime == "CUDA":
+    handleError(cudaMemcpy(dst, src.p, size.cint, kind))
+  else:
+    handleError(hipMemcpy(dst, src.p, size.cint, kind))
+
+template hippoMemcpy*(dst: GpuMemory, src: pointer, size: int, kind: HippoMemcpyKind) =
+  ## device -> host memory copy
+  ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
+  when HippoRuntime == "CUDA":
+    handleError(cudaMemcpy(dst.p, src, size.cint, kind))
+  else:
+    handleError(hipMemcpy(dst.p, src, size.cint, kind))
+
+template hippoMemcpy*(dst: GpuMemory, src: GpuMemory, size: int, kind: HippoMemcpyKind) =
+  ## device -> device memory copy
+  ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
+  when HippoRuntime == "CUDA":
+    handleError(cudaMemcpy(dst.p, src.p, size.cint, kind))
+  else:
+    handleError(hipMemcpy(dst.p, src.p, size.cint, kind))
 
 template hippoFree*(p: pointer) =
   ## Free memory on the GPU
@@ -91,6 +121,13 @@ template hippoFree*(p: pointer) =
     handleError(cudaFree(p))
   else:
     handleError(hipFree(p))
+
+proc `=destroy`(mem: var GpuMemory) =
+  ## Automatically free device memory when the object goes out of scope
+  echo "AUTO FREE"
+  if mem.p != nil:
+    hippoFree(mem.p)
+    mem.p = nil
 
 # -------------------
 # Kernel Execution

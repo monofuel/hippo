@@ -15,8 +15,7 @@ proc addKernel(a, b, c: ptr[cint]){.hippoGlobal.} =
     cArray[tid] = aArray[tid] + bArray[tid]
 
 proc main() =
-  var a,b,c: array[N, int32]
-  #var dev_a, dev_b, dev_c: pointer
+  var a,b,c: array[N, int32] # host-side arrays
 
   # allocate gpu memory
   var dev_a = hippoMalloc(sizeof(int32)*N)
@@ -46,10 +45,7 @@ proc main() =
   for i in 0..<N:
     echo a[i], " + ", b[i], " = ", c[i]
 
-  # free gpu memory
-  hippoFree(dev_a)
-  hippoFree(dev_b)
-  hippoFree(dev_c)
+  # Hippo automatically frees gpu memory when it goes out of scope
 
 when isMainModule:
   main()
