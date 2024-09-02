@@ -135,7 +135,7 @@ proc `=destroy`*(mem: var GpuMemory) =
 # Kernel Execution
 
 macro hipLaunchKernelGGLWithTuple(
-    kernel: proc,
+  kernel: proc,
   gridDim: Dim3 = newDim3(1,1,1),
   blockDim: Dim3 = newDim3(1,1,1),
   sharedMemBytes: uint32 = 0,
@@ -184,18 +184,7 @@ template hippoLaunchKernel*(
       sharedMemBytes,
       stream
     )
-  elif HippoRuntime == "HIP" and HipPlatform == "nvidia":
-    hipLaunchKernelGGLWithTuple(
-      kernel,
-      gridDim,
-      blockDim,
-      sharedMemBytes,
-      stream,
-      args
-      )
-    result = hipGetLastError()
-  elif HippoRuntime == "HIP_CPU":
-
+  elif (HippoRuntime == "HIP" and HipPlatform == "nvidia") or HippoRuntime == "HIP_CPU":
     hipLaunchKernelGGLWithTuple(
       kernel,
       gridDim,
