@@ -52,9 +52,9 @@ proc hipFree*(`ptr`: pointer): hipError_t {.header: "hip/hip_runtime.h",importcp
 proc hipLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;
                      args: ptr pointer): hipError_t {.
     importcpp: "hipLaunchKernel(@)", header: "hip/hip_runtime.h".}
-# proc hipLaunchKernel*(function_address: pointer; numBlocks: dim3; dimBlocks: dim3;
-#                      args: ptr pointer; sharedMemBytes: csize_t; stream: hipStream_t): cint {.
-#     importcpp: "hipLaunchKernel(@)", header: "hip/hip_runtime.h".}
+proc hipLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;
+                     args: ptr pointer; sharedMemBytes: csize_t; stream: hipStream_t): cint {.
+    importcpp: "hipLaunchKernel(@)", header: "hip/hip_runtime.h".}
 proc hipDeviceSynchronize*(): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipDeviceSynchronize(@)".}
 proc hipSyncthreads*() {.importcpp: "__syncthreads()", header: "hip/hip_runtime.h".}
 proc hippoSyncthreads*() {.importcpp: "__syncthreads()", header: "hip/hip_runtime.h".}
@@ -67,7 +67,6 @@ proc hipLaunchKernelGGL*(
   stream: hipStream_t;
   ) {.
     importcpp: "hipLaunchKernelGGL(@)", header: "hip/hip_runtime.h", varargs.}
-
 
 type ConstCString* {.importc: "const char*".} = object
 converter toCString*(self: ConstCString): cstring {.importc: "(char*)", noconv, nodecl.}

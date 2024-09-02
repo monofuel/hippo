@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  hippo-build:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - .:/p/hippo

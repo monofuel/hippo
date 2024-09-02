@@ -134,77 +134,29 @@ proc `=destroy`*(mem: var GpuMemory) =
 # -------------------
 # Kernel Execution
 
-proc launchKernel*(
-  kernel: proc,
-  gridDim: Dim3 = newDim3(1,1,1), # default to a grid of 1 block
-  blockDim: Dim3 = newDim3(1,1,1),  # default to 1 thread per block
-  sharedMemBytes: uint32 = 0,
-  stream: HippoStream = nil,
-  args: tuple
-): HippoError =
-  # launchKernel is designed to be similar to `kernel`<<<blockDim, gridDim>>>(args)
+when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+  macro hipLaunchKernelGGLWithTuple(
+    kernel: proc,
+    gridDim: Dim3 = newDim3(1,1,1),
+    blockDim: Dim3 = newDim3(1,1,1),
+    sharedMemBytes: uint32 = 0,
+    stream: HippoStream = nil,
+    args: tuple
+    ): untyped =
 
-  # this function is horrible but it works
-  # needs to be refactored to handle all the different runtimes and arguments better
+    var callNode = newCall(bindSym"hipLaunchKernelGGL")
 
-  # having some issues between hip and hip-cpu, so defining different versions of launchKernel
-  when HippoRuntime == "HIP" and HipPlatform == "amd":
-    # This branch works for all args
-    echo "executing HIP"
-    var kernelArgs: seq[pointer]
-    for key, arg in args.fieldPairs:
-      kernelArgs.add(cast[pointer](addr arg))
-    result = hipLaunchKernel(
-      cast[pointer](kernel),
-      gridDim,
-      blockDim,
-      cast[ptr pointer](addr kernelArgs[0]),
-    )
-  elif HippoRuntime == "HIP" and HipPlatform == "nvidia":
-    # TODO fix args on this branch
-    hipLaunchKernelGGL(
-      kernel,
-      gridDim,
-      blockDim,
-      0, # TODO
-      nil, # TODO
-      # TODO handle args properly
-      cast[ptr[cint]](args[0]),
-      cast[ptr[cint]](args[1]),
-      cast[ptr[cint]](args[2])
-      )
-    result = hipGetLastError()
-  elif HippoRuntime == "HIP_CPU":
-    # TODO fix args on this branch
-    echo "executing kernel on CPU"
-    hipLaunchKernelGGL(
-      kernel,
-      gridDim,
-      blockDim,
-      0, # TODO
-      nil, # TODO
-      # TODO handle args properly
-      args[0],
-      args[1],
-      args[2]
-    )
-    result = hipGetLastError()
-  elif HippoRuntime == "CUDA":
-    # This branch works for all args
-    echo "executing CUDA"
-    var kernelArgs: seq[pointer]
-    for key, arg in args.fieldPairs:
-      kernelArgs.add(cast[pointer](addr arg))
-    result = cudaLaunchKernel(
-      kernel,
-      gridDim,
-      blockDim,
-      cast[ptr pointer](addr kernelArgs[0])
-      #sharedMemBytes,
-      #stream
-    )
-  else:
-    raise newException(Exception, &"Unknown runtime: {HippoRuntime}")
+    # add the fixed vars
+    callNode.add kernel
+    callNode.add gridDim
+    callNode.add blockDim
+    callNode.add sharedMemBytes
+    callNode.add stream
+
+    # add every value of the tuple
+    for child in args:
+      callNode.add child
+    result = callNode
 
 template hippoLaunchKernel*(
   kernel: proc,                     ## The GPU kernel procedure to launch
@@ -212,10 +164,51 @@ template hippoLaunchKernel*(
   blockDim: Dim3 = newDim3(1,1,1),  ## default to 1 thread per block
   sharedMemBytes: uint32 = 0,       ## dynamic shared memory amount to allocate
   stream: HippoStream = nil,        ## Which device stream to run under (defaults to null)
-  args: tuple,                      ## Arguments to pass to the GPU kernel
+  args: tuple,                ## Arguments to pass to the GPU kernel
 ) =
-  ## Launch a kernel on the GPU and check for errors
-  handleError(launchKernel(kernel, gridDim, blockDim, sharedMemBytes, stream, args))
+  var result: HippoError
+  ## Launch a kernel on the GPU.
+  ## also checks if launchKernel() returns an error.
+  ## Important: this only checks if the kernel launch was successful, not the kernel itself.
+  # 
+  # This code is kinda gross, the launch kernel functions have a lot of different signatures.
+  var kernelArgs: seq[pointer]
+  for key, arg in args.fieldPairs:
+    let a1 = arg
+    kernelArgs.add(cast[pointer](addr a1))
+  when HippoRuntime == "HIP" and HipPlatform == "amd":
+    result = hipLaunchKernel(
+      cast[pointer](kernel),
+      gridDim,
+      blockDim,
+      cast[ptr pointer](addr kernelArgs[0]),
+      sharedMemBytes,
+      stream
+    )
+  elif (HippoRuntime == "HIP" and HipPlatform == "nvidia") or HippoRuntime == "HIP_CPU":
+    hipLaunchKernelGGLWithTuple(
+      kernel,
+      gridDim,
+      blockDim,
+      sharedMemBytes,
+      stream,
+      args
+    )
+    result = hipGetLastError()
+  elif HippoRuntime == "CUDA":
+    result = cudaLaunchKernel(
+      kernel,
+      gridDim,
+      blockDim,
+      cast[ptr pointer](addr kernelArgs[0]),
+      sharedMemBytes,
+      stream
+    )
+  else:
+    raise newException(Exception, &"Unknown runtime: {HippoRuntime}")
+
+  handleError(result)
+  
 
 
 # -------------------
