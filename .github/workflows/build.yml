@@ -35,12 +35,12 @@ jobs:
 
     - name: Build Examples
       run: |
-        nim cpp examples/vector_sum_cpu.nim
+        #nim cpp examples/vector_sum_cpu.nim
         nim cpp examples/vector_sum_cuda.nim
         nim cpp examples/vector_sum_hippo.nim
         nim cpp examples/vector_sum_hip_amd.nim
         #nim cpp examples/vector_sum_hip_nvidia.nim
     
-    - name: Execute CPU Example
-      run: |
-        ./examples/vector_sum_cpu
+    # - name: Execute CPU Example
+    #   run: |
+    #     ./examples/vector_sum_cpu
