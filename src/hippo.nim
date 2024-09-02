@@ -134,28 +134,29 @@ proc `=destroy`*(mem: var GpuMemory) =
 # -------------------
 # Kernel Execution
 
-macro hipLaunchKernelGGLWithTuple(
-  kernel: proc,
-  gridDim: Dim3 = newDim3(1,1,1),
-  blockDim: Dim3 = newDim3(1,1,1),
-  sharedMemBytes: uint32 = 0,
-  stream: HippoStream = nil,
-  args: tuple
-  ): untyped =
+when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+  macro hipLaunchKernelGGLWithTuple(
+    kernel: proc,
+    gridDim: Dim3 = newDim3(1,1,1),
+    blockDim: Dim3 = newDim3(1,1,1),
+    sharedMemBytes: uint32 = 0,
+    stream: HippoStream = nil,
+    args: tuple
+    ): untyped =
 
-  var callNode = newCall(bindSym"hipLaunchKernelGGL")
+    var callNode = newCall(bindSym"hipLaunchKernelGGL")
 
-  # add the fixed vars
-  callNode.add kernel
-  callNode.add gridDim
-  callNode.add blockDim
-  callNode.add sharedMemBytes
-  callNode.add stream
+    # add the fixed vars
+    callNode.add kernel
+    callNode.add gridDim
+    callNode.add blockDim
+    callNode.add sharedMemBytes
+    callNode.add stream
 
-  # add every value of the tuple
-  for child in args:
-    callNode.add child
-  result = callNode
+    # add every value of the tuple
+    for child in args:
+      callNode.add child
+    result = callNode
 
 template hippoLaunchKernel*(
   kernel: proc,                     ## The GPU kernel procedure to launch
