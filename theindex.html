@@ -95,6 +95,10 @@
           data-doc-search-tag="hippo: proc hipLaunchKernel(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;
                 args: ptr pointer): hipError_t" href="hippo.html#hipLaunchKernel%2Cpointer%2CDim3%2CDim3%2Cptr.pointer">hippo: proc hipLaunchKernel(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;
                 args: ptr pointer): hipError_t</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipLaunchKernel(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;
+                args: ptr pointer; sharedMemBytes: csize_t; stream: hipStream_t): cint" href="hippo.html#hipLaunchKernel%2Cpointer%2CDim3%2CDim3%2Cptr.pointer%2Ccsize_t%2ChipStream_t">hippo: proc hipLaunchKernel(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;
+                args: ptr pointer; sharedMemBytes: csize_t; stream: hipStream_t): cint</a></li>
           </ul></dd>
 <dt><a name="hipLaunchKernelGGL" href="#hipLaunchKernelGGL"><span>hipLaunchKernelGGL:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -113,6 +117,20 @@
 <dt><a name="hipMemcpyKind" href="#hipMemcpyKind"><span>hipMemcpyKind:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: enum hipMemcpyKind" href="hippo.html#hipMemcpyKind">hippo: enum hipMemcpyKind</a></li>
+          </ul></dd>
+<dt><a name="hipModuleLaunchKernel" href="#hipModuleLaunchKernel"><span>hipModuleLaunchKernel:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipModuleLaunchKernel(function_address: pointer; grid_dim_x: uint32_t;
+                      grid_dim_y: uint32_t; grid_dim_z: uint32_t;
+                      block_dim_x: uint32_t; block_dim_y: uint32_t;
+                      block_dim_z: uint32_t; sharedMemBytes: uint32_t;
+                      stream: hipStream_t; kernel_params: ptr pointer;
+                      extra: ptr pointer): hipError_t" href="hippo.html#hipModuleLaunchKernel%2Cpointer%2Cuint32_t%2Cuint32_t%2Cuint32_t%2Cuint32_t%2Cuint32_t%2Cuint32_t%2Cuint32_t%2ChipStream_t%2Cptr.pointer%2Cptr.pointer">hippo: proc hipModuleLaunchKernel(function_address: pointer; grid_dim_x: uint32_t;
+                      grid_dim_y: uint32_t; grid_dim_z: uint32_t;
+                      block_dim_x: uint32_t; block_dim_y: uint32_t;
+                      block_dim_z: uint32_t; sharedMemBytes: uint32_t;
+                      stream: hipStream_t; kernel_params: ptr pointer;
+                      extra: ptr pointer): hipError_t</a></li>
           </ul></dd>
 <dt><a name="hippoConstant" href="#hippoConstant"><span>hippoConstant:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -214,14 +232,6 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipSyncthreads()" href="hippo.html#hipSyncthreads">hippo: proc hipSyncthreads()</a></li>
           </ul></dd>
-<dt><a name="launchKernel" href="#launchKernel"><span>launchKernel:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="hippo: proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);
-             blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;
-             stream: HippoStream = nil; args: tuple): HippoError" href="hippo.html#launchKernel%2Cproc%2CDim3%2CDim3%2Cuint32%2CHippoStream%2C">hippo: proc launchKernel(kernel: proc; gridDim: Dim3 = newDim3(1, 1, 1);
-             blockDim: Dim3 = newDim3(1, 1, 1); sharedMemBytes: uint32 = 0;
-             stream: HippoStream = nil; args: tuple): HippoError</a></li>
-          </ul></dd>
 <dt><a name="newDim3" href="#newDim3"><span>newDim3:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc newDim3(x: uint32_t = 1; y: uint32_t = 1; z: uint32_t = 1): Dim3" href="hippo.html#newDim3%2Cuint32_t%2Cuint32_t%2Cuint32_t">hippo: proc newDim3(x: uint32_t = 1; y: uint32_t = 1; z: uint32_t = 1): Dim3</a></li>
@@ -266,7 +276,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-09-01 22:03:30 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-09-02 00:00:40 UTC</small>
       </div>
     </div>
   </div>
