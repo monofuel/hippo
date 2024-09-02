@@ -52,9 +52,9 @@ proc hipFree*(`ptr`: pointer): hipError_t {.header: "hip/hip_runtime.h",importcp
 proc hipLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;
                      args: ptr pointer): hipError_t {.
     importcpp: "hipLaunchKernel(@)", header: "hip/hip_runtime.h".}
-# proc hipLaunchKernel*(function_address: pointer; numBlocks: dim3; dimBlocks: dim3;
-#                      args: ptr pointer; sharedMemBytes: csize_t; stream: hipStream_t): cint {.
-#     importcpp: "hipLaunchKernel(@)", header: "hip/hip_runtime.h".}
+proc hipLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;
+                     args: ptr pointer; sharedMemBytes: csize_t; stream: hipStream_t): cint {.
+    importcpp: "hipLaunchKernel(@)", header: "hip/hip_runtime.h".}
 proc hipDeviceSynchronize*(): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipDeviceSynchronize(@)".}
 proc hipSyncthreads*() {.importcpp: "__syncthreads()", header: "hip/hip_runtime.h".}
 proc hippoSyncthreads*() {.importcpp: "__syncthreads()", header: "hip/hip_runtime.h".}
@@ -67,6 +67,20 @@ proc hipLaunchKernelGGL*(
   stream: hipStream_t;
   ) {.
     importcpp: "hipLaunchKernelGGL(@)", header: "hip/hip_runtime.h", varargs.}
+
+proc hipModuleLaunchKernel*(
+  function_address: pointer;
+  grid_dim_x: uint32_t;
+  grid_dim_y: uint32_t;
+  grid_dim_z: uint32_t;
+  block_dim_x: uint32_t;
+  block_dim_y: uint32_t;
+  block_dim_z: uint32_t;
+  sharedMemBytes: uint32_t;
+  stream: hipStream_t;
+  kernel_params: ptr pointer;
+  extra: ptr pointer;
+  ): hipError_t {.importcpp: "hipModuleLaunchKernel(@)", header: "hip/hip_runtime.h".}
 
 
 type ConstCString* {.importc: "const char*".} = object
