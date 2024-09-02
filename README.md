@@ -11,7 +11,7 @@ A Julia Set fractal generated with HIP
   - nim 2.1.9 added `--cc:nvcc` and `--cc:hipcc`
   - `nim cpp` is required for both HIP and CUDA.
 
-```
+```nim
 import hippo
 
 proc addKernel*(a, b: cint; c: ptr[cint]) {.hippoGlobal.} =
@@ -39,7 +39,7 @@ echo "2 + 7 = ", c
 - all pragmas are prefixed with `hippo` and can be used for hip or cuda to assign attributes like `__global__` or `__shared__`
 
 basic kernel example:
-```
+```nim
 proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
   c[] = a + b
 ```
