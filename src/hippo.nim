@@ -134,6 +134,29 @@ proc `=destroy`*(mem: var GpuMemory) =
 # -------------------
 # Kernel Execution
 
+macro hipLaunchKernelGGLWithTuple(
+    kernel: proc,
+  gridDim: Dim3 = newDim3(1,1,1),
+  blockDim: Dim3 = newDim3(1,1,1),
+  sharedMemBytes: uint32 = 0,
+  stream: HippoStream = nil,
+  args: tuple
+  ): untyped =
+
+  var callNode = newCall(bindSym"hipLaunchKernelGGL")
+
+  # add the fixed vars
+  callNode.add kernel
+  callNode.add gridDim
+  callNode.add blockDim
+  callNode.add sharedMemBytes
+  callNode.add stream
+
+  # add every value of the tuple
+  for child in args:
+    callNode.add child
+  result = callNode
+
 template hippoLaunchKernel*(
   kernel: proc,                     ## The GPU kernel procedure to launch
   gridDim: Dim3 = newDim3(1,1,1),   ## default to a grid of 1 block
@@ -162,32 +185,24 @@ template hippoLaunchKernel*(
       stream
     )
   elif HippoRuntime == "HIP" and HipPlatform == "nvidia":
-    hipLaunchKernelGGL(
+    hipLaunchKernelGGLWithTuple(
       kernel,
       gridDim,
       blockDim,
       sharedMemBytes,
       stream,
-      # TODO handle args properly
-      cast[ptr[cint]](args[0]),
-      cast[ptr[cint]](args[1]),
-      cast[ptr[cint]](args[2])
+      args
       )
     result = hipGetLastError()
   elif HippoRuntime == "HIP_CPU":
 
-    # wonder if it's possible to build a macro to turn kernelArgs to args?
-    # the cpp interface is tricky
-    hipLaunchKernelGGL(
+    hipLaunchKernelGGLWithTuple(
       kernel,
       gridDim,
       blockDim,
       sharedMemBytes,
       stream,
-      # TODO handle args properly
-      args[0],
-      args[1],
-      args[2]
+      args
     )
     result = hipGetLastError()
   elif HippoRuntime == "CUDA":
