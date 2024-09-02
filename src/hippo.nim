@@ -1,7 +1,7 @@
 import
   std/[strformat, os]
 
-when defined(c) or defined(js):
+when not defined(Nimdoc) and (defined(c) or defined(js)):
   {.error: "This module only works on the nim cpp platform".}
 
 ## Nim Library to enable writing CUDA and HIP kernels in Nim
