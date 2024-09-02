@@ -37,11 +37,11 @@ proc main() =
   handleError(hipMemcpy(dev_b, addr b[0], sizeof(int32)*N, hipMemcpyHostToDevice))
 
   # launch kernel
-  hippoLaunchKernel(
+  handleError(launchKernel(
     addkernel,
     gridDim = newDim3(N.uint32),
     args = (dev_a, dev_b, dev_c)
-  )
+  ))
 
   # copy result back to host
   handleError(hipMemcpy(addr c[0], dev_c, sizeof(int32)*N, hipMemcpyDeviceToHost))

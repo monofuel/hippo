@@ -35,11 +35,11 @@ proc main() =
   handleError(cudaMemcpy(dev_b, addr b[0], sizeof(int32)*N, cudaMemcpyHostToDevice))
 
   # launch kernel
-  hippoLaunchKernel(
+  handleError(launchKernel(
     addkernel,
     gridDim = newDim3(N.uint32),
     args = (dev_a, dev_b, dev_c)
-  )
+  ))
 
   # copy result back to host
   handleError(cudaMemcpy(addr c[0], dev_c, sizeof(int32)*N, cudaMemcpyDeviceToHost))
