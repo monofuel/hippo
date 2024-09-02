@@ -140,7 +140,7 @@ template hippoLaunchKernel*(
   blockDim: Dim3 = newDim3(1,1,1),  ## default to 1 thread per block
   sharedMemBytes: uint32 = 0,       ## dynamic shared memory amount to allocate
   stream: HippoStream = nil,        ## Which device stream to run under (defaults to null)
-  args: tuple,                      ## Arguments to pass to the GPU kernel
+  args: tuple,                ## Arguments to pass to the GPU kernel
 ) =
   var result: HippoError
   ## Launch a kernel on the GPU.
@@ -152,7 +152,7 @@ template hippoLaunchKernel*(
   for key, arg in args.fieldPairs:
     let a1 = arg
     kernelArgs.add(cast[pointer](addr a1))
-  when HippoRuntime == "HIP":
+  when HippoRuntime == "HIP" and HipPlatform == "amd":
     result = hipLaunchKernel(
       cast[pointer](kernel),
       gridDim,
@@ -161,22 +161,35 @@ template hippoLaunchKernel*(
       sharedMemBytes,
       stream
     )
-  elif HippoRuntime == "HIP_CPU":
-    # I couldn't find a good way to call hipLaunchKernelGGL() with args as a tuple from nim
-    # so I'm using hipModuleLaunchKernel() instead, It's a much simpler interface.
-    result = hipModuleLaunchKernel(
-      cast[pointer](kernel),
-      gridDim.x,
-      gridDim.y,
-      gridDim.z,
-      blockDim.x,
-      blockDim.y,
-      blockDim.z,
+  elif HippoRuntime == "HIP" and HipPlatform == "nvidia":
+    hipLaunchKernelGGL(
+      kernel,
+      gridDim,
+      blockDim,
       sharedMemBytes,
       stream,
-      nil,
-      cast[ptr pointer](addr kernelArgs[0])
+      # TODO handle args properly
+      cast[ptr[cint]](args[0]),
+      cast[ptr[cint]](args[1]),
+      cast[ptr[cint]](args[2])
+      )
+    result = hipGetLastError()
+  elif HippoRuntime == "HIP_CPU":
+
+    # wonder if it's possible to build a macro to turn kernelArgs to args?
+    # the cpp interface is tricky
+    hipLaunchKernelGGL(
+      kernel,
+      gridDim,
+      blockDim,
+      sharedMemBytes,
+      stream,
+      # TODO handle args properly
+      args[0],
+      args[1],
+      args[2]
     )
+    result = hipGetLastError()
   elif HippoRuntime == "CUDA":
     result = cudaLaunchKernel(
       kernel,
