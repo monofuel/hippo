@@ -174,8 +174,8 @@ template hippoLaunchKernel*(
       blockDim.z,
       sharedMemBytes,
       stream,
-      cast[ptr pointer](addr kernelArgs[0]),
-      nil
+      nil,
+      cast[ptr pointer](addr kernelArgs[0])
     )
   elif HippoRuntime == "CUDA":
     result = cudaLaunchKernel(

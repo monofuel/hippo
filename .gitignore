@@ -2,6 +2,7 @@
 *
 !*/
 !*.*
+!Dockerfile
 
 # normal ignores:
 *.exe
