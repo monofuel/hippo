@@ -62,12 +62,12 @@ proc main() =
   handleError(hipMemcpy(dev_b, addr b[0], sizeof(float64)*N, hipMemcpyHostToDevice))
 
   # launch kernel
-  handleError(launchKernel(
+  hippoLaunchKernel(
     dot,
     gridDim = newDim3(BlocksPerGrid.uint32),
     blockDim = newDim3(ThreadsPerBlock.uint32),
     args = (dev_a, dev_b, dev_partial_c)
-  ))
+  )
 
   # copy memory back from GPU to CPU
   handleError(hipMemcpy(addr partial_c[0], dev_partial_c, BlocksPerGrid * sizeof(float64), hipMemcpyDeviceToHost))
