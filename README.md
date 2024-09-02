@@ -19,11 +19,10 @@ proc addKernel*(a, b: cint; c: ptr[cint]) {.hippoGlobal.} =
 
 var c: int32
 var dev_c: ptr[int32]
-handleError(hipMalloc(cast[ptr pointer](addr dev_c), sizeof(int32).cint))
+hippoMalloc(addr dev_c, sizeof(int32).cint)
 hippoLaunchKernel(addKernel,args = (2,7,dev_c))
-handleError(hipMemcpy(addr c, dev_c, sizeof(int32).cint, hipMemcpyDeviceToHost))
+hippoMempcy(addr c, dev_c, sizeof(int32).cint, hipMemcpyDeviceToHost)
 echo "2 + 7 = ", c
-handleError(hipFree(dev_c))
 ```
 
 ## Functions
