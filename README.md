@@ -9,7 +9,7 @@ A Julia Set fractal generated with HIP
 
 - IMPORTANT: requires at least nim 2.1.9 for gpu usage, and must compile with `nim cpp`
   - nim 2.1.9 added `--cc:nvcc` and `--cc:hipcc`
-  - `nim cpp` is required for both HIP and CUDA. `nim c` will not work. If you get spooky errors, make sure you are using `nim cpp`.
+  - `nim cpp` is required for both HIP and CUDA.
 
 ```
 import hippo
@@ -17,11 +17,11 @@ import hippo
 proc addKernel*(a, b: cint; c: ptr[cint]) {.hippoGlobal.} =
   c[] = a + b
 
-var c: int32
-var dev_c: ptr[int32]
-hippoMalloc(addr dev_c, sizeof(int32).cint)
-hippoLaunchKernel(addKernel,args = (2,7,dev_c))
-hippoMempcy(addr c, dev_c, sizeof(int32).cint, hipMemcpyDeviceToHost)
+var
+  c: int32
+  dev_c = hippoMalloc(sizeof(int32))
+hippoLaunchKernel(addKernel,args = (2,7,dev_c.p))
+hippoMemcpy(addr c, dev_c, sizeof(int32), hipMemcpyDeviceToHost)
 echo "2 + 7 = ", c
 ```
 
