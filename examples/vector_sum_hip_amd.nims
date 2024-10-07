@@ -1,4 +1,4 @@
 --path:"../src"
 --cc:hipcc
---define:"HippoRuntime:AMD"
+--define:"HippoRuntime:HIP"
 --define:"useMalloc"
