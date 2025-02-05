@@ -47,7 +47,11 @@ if HippoRuntime == "HIP":
 
 when HippoRuntime == "HIP_CPU":
   # Intel TBB is required for HIP-CPU
-  {.passL: "-ltbb".}
+  when defined(linux):
+    {.passL: "-ltbb".}
+  elif defined(windows):
+    # using msys2 pacman -S mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-tbb
+    {.passL: "-ltbb12".}
   # I forgot when I had to use stdc++? maybe it's needed?
   # {.passL: "-lstdc++".}
 
