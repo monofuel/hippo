@@ -261,6 +261,20 @@ macro hippoHost*(fn: untyped): untyped =
     `fn`
     {.pop.}
 
+macro hippoHostDevice*(fn: untyped): untyped =
+  ## Declare a function as both `__host__` and `__device__`.
+  ## This is useful for functions that are called from the host and the device.
+  ## eg: `proc add(a: int, b: int) {.hippoHostDevice.} = a + b`
+  let globalPragma: NimNode = quote:
+    {. exportc, codegenDecl: "__device__ __host__ $# $#$#".}
+
+  fn.addPragma(globalPragma[0])
+  fn.addPragma(globalPragma[1])
+  quote do:
+    {.push stackTrace: off, checks: off.}
+    `fn`
+    {.pop.}
+
 macro hippoShared*(v: untyped): untyped =
   ## Declared a variable as static shared memory `__shared__`.
   ## Shared memory is shared between threads in the same block.
@@ -282,3 +296,54 @@ macro hippoConstant*(v: untyped): untyped =
     {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__constant__ $# $#".}
     `v`
     {.pop.}
+
+
+macro autoDeviceKernel*(procDef: untyped): untyped =
+  # Extract the procedure's body
+  let body = procDef[^1]  # Last element is the body in Nim's proc AST
+  
+  # Step 1: Collect function calls from the body
+  var deviceFuncs: seq[string] = @[]
+  
+  proc collectCalls(n: NimNode) =
+    case n.kind
+    of nnkCall:
+      # Found a function call; store its name
+      if n[0].kind == nnkIdent:
+        deviceFuncs.add(n[0].strVal)
+    else:
+      # Recursively traverse the AST
+      for child in n:
+        collectCalls(child)
+  
+  collectCalls(body)
+  
+  # Step 2: Modify or create device versions of called functions
+  var newDefs = newSeq[NimNode]()
+  for funcName in deviceFuncs:
+    # Assume the function is defined elsewhere in scope
+    # For simplicity, we'll duplicate it here (in practice, we'd modify the original if accessible)
+    let deviceFuncName = ident(funcName & "__device")
+    let devicePragma = quote do:
+      {.pragma: hippoDevice, codegenDecl: "__device__ $# $#$#".}
+    let newFunc = quote do:
+      proc `deviceFuncName`(x, y: int): int {.hippoDevice.} =
+        discard  # Placeholder; real implementation comes from original
+    newDefs.add(newFunc)
+  
+  # Step 3: Rewrite the kernel body to use device functions
+  proc rewriteCalls(n: NimNode): NimNode =
+    result = copyNimTree(n)
+    if n.kind == nnkCall and n[0].kind == nnkIdent:
+      let origName = n[0].strVal
+      if origName in deviceFuncs:
+        result[0] = ident(origName & "__device")
+  
+  let newBody = rewriteCalls(body)
+  procDef[^1] = newBody
+  
+  # Step 4: Return the modified proc + new device functions
+  result = newStmtList()
+  for def in newDefs:
+    result.add(def)
+  result.add(procDef)

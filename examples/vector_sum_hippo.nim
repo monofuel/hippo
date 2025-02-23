@@ -6,7 +6,7 @@ import hippo
 
 const N: int32 = 10
 
-proc addKernel(a, b, c: ptr[cint]){.hippoGlobal.} =
+proc addKernel(a, b, c: ptr[cint]){.autoDeviceKernel, hippoGlobal.} =
   let tid = blockIdx.x  # handle data at this index as an integer
   if tid < N.uint:  # guard for out of bounds
     let aArray = cast[ptr UncheckedArray[cint]](a)
