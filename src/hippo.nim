@@ -300,7 +300,7 @@ macro hippoConstant*(v: untyped): untyped =
 
 macro autoDeviceKernel*(procDef: untyped): untyped =
   # Extract the procedure's body
-  let body = procDef[^1]  # Last element is the body in Nim's proc AST
+  let body = procDef[^1]
   
   # Step 1: Collect function calls from the body
   var deviceFuncs: seq[string] = @[]
@@ -308,36 +308,35 @@ macro autoDeviceKernel*(procDef: untyped): untyped =
   proc collectCalls(n: NimNode) =
     case n.kind
     of nnkCall:
-      # Found a function call; store its name
-      if n[0].kind == nnkIdent:
+      if n[0].kind in {nnkIdent, nnkSym}:
         deviceFuncs.add(n[0].strVal)
     else:
-      # Recursively traverse the AST
       for child in n:
         collectCalls(child)
   
   collectCalls(body)
   
-  # Step 2: Modify or create device versions of called functions
+  # Step 2: Create device versions of called functions
   var newDefs = newSeq[NimNode]()
   for funcName in deviceFuncs:
-    # Assume the function is defined elsewhere in scope
-    # For simplicity, we'll duplicate it here (in practice, we'd modify the original if accessible)
     let deviceFuncName = ident(funcName & "__device")
     let devicePragma = quote do:
       {.pragma: hippoDevice, codegenDecl: "__device__ $# $#$#".}
     let newFunc = quote do:
       proc `deviceFuncName`(x, y: int): int {.hippoDevice.} =
-        discard  # Placeholder; real implementation comes from original
+        discard  # Placeholder; ideally, copy original body
     newDefs.add(newFunc)
   
   # Step 3: Rewrite the kernel body to use device functions
   proc rewriteCalls(n: NimNode): NimNode =
     result = copyNimTree(n)
-    if n.kind == nnkCall and n[0].kind == nnkIdent:
+    if n.kind == nnkCall and n[0].kind in {nnkIdent, nnkSym}:
       let origName = n[0].strVal
       if origName in deviceFuncs:
         result[0] = ident(origName & "__device")
+    else:
+      for i in 0..<result.len:
+        result[i] = rewriteCalls(result[i])
   
   let newBody = rewriteCalls(body)
   procDef[^1] = newBody
