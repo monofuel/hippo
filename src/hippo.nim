@@ -189,6 +189,7 @@ template hippoLaunchKernel*(
   var kernelArgs: seq[ptr pointer]
   for arg in args:
     kernelArgs.add(arg)
+
   when HippoRuntime == "HIP" and HipPlatform == "amd":
     result = hipLaunchKernel(
       cast[pointer](kernel),
@@ -302,3 +303,9 @@ macro hippoConstant*(v: untyped): untyped =
     {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__constant__ $# $#".}
     `v`
     {.pop.}
+
+macro hippoArgs*(args: varargs[untyped]): untyped =
+  var newArgs = newNimNode(nnkBracket)
+  for arg in args:
+    newArgs.add(newCall("addr", arg))
+  result = newArgs
