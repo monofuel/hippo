@@ -233,6 +233,10 @@
   <li><a class="reference" href="#hippoHost.m%2Cuntyped" title="hippoHost(fn: untyped): untyped">hippoHost(fn: untyped): untyped</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">hippoHostDevice
+  <li><a class="reference" href="#hippoHostDevice.m%2Cuntyped" title="hippoHostDevice(fn: untyped): untyped">hippoHostDevice(fn: untyped): untyped</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">hippoShared
   <li><a class="reference" href="#hippoShared.m%2Cuntyped" title="hippoShared(v: untyped): untyped">hippoShared(v: untyped): untyped</a></li>
 
@@ -272,6 +276,10 @@
 <li><a class="reference" href="#hippoMemcpy.t%2CGpuRef%2Cpointer%2Cint%2ChipMemcpyKind" title="hippoMemcpy(dst: GpuRef; src: pointer; size: int; kind: HippoMemcpyKind)">hippoMemcpy(dst: GpuRef; src: pointer; size: int; kind: HippoMemcpyKind)</a></li>
 <li><a class="reference" href="#hippoMemcpy.t%2Cpointer%2CGpuRef%2Cint%2ChipMemcpyKind" title="hippoMemcpy(dst: pointer; src: GpuRef; size: int; kind: HippoMemcpyKind)">hippoMemcpy(dst: pointer; src: GpuRef; size: int; kind: HippoMemcpyKind)</a></li>
 <li><a class="reference" href="#hippoMemcpy.t%2Cpointer%2Cpointer%2Cint%2ChipMemcpyKind" title="hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)">hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hippoSynchronize
+  <li><a class="reference" href="#hippoSynchronize.t" title="hippoSynchronize()">hippoSynchronize()</a></li>
 
 </ul>
 
@@ -631,8 +639,8 @@
   <dd>
     
     Automatically free device memory when the object goes out of scope
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L135" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L135" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L142" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L142" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -876,8 +884,8 @@
   <dd>
     
     Declared a variable as <tt class="docutils literal"><span class="pre"><span class="Identifier">__constant__</span></span></tt>. Constants are read-only globals that are cached on-chip. constants are useful for data that is being read by all threads in a warp at the same time. if each thread in a warp accesses different addresses in constant memory, the accesses are serialized and this may cause a 16x slowdown. eg: <tt class="docutils literal"><span class="pre"><span class="Keyword">const</span> <span class="Identifier">N</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">hippoConstant</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="DecNumber">1024</span></span></tt>
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L274" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L274" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L295" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L295" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -889,8 +897,8 @@
   <dd>
     
     Declare fuctions for use on the <tt class="docutils literal"><span class="pre"><span class="Identifier">__device__</span></span></tt> (the gpu), to be called by either <tt class="docutils literal"><span class="pre"><span class="Identifier">device</span></span></tt> or <tt class="docutils literal"><span class="pre"><span class="Identifier">global</span></span></tt> functions.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L237" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L237" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L244" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L244" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -902,8 +910,8 @@
   <dd>
     
     Declare a function as <tt class="docutils literal"><span class="pre"><span class="Identifier">__global__</span></span></tt>. global functions are called from the host and run on the device.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L225" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L225" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L232" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L232" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -915,8 +923,21 @@
   <dd>
     
     Explicitly declare a function as a <tt class="docutils literal"><span class="pre"><span class="Identifier">__host__</span></span></tt> function (cpu side). All functions default to <tt class="docutils literal"><span class="pre"><span class="Identifier">host</span></span></tt> functions, so this is not required.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L251" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L251" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L258" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L258" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hippoHostDevice-macros-all">
+  <div id="hippoHostDevice.m,untyped">
+  <dt><pre><span class="Keyword">macro</span> <a href="#hippoHostDevice.m%2Cuntyped"><span class="Identifier">hippoHostDevice</span></a><span class="Other">(</span><span class="Identifier">fn</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+  <dd>
+    
+    Declare a function as both <tt class="docutils literal"><span class="pre"><span class="Identifier">__host__</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">__device__</span></span></tt>. This is useful for functions that are usable from either the host and the device. eg: <tt class="docutils literal"><span class="pre"><span class="Keyword">proc</span> <span class="Identifier">add</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Punctuation">:</span> <span class="Identifier">int</span><span class="Punctuation">,</span> <span class="Identifier">b</span><span class="Punctuation">:</span> <span class="Identifier">int</span><span class="Punctuation">)</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">hippoHostDevice</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Identifier">a</span> <span class="Operator">+</span> <span class="Identifier">b</span></span></tt>
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L271" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L271" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -928,8 +949,8 @@
   <dd>
     
     Declared a variable as static shared memory <tt class="docutils literal"><span class="pre"><span class="Identifier">__shared__</span></span></tt>. Shared memory is shared between threads in the same block. It is faster than global memory, but is limited in size. They are located on-chip. eg: <tt class="docutils literal"><span class="pre"><span class="Keyword">var</span> <span class="Identifier">cache</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">hippoShared</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">array</span><span class="Punctuation">[</span><span class="DecNumber">256</span><span class="Punctuation">,</span> <span class="Identifier">float</span><span class="Punctuation">]</span></span></tt>
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L264" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L264" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L285" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L285" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -965,8 +986,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L168" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L168" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L175" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L175" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1029,6 +1050,19 @@
 </div>
 
 </div>
+<div id="hippoSynchronize-templates-all">
+  <div id="hippoSynchronize.t">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoSynchronize.t"><span class="Identifier">hippoSynchronize</span></a><span class="Other">(</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    Synchronize the device
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L135" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L135" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
 
   </dl>
 </div>
@@ -1039,7 +1073,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2025-02-05 05:14:11 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2025-02-24 01:49:17 UTC</small>
       </div>
     </div>
   </div>
