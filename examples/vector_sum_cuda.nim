@@ -20,6 +20,8 @@ proc main() =
   var a,b,c: array[N, int32]
   var dev_a, dev_b, dev_c: pointer
 
+  echo "allocate"
+
   # allocate gpu memory
   handleError(cudaMalloc(addr dev_a, sizeof(int32)*N))
   handleError(cudaMalloc(addr dev_b, sizeof(int32)*N))
@@ -30,19 +32,30 @@ proc main() =
     a[i] = -i
     b[i] = i * i
 
+  echo "copy"
+
   # copy data to device
   handleError(cudaMemcpy(dev_a, addr a[0], sizeof(int32)*N, cudaMemcpyHostToDevice))
   handleError(cudaMemcpy(dev_b, addr b[0], sizeof(int32)*N, cudaMemcpyHostToDevice))
+
+  echo "launch"
 
   # launch kernel
   hippoLaunchKernel(
     addkernel,
     gridDim = newDim3(N.uint32),
-    args = (dev_a, dev_b, dev_c)
+    args = @[addr dev_a, addr dev_b, addr dev_c]
   )
+
+  echo "sync"
+  hippoSynchronize()
+
+  echo "copy"
 
   # copy result back to host
   handleError(cudaMemcpy(addr c[0], dev_c, sizeof(int32)*N, cudaMemcpyDeviceToHost))
+
+  echo "display"
 
   # display the results
   for i in 0..<N:

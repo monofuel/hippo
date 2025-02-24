@@ -5,7 +5,10 @@ let
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [
-    cudatoolkit
+    unstable.cudatoolkit
+    unstable.cudaPackages.cuda_nvcc
+    unstable.cudaPackages.cuda_cudart
+    linuxPackages.nvidia_x11 # needed to run cuda binaries
     unstable.nim
     unstable.nim-atlas
     unstable.nimble
@@ -13,9 +16,9 @@ pkgs.mkShell {
   ];
 
   shellHook = ''
-    export CUDA_PATH=${pkgs.cudatoolkit}
-    export LD_LIBRARY_PATH=${pkgs.cudatoolkit}/lib:$LD_LIBRARY_PATH
-    export EXTRA_CFLAGS="-I${pkgs.cudatoolkit}/include"
-    export EXTRA_LDFLAGS="-L${pkgs.cudatoolkit}/lib"
+    export CUDA_PATH=${unstable.cudatoolkit}
+    export LD_LIBRARY_PATH=${unstable.cudatoolkit}/lib:${unstable.cudaPackages.cuda_cudart}/lib:${pkgs.linuxPackages.nvidia_x11}/lib:$LD_LIBRARY_PATH
+    export EXTRA_CFLAGS="-I${unstable.cudatoolkit}/include"
+    export EXTRA_LDFLAGS="-L${unstable.cudatoolkit}/lib -L${unstable.cudaPackages.cuda_cudart}/lib -L${pkgs.linuxPackages.nvidia_x11}/lib"
   '';
 }
