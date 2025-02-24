@@ -50,12 +50,13 @@ nim	hippoMemcpy	hippo.html#hippoMemcpy.t,GpuRef,GpuRef,int,hipMemcpyKind	templat
 nim	hippoFree	hippo.html#hippoFree.t,pointer	template hippoFree(p: pointer)		128
 nim	hippoSynchronize	hippo.html#hippoSynchronize.t	template hippoSynchronize()		135
 nim	`=destroy`	hippo.html#=destroy,GpuMemory	proc `=destroy`(mem: var GpuMemory)		142
-nim	hippoLaunchKernel	hippo.html#hippoLaunchKernel.t,proc,Dim3,Dim3,uint32,HippoStream,	template hippoLaunchKernel(kernel: proc; ## The GPU kernel procedure to launch\n                  gridDim: Dim3 = newDim3(1, 1, 1); ## default to a grid of 1 block\n                  blockDim: Dim3 = newDim3(1, 1, 1); ## default to 1 thread per block\n                  sharedMemBytes: uint32 = 0; ## dynamic shared memory amount to allocate\n                  stream: HippoStream = nil; ## Which device stream to run under (defaults to null)\n                  args: tuple)		175
-nim	hippoGlobal	hippo.html#hippoGlobal.m,untyped	macro hippoGlobal(fn: untyped): untyped		232
-nim	hippoDevice	hippo.html#hippoDevice.m,untyped	macro hippoDevice(fn: untyped): untyped		244
-nim	hippoHost	hippo.html#hippoHost.m,untyped	macro hippoHost(fn: untyped): untyped		258
-nim	hippoHostDevice	hippo.html#hippoHostDevice.m,untyped	macro hippoHostDevice(fn: untyped): untyped		271
-nim	hippoShared	hippo.html#hippoShared.m,untyped	macro hippoShared(v: untyped): untyped		285
-nim	hippoConstant	hippo.html#hippoConstant.m,untyped	macro hippoConstant(v: untyped): untyped		295
+nim	hippoLaunchKernel	hippo.html#hippoLaunchKernel.t,proc,Dim3,Dim3,uint32,HippoStream,seq[untyped]	template hippoLaunchKernel(kernel: proc; ## The GPU kernel procedure to launch\n                  gridDim: Dim3 = newDim3(1, 1, 1); ## default to a grid of 1 block\n                  blockDim: Dim3 = newDim3(1, 1, 1); ## default to 1 thread per block\n                  sharedMemBytes: uint32 = 0; ## dynamic shared memory amount to allocate\n                  stream: HippoStream = nil; ## Which device stream to run under (defaults to null)\n                  args: seq[untyped])		185
+nim	hippoGlobal	hippo.html#hippoGlobal.m,untyped	macro hippoGlobal(fn: untyped): untyped		240
+nim	hippoDevice	hippo.html#hippoDevice.m,untyped	macro hippoDevice(fn: untyped): untyped		252
+nim	hippoHost	hippo.html#hippoHost.m,untyped	macro hippoHost(fn: untyped): untyped		266
+nim	hippoHostDevice	hippo.html#hippoHostDevice.m,untyped	macro hippoHostDevice(fn: untyped): untyped		279
+nim	hippoShared	hippo.html#hippoShared.m,untyped	macro hippoShared(v: untyped): untyped		293
+nim	hippoConstant	hippo.html#hippoConstant.m,untyped	macro hippoConstant(v: untyped): untyped		303
+nim	hippoArgs	hippo.html#hippoArgs.m,varargs[untyped]	macro hippoArgs(args: varargs[untyped]): seq[untyped]		315
 nimgrp	hiplaunchkernel	hippo.html#hipLaunchKernel-procs-all	proc		52
 nimgrp	hippomemcpy	hippo.html#hippoMemcpy-templates-all	template		95

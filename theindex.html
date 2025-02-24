@@ -118,6 +118,10 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: enum hipMemcpyKind" href="hippo.html#hipMemcpyKind">hippo: enum hipMemcpyKind</a></li>
           </ul></dd>
+<dt><a name="hippoArgs" href="#hippoArgs"><span>hippoArgs:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: macro hippoArgs(args: varargs[untyped]): seq[untyped]" href="hippo.html#hippoArgs.m%2Cvarargs%5Buntyped%5D">hippo: macro hippoArgs(args: varargs[untyped]): seq[untyped]</a></li>
+          </ul></dd>
 <dt><a name="hippoConstant" href="#hippoConstant"><span>hippoConstant:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: macro hippoConstant(v: untyped): untyped" href="hippo.html#hippoConstant.m%2Cuntyped">hippo: macro hippoConstant(v: untyped): untyped</a></li>
@@ -153,12 +157,12 @@
                   blockDim: Dim3 = newDim3(1, 1, 1); ## default to 1 thread per block
                   sharedMemBytes: uint32 = 0; ## dynamic shared memory amount to allocate
                   stream: HippoStream = nil; ## Which device stream to run under (defaults to null)
-                  args: tuple)" href="hippo.html#hippoLaunchKernel.t%2Cproc%2CDim3%2CDim3%2Cuint32%2CHippoStream%2C">hippo: template hippoLaunchKernel(kernel: proc; ## The GPU kernel procedure to launch
+                  args: seq[untyped])" href="hippo.html#hippoLaunchKernel.t%2Cproc%2CDim3%2CDim3%2Cuint32%2CHippoStream%2Cseq%5Buntyped%5D">hippo: template hippoLaunchKernel(kernel: proc; ## The GPU kernel procedure to launch
                   gridDim: Dim3 = newDim3(1, 1, 1); ## default to a grid of 1 block
                   blockDim: Dim3 = newDim3(1, 1, 1); ## default to 1 thread per block
                   sharedMemBytes: uint32 = 0; ## dynamic shared memory amount to allocate
                   stream: HippoStream = nil; ## Which device stream to run under (defaults to null)
-                  args: tuple)</a></li>
+                  args: seq[untyped])</a></li>
           </ul></dd>
 <dt><a name="hippoMalloc" href="#hippoMalloc"><span>hippoMalloc:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -270,7 +274,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2025-02-24 01:49:17 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2025-02-24 22:31:42 UTC</small>
       </div>
     </div>
   </div>
