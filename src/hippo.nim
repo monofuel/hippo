@@ -178,7 +178,7 @@ template hippoLaunchKernel*(
   blockDim: Dim3 = newDim3(1,1,1),  ## default to 1 thread per block
   sharedMemBytes: uint32 = 0,       ## dynamic shared memory amount to allocate
   stream: HippoStream = nil,        ## Which device stream to run under (defaults to null)
-  args: seq[ptr pointer],     ## array of pointers to arguments (pointers to arguments! not arguments!) to pass to the GPU kernel
+  args: varargs[untyped],     ## array of pointers to arguments (pointers to arguments! not arguments!) to pass to the GPU kernel
 ) =
   var result: HippoError
   ## Launch a kernel on the GPU.
@@ -186,7 +186,9 @@ template hippoLaunchKernel*(
   ## Important: this only checks if the kernel launch was successful, not the kernel itself.
   # 
 
-  var kernelArgs: seq[ptr pointer] = args
+  var kernelArgs: seq[ptr pointer]
+  for arg in args:
+    kernelArgs.add(arg)
   when HippoRuntime == "HIP" and HipPlatform == "amd":
     result = hipLaunchKernel(
       cast[pointer](kernel),
