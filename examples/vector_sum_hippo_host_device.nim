@@ -38,7 +38,7 @@ proc main() =
   hippoLaunchKernel(
     addkernel,
     gridDim = newDim3(N.uint32),
-    args = (dev_a.p, dev_b.p, dev_c.p)
+    args = hippoArgs(dev_a.p, dev_b.p, dev_c.p)
   )
 
   # copy result back to host
