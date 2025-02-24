@@ -315,7 +315,7 @@ macro hippoConstant*(v: untyped): untyped =
 macro hippoArgs*(args: varargs[untyped]): seq[untyped] =
   ## Automatically convert varargs for use with CUDA/HIP.
   ## CUDA/HIP expects a list of pointers to arguments, not a list of arguments.
-  when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+  when (HippoRuntime == "HIP" and HipPlatform == "nvidia") or HippoRuntime == "HIP_CPU":
     var seqNode = newNimNode(nnkBracket)
     for arg in args:
       seqNode.add(arg)
