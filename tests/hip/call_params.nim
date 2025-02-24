@@ -10,7 +10,7 @@ proc main() =
   handleError(hipMalloc(cast[ptr pointer](addr dev_c), sizeof(int32).cint))
   hippoLaunchKernel(
     addKernel,
-    args = (2,7,dev_c)
+    args = hippoArgs(2,7,dev_c)
   )
   handleError(hipMemcpy(addr c, dev_c, sizeof(int32).cint, hipMemcpyDeviceToHost))
   echo "2 + 7 = ", c

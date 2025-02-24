@@ -66,7 +66,7 @@ proc main() =
     dot,
     gridDim = newDim3(BlocksPerGrid.uint32),
     blockDim = newDim3(ThreadsPerBlock.uint32),
-    args = (dev_a, dev_b, dev_partial_c)
+    args = hippoArgs(dev_a, dev_b, dev_partial_c)
   )
 
   # copy memory back from GPU to CPU
