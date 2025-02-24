@@ -261,6 +261,20 @@ macro hippoHost*(fn: untyped): untyped =
     `fn`
     {.pop.}
 
+macro hippoHostDevice*(fn: untyped): untyped =
+  ## Declare a function as both `__host__` and `__device__`.
+  ## This is useful for functions that are usable from either the host and the device.
+  ## eg: `proc add(a: int, b: int) {.hippoHostDevice.} = a + b`
+  let globalPragma: NimNode = quote:
+    {. exportc, codegenDecl: "__device__ __host__ $# $#$#".}
+
+  fn.addPragma(globalPragma[0])
+  fn.addPragma(globalPragma[1])
+  quote do:
+    {.push stackTrace: off, checks: off.}
+    `fn`
+    {.pop.}
+
 macro hippoShared*(v: untyped): untyped =
   ## Declared a variable as static shared memory `__shared__`.
   ## Shared memory is shared between threads in the same block.
