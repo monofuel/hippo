@@ -132,6 +132,13 @@ template hippoFree*(p: pointer) =
   else:
     handleError(hipFree(p))
 
+template hippoSynchronize*() =
+  ## Synchronize the device
+  when HippoRuntime == "CUDA":
+    handleError(cudaDeviceSynchronize())
+  else:
+    handleError(hipDeviceSynchronize())
+
 proc `=destroy`*(mem: var GpuMemory) =
   ## Automatically free device memory when the object goes out of scope
   if mem.p != nil:
