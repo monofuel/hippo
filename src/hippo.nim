@@ -305,6 +305,8 @@ macro hippoConstant*(v: untyped): untyped =
     {.pop.}
 
 macro hippoArgs*(args: varargs[untyped]): untyped =
+  ## Automatically convert varargs for use with CUDA/HIP.
+  ## CUDA/HIP expects a list of pointers to arguments, not a list of arguments.
   var newArgs = newNimNode(nnkBracket)
   for arg in args:
     newArgs.add(newCall("addr", arg))
