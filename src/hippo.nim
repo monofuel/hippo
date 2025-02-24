@@ -149,27 +149,37 @@ proc `=destroy`*(mem: var GpuMemory) =
 # Kernel Execution
 
 when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
-  macro hipLaunchKernelGGLWithTuple(
+  macro hipLaunchKernelGGLWithSeq(
     kernel: proc,
     gridDim: Dim3 = newDim3(1,1,1),
     blockDim: Dim3 = newDim3(1,1,1),
     sharedMemBytes: uint32 = 0,
     stream: HippoStream = nil,
-    args: tuple
-    ): untyped =
+    args: untyped
+  ): untyped =
 
+    # Extract the sequence arguments from the input
+    var seqArgs: NimNode
+    if args.kind == nnkPrefix and args[0].eqIdent("@") and args[1].kind == nnkBracket:
+      seqArgs = args[1]
+    else:
+      error("Expected a sequence literal like @[arg1, arg2, ...]", args)
+
+    # Create the call node for hipLaunchKernelGGL
     var callNode = newCall(bindSym"hipLaunchKernelGGL")
 
-    # add the fixed vars
+    # Add the fixed parameters
     callNode.add kernel
     callNode.add gridDim
     callNode.add blockDim
     callNode.add sharedMemBytes
     callNode.add stream
 
-    # add every value of the tuple
-    for child in args:
+    # Add each element from the sequence to the call node
+    for child in seqArgs:
       callNode.add child
+
+    # Set the result to the constructed call node
     result = callNode
 
 template hippoLaunchKernel*(
@@ -178,19 +188,16 @@ template hippoLaunchKernel*(
   blockDim: Dim3 = newDim3(1,1,1),  ## default to 1 thread per block
   sharedMemBytes: uint32 = 0,       ## dynamic shared memory amount to allocate
   stream: HippoStream = nil,        ## Which device stream to run under (defaults to null)
-  args: tuple,                ## Arguments to pass to the GPU kernel
+  args: seq[untyped],     ## array of pointers to arguments (pointers to arguments! not arguments!) to pass to the GPU kernel
 ) =
   var result: HippoError
   ## Launch a kernel on the GPU.
   ## also checks if launchKernel() returns an error.
   ## Important: this only checks if the kernel launch was successful, not the kernel itself.
   # 
-  # This code is kinda gross, the launch kernel functions have a lot of different signatures.
-  var kernelArgs: seq[pointer]
-  for key, arg in args.fieldPairs:
-    let a1 = arg
-    kernelArgs.add(cast[pointer](addr a1))
+
   when HippoRuntime == "HIP" and HipPlatform == "amd":
+    var kernelArgs: seq[ptr pointer] = args
     result = hipLaunchKernel(
       cast[pointer](kernel),
       gridDim,
@@ -200,7 +207,7 @@ template hippoLaunchKernel*(
       stream
     )
   elif (HippoRuntime == "HIP" and HipPlatform == "nvidia") or HippoRuntime == "HIP_CPU":
-    hipLaunchKernelGGLWithTuple(
+    hipLaunchKernelGGLWithSeq(
       kernel,
       gridDim,
       blockDim,
@@ -210,6 +217,7 @@ template hippoLaunchKernel*(
     )
     result = hipGetLastError()
   elif HippoRuntime == "CUDA":
+    var kernelArgs: seq[ptr pointer] = args
     result = cudaLaunchKernel(
       kernel,
       gridDim,
@@ -303,3 +311,19 @@ macro hippoConstant*(v: untyped): untyped =
     {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__constant__ $# $#".}
     `v`
     {.pop.}
+
+macro hippoArgs*(args: varargs[untyped]): seq[untyped] =
+  ## Automatically convert varargs for use with CUDA/HIP.
+  ## CUDA/HIP expects a list of pointers to arguments, not a list of arguments.
+  when (HippoRuntime == "HIP" and HipPlatform == "nvidia") or HippoRuntime == "HIP_CPU":
+    var seqNode = newNimNode(nnkBracket)
+    for arg in args:
+      seqNode.add(arg)
+    result = quote do:
+      @`seqNode`
+  else:
+    var seqNode = newNimNode(nnkBracket)
+    for arg in args:
+      seqNode.add(newCall("addr", arg))
+    result = quote do:
+      @`seqNode`

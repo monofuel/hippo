@@ -63,7 +63,7 @@ suite "dot product":
       dot,
       gridDim = newDim3(BlocksPerGrid.uint32),
       blockDim = newDim3(ThreadsPerBlock.uint32),
-      args = (dev_a.p, dev_b.p, dev_partial_c.p)
+      args = hippoArgs(dev_a.p, dev_b.p, dev_partial_c.p)
     )
 
     # copy memory back from GPU to CPU
