@@ -132,6 +132,13 @@ template hippoFree*(p: pointer) =
   else:
     handleError(hipFree(p))
 
+template hippoSynchronize*() =
+  ## Synchronize the device
+  when HippoRuntime == "CUDA":
+    handleError(cudaDeviceSynchronize())
+  else:
+    handleError(hipDeviceSynchronize())
+
 proc `=destroy`*(mem: var GpuMemory) =
   ## Automatically free device memory when the object goes out of scope
   if mem.p != nil:
@@ -253,6 +260,20 @@ macro hippoHost*(fn: untyped): untyped =
   ## All functions default to `host` functions, so this is not required.
   let globalPragma: NimNode = quote:
     {. exportc, codegenDecl: "__host__ $# $#$#".}
+
+  fn.addPragma(globalPragma[0])
+  fn.addPragma(globalPragma[1])
+  quote do:
+    {.push stackTrace: off, checks: off.}
+    `fn`
+    {.pop.}
+
+macro hippoHostDevice*(fn: untyped): untyped =
+  ## Declare a function as both `__host__` and `__device__`.
+  ## This is useful for functions that are usable from either the host and the device.
+  ## eg: `proc add(a: int, b: int) {.hippoHostDevice.} = a + b`
+  let globalPragma: NimNode = quote:
+    {. exportc, codegenDecl: "__device__ __host__ $# $#$#".}
 
   fn.addPragma(globalPragma[0])
   fn.addPragma(globalPragma[1])
