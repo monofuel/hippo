@@ -49,6 +49,7 @@ proc simpleInit() =
   ## get the number of cpu cores and set the number of threads to use.
   when SingleThread:
     threads = countProcessors()
+    echo "DEBUG: hippo/simple: Using ", threads, " threads"
   else:
     threads = 1
 
@@ -67,10 +68,9 @@ proc handleError(err: HippoError) =
   ## Simple runtime raises errors as exceptions.
   discard
 
-# TODO thread local variables
 var
-  blockIdx*: BlockIdx
-  threadIdx*: ThreadIdx
+  blockIdx* {.threadvar.}: BlockIdx
+  threadIdx* {.threadvar.}: ThreadIdx
 
 macro unpackCall(fn: untyped, args: untyped): untyped =
   ## Unpack the tuple and call the function with individual arguments, forcing type casting.
