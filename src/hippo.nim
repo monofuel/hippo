@@ -1,8 +1,14 @@
 import
-  std/[strformat, os]
+  std/[strformat, os, macros]
 
-when not defined(Nimdoc) and (defined(c) or defined(js)):
-  {.error: "This module only works on the nim cpp platform".}
+
+# supported runtimes: HIP, HIP_CPU, CUDA, and SIMPLE
+const HippoRuntime* {.strdefine.} = "HIP"
+
+echo &"DEBUG: Using Hippo Runtime: {HippoRuntime}"
+
+when not defined(Nimdoc) and ((defined(c) or defined(js)) and HippoRuntime != "SIMPLE"):
+  {.error: "The HIP, CUDA and HIP_CPU backends require compiling with cpp".}
 
 ## Nim Library to enable writing CUDA and HIP kernels in Nim
 ## All cuda and hip structures and functions are re-exported and can be used
@@ -39,9 +45,6 @@ const HipPlatform = getHipPlatform()
 # HIP_CPU will use the HIP-CPU runtime header
 # CUDA will use nvcc
 
-const HippoRuntime* {.strdefine.} = "HIP"
-
-echo &"DEBUG: Using Hippo Runtime: {HippoRuntime}"
 if HippoRuntime == "HIP":
   echo &"DEBUG: Using HIP Platform: {HipPlatform}"
 
@@ -67,6 +70,9 @@ elif HippoRuntime == "CUDA":
   # nvcc loads the CUDA runtime header automatically
   echo "DEBUG: Using CUDA runtime"
   include cuda
+elif HippoRuntime == "SIMPLE":
+  echo "DEBUG: Using SIMPLE runtime"
+  include simple
 else:
   echo "DEBUG: Using HIP runtime"
   include hip
@@ -88,6 +94,8 @@ template hippoMalloc*(size: int): GpuRef =
   var g = GpuRef()
   when HippoRuntime == "CUDA":
     handleError(cudaMalloc(addr g.p, size.cint))
+  when HippoRuntime == "SIMPLE":
+    simpleMalloc(addr g.p, size)
   else:
     handleError(hipMalloc(addr g.p, size.cint))
   g
@@ -98,6 +106,8 @@ template hippoMemcpy*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKi
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
     handleError(cudaMemcpy(dst, src, size.cint, kind))
+  when HippoRuntime == "SIMPLE":
+    simpleMemcpy(dst, src, size, kind)
   else:
     handleError(hipMemcpy(dst, src, size.cint, kind))
 
@@ -106,6 +116,8 @@ template hippoMemcpy*(dst: pointer, src: GpuRef, size: int, kind: HippoMemcpyKin
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
     handleError(cudaMemcpy(dst, src.p, size.cint, kind))
+  when HippoRuntime == "SIMPLE":
+    simpleMemcpy(dst, src.p, size, kind)
   else:
     handleError(hipMemcpy(dst, src.p, size.cint, kind))
 
@@ -114,6 +126,8 @@ template hippoMemcpy*(dst: GpuRef, src: pointer, size: int, kind: HippoMemcpyKin
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
     handleError(cudaMemcpy(dst.p, src, size.cint, kind))
+  when HippoRuntime == "SIMPLE":
+    simpleMemcpy(dst.p, src, size, kind)
   else:
     handleError(hipMemcpy(dst.p, src, size.cint, kind))
 
@@ -122,6 +136,8 @@ template hippoMemcpy*(dst: GpuRef, src: GpuRef, size: int, kind: HippoMemcpyKind
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
     handleError(cudaMemcpy(dst.p, src.p, size.cint, kind))
+  when HippoRuntime == "SIMPLE":
+    simpleMemcpy(dst.p, src.p, size, kind)
   else:
     handleError(hipMemcpy(dst.p, src.p, size.cint, kind))
 
@@ -129,6 +145,8 @@ template hippoFree*(p: pointer) =
   ## Free memory on the GPU
   when HippoRuntime == "CUDA":
     handleError(cudaFree(p))
+  when HippoRuntime == "SIMPLE":
+    simpleFree(p)
   else:
     handleError(hipFree(p))
 
@@ -136,6 +154,9 @@ template hippoSynchronize*() =
   ## Synchronize the device
   when HippoRuntime == "CUDA":
     handleError(cudaDeviceSynchronize())
+  when HippoRuntime == "SIMPLE":
+    # in cpu mode, kernels are performed syncronously
+    discard
   else:
     handleError(hipDeviceSynchronize())
 
@@ -216,6 +237,8 @@ template hippoLaunchKernel*(
       sharedMemBytes,
       stream
     )
+  elif HippoRuntime == "SIMPLE":
+    simpleLaunchKernel(kernel, gridDim, blockDim, args)
   else:
     raise newException(Exception, &"Unknown runtime: {HippoRuntime}")
 
@@ -229,11 +252,12 @@ template hippoLaunchKernel*(
 
 macro hippoGlobal*(fn: untyped): untyped =
   ## Declare a function as `__global__`. global functions are called from the host and run on the device.
-  let globalPragma: NimNode = quote:
-    {. exportc, codegenDecl: "__global__ $# $#$#".}
+  when HippoRuntime != "SIMPLE":
+    let globalPragma: NimNode = quote:
+      {. exportc, codegenDecl: "__global__ $# $#$#".}
 
-  fn.addPragma(globalPragma[0])
-  fn.addPragma(globalPragma[1])
+    fn.addPragma(globalPragma[0])
+    fn.addPragma(globalPragma[1])
   quote do:
     {.push stackTrace: off, checks: off.}
     `fn`
@@ -242,11 +266,12 @@ macro hippoGlobal*(fn: untyped): untyped =
 macro hippoDevice*(fn: untyped): untyped =
   ## Declare fuctions for use on the `__device__` (the gpu),
   ## to be called by either `device` or `global` functions.
-  let globalPragma: NimNode = quote:
-    {. exportc, codegenDecl: "__device__ $# $#$#".}
+  when HippoRuntime != "SIMPLE":
+    let globalPragma: NimNode = quote:
+      {. exportc, codegenDecl: "__device__ $# $#$#".}
 
-  fn.addPragma(globalPragma[0])
-  fn.addPragma(globalPragma[1])
+    fn.addPragma(globalPragma[0])
+    fn.addPragma(globalPragma[1])
   quote do:
     {.push stackTrace: off, checks: off.}
     `fn`
@@ -256,11 +281,12 @@ macro hippoDevice*(fn: untyped): untyped =
 macro hippoHost*(fn: untyped): untyped =
   ## Explicitly declare a function as a `__host__` function (cpu side).
   ## All functions default to `host` functions, so this is not required.
-  let globalPragma: NimNode = quote:
-    {. exportc, codegenDecl: "__host__ $# $#$#".}
+  when HippoRuntime != "SIMPLE":
+    let globalPragma: NimNode = quote:
+      {. exportc, codegenDecl: "__host__ $# $#$#".}
 
-  fn.addPragma(globalPragma[0])
-  fn.addPragma(globalPragma[1])
+    fn.addPragma(globalPragma[0])
+    fn.addPragma(globalPragma[1])
   quote do:
     {.push stackTrace: off, checks: off.}
     `fn`
@@ -270,11 +296,12 @@ macro hippoHostDevice*(fn: untyped): untyped =
   ## Declare a function as both `__host__` and `__device__`.
   ## This is useful for functions that are usable from either the host and the device.
   ## eg: `proc add(a: int, b: int) {.hippoHostDevice.} = a + b`
-  let globalPragma: NimNode = quote:
-    {. exportc, codegenDecl: "__device__ __host__ $# $#$#".}
+  when HippoRuntime != "SIMPLE":
+    let globalPragma: NimNode = quote:
+      {. exportc, codegenDecl: "__device__ __host__ $# $#$#".}
 
-  fn.addPragma(globalPragma[0])
-  fn.addPragma(globalPragma[1])
+    fn.addPragma(globalPragma[0])
+    fn.addPragma(globalPragma[1])
   quote do:
     {.push stackTrace: off, checks: off.}
     `fn`
@@ -285,10 +312,15 @@ macro hippoShared*(v: untyped): untyped =
   ## Shared memory is shared between threads in the same block.
   ## It is faster than global memory, but is limited in size. They are located on-chip.
   ## eg: `var cache {.hippoShared.}: array[256, float]`
-  quote do:
-    {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__shared__ $# $#".}
-    `v`
-    {.pop.}
+  when HippoRuntime != "SIMPLE":
+    quote do:
+      {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__shared__ $# $#".}
+      `v`
+      {.pop.}
+  else:
+    # TODO proper thread vars
+    quote do:
+      `v`
 
 macro hippoConstant*(v: untyped): untyped =
   ## Declared a variable as `__constant__`.
@@ -297,15 +329,20 @@ macro hippoConstant*(v: untyped): untyped =
   ## if each thread in a warp accesses different addresses in constant memory,
   ## the accesses are serialized and this may cause a 16x slowdown.
   ## eg: `const N {.hippoConstant.} = 1024`
-  quote do:
-    {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__constant__ $# $#".}
-    `v`
-    {.pop.}
+  when HippoRuntime != "SIMPLE":
+    quote do:
+      {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__constant__ $# $#".}
+      `v`
+      {.pop.}
+  else:
+    # TODO proper const vars
+    quote do:
+      `v`
 
 macro hippoArgs*(args: varargs[untyped]): untyped =
   ## Automatically convert varargs for use with CUDA/HIP.
   ## CUDA/HIP expects an array of arguments or pointers depending on platform.
-  when (HippoRuntime == "HIP" and HipPlatform == "nvidia") or HippoRuntime == "HIP_CPU":
+  when (HippoRuntime == "HIP" and HipPlatform == "nvidia") or HippoRuntime == "HIP_CPU" or HippoRuntime == "SIMPLE":
     # Create a tuple constructor with original arguments
     var tupleNode = newNimNode(nnkTupleConstr)
     for arg in args:

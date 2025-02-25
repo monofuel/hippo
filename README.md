@@ -57,7 +57,8 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
 - [vector_sum_hip_nvidia.nims](examples/vector_sum_hip_nvidia.nims) example .nims for building with hipcc with the cuda backend
   - tell nim that you want the 'nvcc' compiler settings to get the right arguments, but swap out the compiler executable for hipcc
   - you might also need to have HIP_PLATFORM=nvidia set in your environment
-- [vector_sum_cpu.nims](examples/vector_sum_cpu.nims) example .nims for building with the HIP-CPU backend (no hipcc required)
+- [vector_sum_hip_cpu.nims](examples/vector_sum_cpu.nims) example .nims for building with the HIP-CPU backend (cpp required, no hipcc required)
+- [vector_sum_simple.nims](examples/vector_simple.nims) example .nims for building a pure nim backend
 
 - HIP-CPU is supported with the `-d:HippoRuntime=HIP_CPU` flag
   - note: you need to pull the HIP-CPU git submodule to use this feature
