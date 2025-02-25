@@ -1,10 +1,21 @@
 # https://gpuopen.com/learn/wmma_on_rdna3/
 
-import hippo
+import hippo, std/strformat
 
 
 type
   half* {.importcpp: "__half", header: "hip/hip_fp16.h".} = object
+
+# Conversion from float to half - renamed to avoid name collision
+proc toHalf*(x: float32): half {.importcpp: "(__half)#", nodecl.}
+proc toHalf*(x: float64): half {.importcpp: "(__half)#", nodecl.}
+proc toHalf*(x: int): half {.importcpp: "(__half)#", nodecl.}
+
+# Conversion from half to float (for displaying values)
+proc toFloat*(x: half): float32 {.importcpp: "(float)#", nodecl.}
+
+# String representation for debugging
+proc `$`*(x: half): string = $x.toFloat()
 
 {.emit:"""
 // Wave Matrix Multiply Accumulate (WMMA) using HIP compiler intrinsic
@@ -68,48 +79,81 @@ proc wmmaMatmul(a: ptr half, b: ptr half, c: ptr half) {.importcpp: "wmma_matmul
 
 proc main() =
 
-  {.emit: """
-  __half a[16 * 16] = {};
-  __half b[16 * 16] = {};
-  __half c[16 * 16] = {};
-  __half *a_gpu, *b_gpu, *c_gpu;
-  hipMalloc(&a_gpu, 16*16 * sizeof(__half));
-  hipMalloc(&b_gpu, 16*16 * sizeof(__half));
-  hipMalloc(&c_gpu, 16*16 * sizeof(__half));
+  # {.emit: """
+  # __half a[16 * 16] = {};
+  # __half b[16 * 16] = {};
+  # __half c[16 * 16] = {};
+  # __half *a_gpu, *b_gpu, *c_gpu;
+  # hipMalloc(&a_gpu, 16*16 * sizeof(__half));
+  # hipMalloc(&b_gpu, 16*16 * sizeof(__half));
+  # hipMalloc(&c_gpu, 16*16 * sizeof(__half));
 
-  // fill in some data into matrices A and B
-  for (int i = 0; i < 16; ++i)
-  {
-      for (int j = 0; j < 16; ++j)
-      {
-          a[i * 16 + j] = (__half)1.f;
-          b[i * 16 + j] = (__half)1.f;
-      }
-  }
+  # // fill in some data into matrices A and B
+  # for (int i = 0; i < 16; ++i)
+  # {
+  #     for (int j = 0; j < 16; ++j)
+  #     {
+  #         a[i * 16 + j] = (__half)1.f;
+  #         b[i * 16 + j] = (__half)1.f;
+  #     }
+  # }
 
-  hipMemcpy(a_gpu, a, (16*16) * sizeof(__half), hipMemcpyHostToDevice);
-  hipMemcpy(b_gpu, b, (16*16) * sizeof(__half), hipMemcpyHostToDevice);
-  hipMemcpy(c_gpu, c, (16*16) * sizeof(__half), hipMemcpyHostToDevice);
+  # hipMemcpy(a_gpu, a, (16*16) * sizeof(__half), hipMemcpyHostToDevice);
+  # hipMemcpy(b_gpu, b, (16*16) * sizeof(__half), hipMemcpyHostToDevice);
+  # hipMemcpy(c_gpu, c, (16*16) * sizeof(__half), hipMemcpyHostToDevice);
 
-  wmma_matmul<<<dim3(1), dim3(32, 1, 1), 0, 0>>>(a_gpu, b_gpu, c_gpu);
+  # wmma_matmul<<<dim3(1), dim3(32, 1, 1), 0, 0>>>(a_gpu, b_gpu, c_gpu);
 
-  hipMemcpy(c, c_gpu, (16 * 16) * sizeof(__half), hipMemcpyDeviceToHost);
+  # hipMemcpy(c, c_gpu, (16 * 16) * sizeof(__half), hipMemcpyDeviceToHost);
 
-  hipFree(a_gpu);
-  hipFree(b_gpu);
-  hipFree(c_gpu);
+  # hipFree(a_gpu);
+  # hipFree(b_gpu);
+  # hipFree(c_gpu);
 
-  for (int i = 0; i < 16; ++i)
-  {
-      for (int j = 0; j < 16; ++j)
-      {
-          printf("%f ", (float)c[i * 16 + j]);
-      }
-      printf("\\n");
-  }
-  """.}
+  # for (int i = 0; i < 16; ++i)
+  # {
+  #     for (int j = 0; j < 16; ++j)
+  #     {
+  #         printf("%f ", (float)c[i * 16 + j]);
+  #     }
+  #     printf("\\n");
+  # }
+  # """.}
 
 
+  var
+    a: array[16*16, half]
+    b: array[16*16, half]
+    c: array[16*16, half]
+
+  for i in 0..<16:
+    for j in 0..<16:
+      a[i*16 + j] = toHalf(1.0)
+      b[i*16 + j] = toHalf(1.0)
+
+  var dev_a = hippoMalloc(sizeof(half)*16*16)
+  var dev_b = hippoMalloc(sizeof(half)*16*16)
+  var dev_c = hippoMalloc(sizeof(half)*16*16)
+
+  hippoMemcpy(dev_a, addr a[0], sizeof(half)*16*16, hipMemcpyHostToDevice)
+  hippoMemcpy(dev_b, addr b[0], sizeof(half)*16*16, hipMemcpyHostToDevice)
+
+  hippoLaunchKernel(
+    wmmaMatmul,
+    gridDim = newDim3(1),
+    blockDim = newDim3(32, 1, 1),
+    args = hippoArgs(dev_a.p, dev_b.p, dev_c.p)
+  )
+
+  hippoMemcpy(addr c[0], dev_c, sizeof(half)*16*16, hipMemcpyDeviceToHost)
+
+  for i in 0..<16:
+    for j in 0..<16:
+      echo c[i*16 + j]
+
+
+
+  # old hip example
   # var a,b,c: array[N, int32] # host-side arrays
 
   # # allocate gpu memory
