@@ -5,6 +5,7 @@ import
 # supported runtimes: HIP, HIP_CPU, CUDA, and SIMPLE
 const HippoRuntime* {.strdefine.} = "HIP"
 
+{.warning: "DEBUG: Using Hippo Runtime: " & HippoRuntime.}
 echo &"DEBUG: Using Hippo Runtime: {HippoRuntime}"
 
 when not defined(Nimdoc) and ((defined(c) or defined(js)) and HippoRuntime != "SIMPLE"):
@@ -94,7 +95,7 @@ template hippoMalloc*(size: int): GpuRef =
   var g = GpuRef()
   when HippoRuntime == "CUDA":
     handleError(cudaMalloc(addr g.p, size.cint))
-  when HippoRuntime == "SIMPLE":
+  elif HippoRuntime == "SIMPLE":
     simpleMalloc(addr g.p, size)
   else:
     handleError(hipMalloc(addr g.p, size.cint))
@@ -106,7 +107,7 @@ template hippoMemcpy*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKi
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
     handleError(cudaMemcpy(dst, src, size.cint, kind))
-  when HippoRuntime == "SIMPLE":
+  elif HippoRuntime == "SIMPLE":
     simpleMemcpy(dst, src, size, kind)
   else:
     handleError(hipMemcpy(dst, src, size.cint, kind))
@@ -116,7 +117,7 @@ template hippoMemcpy*(dst: pointer, src: GpuRef, size: int, kind: HippoMemcpyKin
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
     handleError(cudaMemcpy(dst, src.p, size.cint, kind))
-  when HippoRuntime == "SIMPLE":
+  elif HippoRuntime == "SIMPLE":
     simpleMemcpy(dst, src.p, size, kind)
   else:
     handleError(hipMemcpy(dst, src.p, size.cint, kind))
@@ -126,7 +127,7 @@ template hippoMemcpy*(dst: GpuRef, src: pointer, size: int, kind: HippoMemcpyKin
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
     handleError(cudaMemcpy(dst.p, src, size.cint, kind))
-  when HippoRuntime == "SIMPLE":
+  elif HippoRuntime == "SIMPLE":
     simpleMemcpy(dst.p, src, size, kind)
   else:
     handleError(hipMemcpy(dst.p, src, size.cint, kind))
@@ -136,7 +137,7 @@ template hippoMemcpy*(dst: GpuRef, src: GpuRef, size: int, kind: HippoMemcpyKind
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
     handleError(cudaMemcpy(dst.p, src.p, size.cint, kind))
-  when HippoRuntime == "SIMPLE":
+  elif HippoRuntime == "SIMPLE":
     simpleMemcpy(dst.p, src.p, size, kind)
   else:
     handleError(hipMemcpy(dst.p, src.p, size.cint, kind))
@@ -145,7 +146,7 @@ template hippoFree*(p: pointer) =
   ## Free memory on the GPU
   when HippoRuntime == "CUDA":
     handleError(cudaFree(p))
-  when HippoRuntime == "SIMPLE":
+  elif HippoRuntime == "SIMPLE":
     simpleFree(p)
   else:
     handleError(hipFree(p))
@@ -154,7 +155,7 @@ template hippoSynchronize*() =
   ## Synchronize the device
   when HippoRuntime == "CUDA":
     handleError(cudaDeviceSynchronize())
-  when HippoRuntime == "SIMPLE":
+  elif HippoRuntime == "SIMPLE":
     # in cpu mode, kernels are performed syncronously
     discard
   else:
