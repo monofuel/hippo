@@ -314,6 +314,9 @@ macro hippoArgs*(args: varargs[untyped]): untyped =
   else:
     var seqNode = newNimNode(nnkBracket)
     for arg in args:
-      seqNode.add(newCall("addr", arg))
+      seqNode.add(
+        quote do:
+          cast[ptr pointer](addr `arg`)
+      )
     result = quote do:
       @`seqNode`
