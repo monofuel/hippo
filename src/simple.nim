@@ -110,44 +110,45 @@ else:
     closure()
 
   template simpleLaunchKernel(fn: untyped, gridDim: Dim3, blockDim: Dim3, args: tuple) =
-    # Multi-threaded execution
-    let totalBlocks = gridDim.x * gridDim.y * gridDim.z
-    let blocksPerThread = totalBlocks div threads
-    let extraBlocks = totalBlocks mod threads
+    block:
+      # Multi-threaded execution
+      let totalBlocks = gridDim.x * gridDim.y * gridDim.z
+      let blocksPerThread = totalBlocks div threads
+      let extraBlocks = totalBlocks mod threads
 
-    var threadHandles: seq[Thread[proc () {.closure.}]]
-    threadHandles.setLen(threads)
+      var threadHandles: seq[Thread[proc () {.closure.}]]
+      threadHandles.setLen(threads)
 
-    proc makeClosure(tid: uint, startBlock: uint, endBlock: uint): proc() {.closure, gcsafe.} =
-      result = proc() {.closure.} =
-        # echo "Thread ", tid, " startBlock=", startBlock, " endBlock=", endBlock
-        for bz in 0..<gridDim.z:
-          for by in 0..<gridDim.y:
-            for bx in 0..<gridDim.x:
-              let blockIndex = (bx.uint + by.uint * gridDim.x + bz.uint * gridDim.x * gridDim.y).uint
-              if blockIndex >= startBlock and blockIndex < endBlock:
-                blockIdx.x = bx
-                blockIdx.y = by
-                blockIdx.z = bz
-                for tz in 0..<blockDim.z:
-                  for ty in 0..<blockDim.y:
-                    for tx in 0..<blockDim.x:
-                      threadIdx.x = tx
-                      threadIdx.y = ty
-                      threadIdx.z = tz
-                      unpackCall(fn, args)
+      proc makeClosure(tid: uint, startBlock: uint, endBlock: uint): proc() {.closure, gcsafe.} =
+        result = proc() {.closure.} =
+          # echo "Thread ", tid, " startBlock=", startBlock, " endBlock=", endBlock
+          for bz in 0..<gridDim.z:
+            for by in 0..<gridDim.y:
+              for bx in 0..<gridDim.x:
+                let blockIndex = (bx.uint + by.uint * gridDim.x + bz.uint * gridDim.x * gridDim.y).uint
+                if blockIndex >= startBlock and blockIndex < endBlock:
+                  blockIdx.x = bx
+                  blockIdx.y = by
+                  blockIdx.z = bz
+                  for tz in 0..<blockDim.z:
+                    for ty in 0..<blockDim.y:
+                      for tx in 0..<blockDim.x:
+                        threadIdx.x = tx
+                        threadIdx.y = ty
+                        threadIdx.z = tz
+                        unpackCall(fn, args)
 
-    var startBlock: uint = 0
-    for i in 0..<threads.uint:
-      let numBlocks = if i < extraBlocks: blocksPerThread + 1 else: blocksPerThread
-      let myStartBlock = startBlock
-      let myEndBlock = startBlock + numBlocks
-      let closure = makeClosure(i, myStartBlock, myEndBlock)
-      createThread(threadHandles[i], worker, closure)
-      startBlock = myEndBlock
+      var startBlock: uint = 0
+      for i in 0..<threads.uint:
+        let numBlocks = if i < extraBlocks: blocksPerThread + 1 else: blocksPerThread
+        let myStartBlock = startBlock
+        let myEndBlock = startBlock + numBlocks
+        let closure = makeClosure(i, myStartBlock, myEndBlock)
+        createThread(threadHandles[i], worker, closure)
+        startBlock = myEndBlock
 
-    for th in threadHandles:
-      joinThread(th)
+      for th in threadHandles:
+        joinThread(th)
 
 
 proc hippoSyncthreads*() =
