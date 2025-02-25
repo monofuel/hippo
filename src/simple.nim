@@ -3,10 +3,14 @@
 ## Otherwise it will only use 1 core.
 import std/[cpuinfo, macros]
 
-const SingleThread = defined(js) or not defined(threadsOn)
+const SingleThread = defined(js) or not compileOption("threads")
 
 when SingleThread:
+  echo "singlethread"
   {.warning: "hippo/simple: Compiled without --threads:on, performance will be limited to 1 core".}
+else:
+  echo "multithread"
+  {.warning: "hippo/simple: Compiling with --threads:on".}
 
 type
   Dim3* = object
@@ -39,19 +43,19 @@ proc newDim3*(x: uint = 1; y: uint = 1; z: uint = 1): Dim3 =
   result.z = z
 
 
-var threads = 1
+var threads = 1.uint
 
-proc setThreads*(n: int) =
+proc setThreads*(n: uint) =
   threads = n
 
 
 proc simpleInit() =
   ## get the number of cpu cores and set the number of threads to use.
   when SingleThread:
-    threads = countProcessors()
-    echo "DEBUG: hippo/simple: Using ", threads, " threads"
-  else:
     threads = 1
+  else:
+    threads = countProcessors().uint
+    echo "DEBUG: hippo/simple: Using ", threads, " threads"
 
 simpleInit()
 
@@ -74,7 +78,6 @@ var
 
 macro unpackCall(fn: untyped, args: untyped): untyped =
   ## Unpack the tuple and call the function with individual arguments, forcing type casting.
-  #TODO this would be better without type casting but computers are hard.
   let fnType = fn.getTypeInst()
   assert fnType.kind == nnkProcTy, "Expected a procedure type"
   let params = fnType[0]
@@ -85,14 +88,65 @@ macro unpackCall(fn: untyped, args: untyped): untyped =
     let castedArg = newTree(nnkCast, paramType, argExpr)
     result.add(castedArg)
 
-# Updated template for the CPU backend kernel launch
-template simpleLaunchKernel(fn: untyped, gridDim: Dim3, blockDim: Dim3, args: tuple) =
-  for bx in 0..<gridDim.x:
-    blockIdx.x = bx.uint32
-    for tx in 0..<blockDim.x:
-      threadIdx.x = tx.uint32
-      unpackCall(fn, args)
+when SingleThread:
 
+  template simpleLaunchKernel(fn: untyped, gridDim: Dim3, blockDim: Dim3, args: tuple) =
+    # Sequential execution
+    for bz in 0..<gridDim.z:
+      for by in 0..<gridDim.y:
+        for bx in 0..<gridDim.x:
+          blockIdx.x = bx
+          blockIdx.y = by
+          blockIdx.z = bz
+          for tz in 0..<blockDim.z:
+            for ty in 0..<blockDim.y:
+              for tx in 0..<blockDim.x:
+                threadIdx.x = tx
+                threadIdx.y = ty
+                threadIdx.z = tz
+                unpackCall(fn, args)
+
+else:
+
+  proc worker(closure: proc () {.closure.}) {.thread.} =
+    ## Worker procedure that executes the provided closure in a thread.
+    {.gcsafe.}:
+      closure()
+
+  template simpleLaunchKernel(fn: untyped, gridDim: Dim3, blockDim: Dim3, args: tuple) =
+    # Multi-threaded execution
+    let totalBlocks = gridDim.x * gridDim.y * gridDim.z
+    let blocksPerThread = totalBlocks div threads
+    let extraBlocks = totalBlocks mod threads
+
+    var threadHandles: seq[Thread[proc () {.closure.}]]
+    threadHandles.setLen(threads)
+    var startBlock = 0.uint
+
+    for i in 0..<threads.uint:
+      let numBlocks = if i < extraBlocks: blocksPerThread + 1 else: blocksPerThread
+      let endBlock = startBlock + numBlocks
+      proc threadClosure() {.closure.} =
+        for bz in 0..<gridDim.z:
+          for by in 0..<gridDim.y:
+            for bx in 0..<gridDim.x:
+              let blockIndex = bx + by * gridDim.x + bz * gridDim.x * gridDim.y
+              if blockIndex >= startBlock and blockIndex < endBlock:
+                blockIdx.x = bx
+                blockIdx.y = by
+                blockIdx.z = bz
+                for tz in 0..<blockDim.z:
+                  for ty in 0..<blockDim.y:
+                    for tx in 0..<blockDim.x:
+                      threadIdx.x = tx
+                      threadIdx.y = ty
+                      threadIdx.z = tz
+                      unpackCall(fn, args)
+      createThread(threadHandles[i], worker, threadClosure)
+      startBlock = endBlock
+
+    for th in threadHandles:
+      joinThread(th)
 
 
 proc hippoSyncthreads*() =

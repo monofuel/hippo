@@ -178,6 +178,11 @@ proc hippoRefcopy[T](gpuref: GpuRef): ref T =
   result = new T
   hippoMemcpy(addr result[], gpuref, size, HippoMemcpyDeviceToHost)
 
+proc hippoRefcopy[T](gpuref: GpuRef, target: ref T) =
+  ## Copies gpu memory to a ref object on the host
+  let size = sizeof(T)
+  hippoMemcpy(addr target[], gpuref, size, HippoMemcpyDeviceToHost)
+
 # -------------------
 # Kernel Execution
 

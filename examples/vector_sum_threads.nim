@@ -9,6 +9,7 @@ const N: int32 = 10
 
 proc addKernel(a, b, c: ptr[cint]){.hippoGlobal.} =
   let tid = blockIdx.x  # handle data at this index as an integer
+  echo "tid: ", tid
   if tid < N.uint:  # guard for out of bounds
     let aArray = cast[ptr UncheckedArray[cint]](a)
     let bArray = cast[ptr UncheckedArray[cint]](b)
