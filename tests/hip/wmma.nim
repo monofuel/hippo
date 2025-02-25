@@ -72,8 +72,6 @@ __global__ void wmma_matmul(__half* a, __half* b, __half* c)
 """
 .}
 
-# proc wmmaKernel*(A: ptr half, B: ptr half, C: ptr cfloat) {.importcpp: "wmmaKernel".}
-# wmma_matmul(__half* a, __half* b, __half* c)
 proc wmmaMatmul(a: ptr half, b: ptr half, c: ptr half) {.importcpp: "wmma_matmul".}
 
 
@@ -149,40 +147,8 @@ proc main() =
 
   for i in 0..<16:
     for j in 0..<16:
-      echo c[i*16 + j]
-
-
-
-  # old hip example
-  # var a,b,c: array[N, int32] # host-side arrays
-
-  # # allocate gpu memory
-  # var dev_a = hippoMalloc(sizeof(int32)*N)
-  # var dev_b = hippoMalloc(sizeof(int32)*N)
-  # var dev_c = hippoMalloc(sizeof(int32)*N)
-
-  # # fill in arrays a and b on the host
-  # for i in 0..<N:
-  #   a[i] = -i
-  #   b[i] = i * i
-
-  # # copy data to device
-  # hippoMemcpy(dev_a, addr a[0], sizeof(int32)*N, hipMemcpyHostToDevice)
-  # hippoMemcpy(dev_b, addr b[0], sizeof(int32)*N, hipMemcpyHostToDevice)
-
-  # # launch kernel
-  # hippoLaunchKernel(
-  #   addkernel,
-  #   gridDim = newDim3(N.uint32),
-  #   args = hippoArgs(dev_a.p, dev_b.p, dev_c.p)
-  # )
-
-  # # copy result back to host
-  # hippoMemcpy(addr c[0], dev_c, sizeof(int32)*N, hipMemcpyDeviceToHost)
-
-  # # display the results
-  # for i in 0..<N:
-  #   echo a[i], " + ", b[i], " = ", c[i]
+      stdout.write fmt"{c[i*16 + j]} "
+    stdout.write "\n"
 
   # Hippo automatically frees gpu memory when it goes out of scope
 
