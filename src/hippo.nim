@@ -178,7 +178,7 @@ template hippoLaunchKernel*(
   blockDim: Dim3 = newDim3(1,1,1),  ## default to 1 thread per block
   sharedMemBytes: uint32 = 0,       ## dynamic shared memory amount to allocate
   stream: HippoStream = nil,        ## Which device stream to run under (defaults to null)
-  args: tuple,     ## tuple of pointers to arguments (pointers to arguments! not arguments!) to pass to the GPU kernel
+  args: untyped,     ## tuple of pointers to arguments (pointers to arguments! not arguments!) to pass to the GPU kernel
 ) =
   var result: HippoError
   ## Launch a kernel on the GPU.
@@ -187,14 +187,12 @@ template hippoLaunchKernel*(
   ## If you need help debugging, you can call hippoSynchronize() to wait for the kernel to finish and report errors.
 
   when HippoRuntime == "HIP" and HipPlatform == "amd":
-    var kernelArgs: seq[ptr pointer]
-    for arg in args:
-      kernelArgs.add(arg)
+    var kernelArgs: seq[pointer] = cast[seq[pointer]](args)
     result = hipLaunchKernel(
       cast[pointer](kernel),
       gridDim,
       blockDim,
-      cast[ptr pointer](addr kernelArgs[0]),
+      addr kernelArgs[0],
       sharedMemBytes,
       stream
     )
@@ -209,14 +207,12 @@ template hippoLaunchKernel*(
     )
     result = hipGetLastError()
   elif HippoRuntime == "CUDA":
-    var kernelArgs: seq[ptr pointer]
-    for arg in args:
-      kernelArgs.add(arg)
+    var kernelArgs: seq[pointer] = cast[seq[pointer]](args)
     result = cudaLaunchKernel(
       kernel,
       gridDim,
       blockDim,
-      cast[ptr pointer](addr kernelArgs[0]),
+      addr kernelArgs[0],
       sharedMemBytes,
       stream
     )
@@ -316,8 +312,8 @@ macro hippoArgs*(args: varargs[untyped]): untyped =
       tupleNode.add(arg)
     result = tupleNode
   else:
-    # Create a tuple constructor with pointers to arguments
-    var tupleNode = newNimNode(nnkTupleConstr)
+    var seqNode = newNimNode(nnkBracket)
     for arg in args:
-      tupleNode.add(newCall("addr", arg))
-    result = tupleNode
+      seqNode.add(newCall("addr", arg))
+    result = quote do:
+      @`seqNode`
