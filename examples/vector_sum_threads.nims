@@ -1,0 +1,3 @@
+--define:"HippoRuntime:SIMPLE"
+--path:"../src"
+--threads:on
