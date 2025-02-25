@@ -166,6 +166,12 @@ proc `=destroy`*(mem: var GpuMemory) =
     hippoFree(mem.p)
     mem.p = nil
 
+proc hippoRefcopy[T](obj: ref T): GpuRef =
+  ## Performs a shallow copy of a ref object to the GPU.
+  let size = sizeof(T)
+  result = hippoMalloc(size)
+  hippoMemcpy(result, addr obj[], size, HippoMemcpyHostToDevice)
+
 # -------------------
 # Kernel Execution
 
