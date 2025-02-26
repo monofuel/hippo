@@ -12,8 +12,17 @@ import hippo, std/strformat
 // Use half16 as an alias of the internal clang vector type of 16 fp16 values
 typedef _Float16 half16 __attribute__((ext_vector_type(16)));
 
-__global__ void wmma_matmul(__half* a, __half* b, __half* c)
-{
+"""
+.}
+
+
+proc wmmaMatmul(
+  a {.exportc.}: ptr half,
+  b {.exportc.}: ptr half,
+  c {.exportc.}: ptr half
+) {.hippoGlobal.} =
+  {.emit:"""
+
     const int gIdx = blockIdx.x * blockDim.x + threadIdx.x;
     const int lIdx = threadIdx.x;
 
@@ -50,56 +59,11 @@ __global__ void wmma_matmul(__half* a, __half* b, __half* c)
         // c[16 * r + lane] = c_frag[ele*2 + 1];
     }
 
-}
-"""
-.}
-
-proc wmmaMatmul(a: ptr half, b: ptr half, c: ptr half) {.importcpp: "wmma_matmul".}
+  """
+  .}
 
 
 proc main() =
-
-  # {.emit: """
-  # __half a[16 * 16] = {};
-  # __half b[16 * 16] = {};
-  # __half c[16 * 16] = {};
-  # __half *a_gpu, *b_gpu, *c_gpu;
-  # hipMalloc(&a_gpu, 16*16 * sizeof(__half));
-  # hipMalloc(&b_gpu, 16*16 * sizeof(__half));
-  # hipMalloc(&c_gpu, 16*16 * sizeof(__half));
-
-  # // fill in some data into matrices A and B
-  # for (int i = 0; i < 16; ++i)
-  # {
-  #     for (int j = 0; j < 16; ++j)
-  #     {
-  #         a[i * 16 + j] = (__half)1.f;
-  #         b[i * 16 + j] = (__half)1.f;
-  #     }
-  # }
-
-  # hipMemcpy(a_gpu, a, (16*16) * sizeof(__half), hipMemcpyHostToDevice);
-  # hipMemcpy(b_gpu, b, (16*16) * sizeof(__half), hipMemcpyHostToDevice);
-  # hipMemcpy(c_gpu, c, (16*16) * sizeof(__half), hipMemcpyHostToDevice);
-
-  # wmma_matmul<<<dim3(1), dim3(32, 1, 1), 0, 0>>>(a_gpu, b_gpu, c_gpu);
-
-  # hipMemcpy(c, c_gpu, (16 * 16) * sizeof(__half), hipMemcpyDeviceToHost);
-
-  # hipFree(a_gpu);
-  # hipFree(b_gpu);
-  # hipFree(c_gpu);
-
-  # for (int i = 0; i < 16; ++i)
-  # {
-  #     for (int j = 0; j < 16; ++j)
-  #     {
-  #         printf("%f ", (float)c[i * 16 + j]);
-  #     }
-  #     printf("\\n");
-  # }
-  # """.}
-
 
   var
     a: array[16*16, half]
@@ -131,8 +95,6 @@ proc main() =
     for j in 0..<16:
       stdout.write fmt"{c[i*16 + j]} "
     stdout.write "\n"
-
-  # Hippo automatically frees gpu memory when it goes out of scope
 
 when isMainModule:
   main()
