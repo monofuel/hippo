@@ -1,31 +1,16 @@
 # https://gpuopen.com/learn/wmma_on_rdna3/
+# Wave Matrix Multiply Accumulate (WMMA) using HIP compiler intrinsic
+# Does a matrix multiplication of two 16x16, fp16 matrices, and stores them into a 16x16 fp16 result matrix
 
 import hippo, std/strformat
 
 
-type
-  half* {.importcpp: "__half", header: "hip/hip_fp16.h".} = object
 
-# Conversion from float to half - renamed to avoid name collision
-proc toHalf*(x: float32): half {.importcpp: "(__half)#", nodecl.}
-proc toHalf*(x: float64): half {.importcpp: "(__half)#", nodecl.}
-proc toHalf*(x: int): half {.importcpp: "(__half)#", nodecl.}
-
-# Conversion from half to float (for displaying values)
-proc toFloat*(x: half): float32 {.importcpp: "(float)#", nodecl.}
-
-# String representation for debugging
-proc `$`*(x: half): string = $x.toFloat()
 
 {.emit:"""
-// Wave Matrix Multiply Accumulate (WMMA) using HIP compiler intrinsic
-// Does a matrix multiplication of two 16x16, fp16 matrices, and stores them into a 16x16 fp16 result matrix
 
-#include <iostream>
 #include <hip/hip_runtime.h>
 #include <hip/hip_fp16.h>
-
-using namespace std;
 
 // Use half16 as an alias of the internal clang vector type of 16 fp16 values
 typedef _Float16 half16 __attribute__((ext_vector_type(16)));
