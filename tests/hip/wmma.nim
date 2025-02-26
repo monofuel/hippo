@@ -1,20 +1,13 @@
 # https://gpuopen.com/learn/wmma_on_rdna3/
 # Wave Matrix Multiply Accumulate (WMMA) using HIP compiler intrinsic
 # Does a matrix multiplication of two 16x16, fp16 matrices, and stores them into a 16x16 fp16 result matrix
-
 import hippo, std/strformat
 
-
-
-
 {.emit:"""
-
 // Use half16 as an alias of the internal clang vector type of 16 fp16 values
 typedef _Float16 half16 __attribute__((ext_vector_type(16)));
-
 """
 .}
-
 
 proc wmmaMatmul(
   a {.exportc.}: ptr half,
@@ -58,10 +51,8 @@ proc wmmaMatmul(
         // if OPSEL was set to "true", the line above would instead be
         // c[16 * r + lane] = c_frag[ele*2 + 1];
     }
-
   """
   .}
-
 
 proc main() =
 
