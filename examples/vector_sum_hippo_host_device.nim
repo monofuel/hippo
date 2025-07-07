@@ -1,18 +1,21 @@
-# vector_sums_hippo.nims is setup for hipcc to build for amd
-# but it should work with either --cc:hipcc or --cc:nvcc
-# hippo functions will translate to cuda or hip automatically depending on which is compiled for
+# vector_sums_hippo_host_device.nim showcases how to use
+# __device__ and __host__ functions in the same program.
 
 import hippo
 
 const N: int32 = 10
 
-proc addKernel(a, b, c: ptr[cint]){.autoDeviceKernel, hippoGlobal.} =
+proc addFunc(a, b: int32): int32 {.hippoHostDevice.} =
+  ## Host or Device usable function
+  return a + b
+
+proc addKernel(a, b, c: ptr[cint]){.hippoGlobal.} =
   let tid = blockIdx.x  # handle data at this index as an integer
   if tid < N.uint:  # guard for out of bounds
     let aArray = cast[ptr UncheckedArray[cint]](a)
     let bArray = cast[ptr UncheckedArray[cint]](b)
     let cArray = cast[ptr UncheckedArray[cint]](c)
-    cArray[tid] = aArray[tid] + bArray[tid]
+    cArray[tid] = addFunc(aArray[tid], bArray[tid])
 
 proc main() =
   var a,b,c: array[N, int32] # host-side arrays
@@ -40,6 +43,12 @@ proc main() =
 
   # copy result back to host
   hippoMemcpy(addr c[0], dev_c, sizeof(int32)*N, hipMemcpyDeviceToHost)
+
+  # verify results using CPU
+  for i in 0..<N:
+    let cpuResult = addFunc(a[i], b[i])
+    assert c[i] == cpuResult, "GPU and CPU results don't match at index " & $i & 
+      ". GPU: " & $c[i] & ", CPU: " & $cpuResult
 
   # display the results
   for i in 0..<N:

@@ -1,12 +1,13 @@
-# vector_sums_hippo.nims is setup for hipcc to build for amd
-# but it should work with either --cc:hipcc or --cc:nvcc
-# hippo functions will translate to cuda or hip automatically depending on which is compiled for
+# vector_sums_threads.nims is setup to use the SIMPLE pure nim backend with --threads:on
+# does not need hipcc or nvcc, or require compiling with cpp
+# --define:"HippoRuntime:SIMPLE"
+# only hippo functions are available, no hip or cuda functions. will try to emulate gpu behavior.
 
 import hippo
 
 const N: int32 = 10
 
-proc addKernel(a, b, c: ptr[cint]){.autoDeviceKernel, hippoGlobal.} =
+proc addKernel(a, b, c: ptr[cint]){.hippoGlobal.} =
   let tid = blockIdx.x  # handle data at this index as an integer
   if tid < N.uint:  # guard for out of bounds
     let aArray = cast[ptr UncheckedArray[cint]](a)
@@ -28,8 +29,8 @@ proc main() =
     b[i] = i * i
 
   # copy data to device
-  hippoMemcpy(dev_a, addr a[0], sizeof(int32)*N, hipMemcpyHostToDevice)
-  hippoMemcpy(dev_b, addr b[0], sizeof(int32)*N, hipMemcpyHostToDevice)
+  hippoMemcpy(dev_a, addr a[0], sizeof(int32)*N, HippoMemcpyHostToDevice)
+  hippoMemcpy(dev_b, addr b[0], sizeof(int32)*N, HippoMemcpyHostToDevice)
 
   # launch kernel
   hippoLaunchKernel(
@@ -39,7 +40,7 @@ proc main() =
   )
 
   # copy result back to host
-  hippoMemcpy(addr c[0], dev_c, sizeof(int32)*N, hipMemcpyDeviceToHost)
+  hippoMemcpy(addr c[0], dev_c, sizeof(int32)*N, HippoMemcpyDeviceToHost)
 
   # display the results
   for i in 0..<N:

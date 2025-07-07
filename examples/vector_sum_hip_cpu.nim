@@ -1,8 +1,7 @@
-# this example uses raw cuda functions and compiles with nvcc (no hip involved)
-# vector_sum_cuda.nims is setup with nvcc to build for GPU
-# requires nim >= 2.1.9
-# nim cpp -r examples/vector_sum_cuda.nim
-# when using nvcc, can only use cuda functions or hippo functions (maps to cuda)
+# vector_sums_cpu.nims is setup to use HIP-CPU
+# does not need hipcc or nvcc
+# --define:"HippoRuntime:HIP_CPU"
+# cannot use cuda functions. use hip or hippo (maps to hip)
 
 import hippo
 
@@ -21,9 +20,9 @@ proc main() =
   var dev_a, dev_b, dev_c: pointer
 
   # allocate gpu memory
-  handleError(cudaMalloc(addr dev_a, sizeof(int32)*N))
-  handleError(cudaMalloc(addr dev_b, sizeof(int32)*N))
-  handleError(cudaMalloc(addr dev_c, sizeof(int32)*N))
+  handleError(hipMalloc(addr dev_a, sizeof(int32)*N))
+  handleError(hipMalloc(addr dev_b, sizeof(int32)*N))
+  handleError(hipMalloc(addr dev_c, sizeof(int32)*N))
 
   # fill in arrays a and b on the host
   for i in 0..<N:
@@ -31,27 +30,27 @@ proc main() =
     b[i] = i * i
 
   # copy data to device
-  handleError(cudaMemcpy(dev_a, addr a[0], sizeof(int32)*N, cudaMemcpyHostToDevice))
-  handleError(cudaMemcpy(dev_b, addr b[0], sizeof(int32)*N, cudaMemcpyHostToDevice))
+  handleError(hipMemcpy(dev_a, addr a[0], sizeof(int32)*N, hipMemcpyHostToDevice))
+  handleError(hipMemcpy(dev_b, addr b[0], sizeof(int32)*N, hipMemcpyHostToDevice))
 
   # launch kernel
   hippoLaunchKernel(
     addkernel,
     gridDim = newDim3(N.uint32),
-    args = hippoArgs(dev_a, dev_b, dev_c)
+    args = (dev_a, dev_b, dev_c)
   )
-  
+
   # copy result back to host
-  handleError(cudaMemcpy(addr c[0], dev_c, sizeof(int32)*N, cudaMemcpyDeviceToHost))
+  handleError(hipMemcpy(addr c[0], dev_c, sizeof(int32)*N, hipMemcpyDeviceToHost))
 
   # display the results
   for i in 0..<N:
     echo a[i], " + ", b[i], " = ", c[i]
 
   # free gpu memory
-  handleError(cudaFree(dev_a))
-  handleError(cudaFree(dev_b))
-  handleError(cudaFree(dev_c))
+  handleError(hipFree(dev_a))
+  handleError(hipFree(dev_b))
+  handleError(hipFree(dev_c))
 
 when isMainModule:
   main()
