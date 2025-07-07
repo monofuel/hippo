@@ -1,5 +1,5 @@
 import
-  std/[strformat, os, macros, strutils]
+  std/[strformat, os, macros, strutils, tables, sequtils]
 
 
 # supported runtimes: HIP, HIP_CPU, CUDA, and SIMPLE
@@ -374,72 +374,213 @@ proc findCalledFunctions(n: NimNode): seq[NimNode] =
     for child in n:
       result.add(findCalledFunctions(child))
 
-proc createHostDeviceVersion(funcName: string, originalFunc: NimNode): NimNode =
-  ## Create a __host__ __device__ version of a function
-  result = copyNimTree(originalFunc)
+proc shouldWrapFunction(funcName: string): bool =
+  ## Determine if a function should be wrapped for device execution
+  if funcName in deviceAnnotatedFunctions:
+    return false  # Already processed
   
-  when HippoRuntime != "SIMPLE":
-    let hostDevicePragma = quote do:
-      {.exportc, codegenDecl: "__host__ __device__ $# $#$#".}
-    
-    result.addPragma(hostDevicePragma[0])
-    result.addPragma(hostDevicePragma[1])
+  # Skip system functions, operators, and built-ins
+  if funcName in ["len", "high", "low", "int", "uint8", "float", "cfloat", "addr", "cast", "sizeof"]:
+    return false
+  if funcName.startsWith("nim"):
+    return false
+  if funcName.startsWith("system"):
+    return false
+  if funcName.startsWith("=") or funcName.startsWith("@"):
+    return false
+  if funcName in [".", "[]", "+", "-", "*", "/", "==", "!=", "<", ">", "<=", ">="]:
+    return false
   
-  # Add stackTrace off and checks off for device compatibility
-  let devicePragmas = quote do:
-    {.push stackTrace: off, checks: off.}
-  result.addPragma(devicePragmas[0])
+  # Skip single character identifiers (likely variables)
+  if funcName.len == 1:
+    return false
+  
+  # Skip common variable names
+  if funcName in ["x", "y", "z", "i", "j", "k", "offset", "res"]:
+    return false
+  
+  return true
 
-macro autoDeviceKernel*(fn: untyped): untyped =
-  ## Automatically annotate functions called from this kernel as __host__ __device__
+proc transformFunctionCalls(node: NimNode, wrapperMap: Table[string, string]): NimNode =
+  ## Transform function calls to use device wrappers
+  result = copyNimNode(node)
   
-  # First apply hippoGlobal to the kernel itself
-  var kernelFunc = copyNimTree(fn)
-  when HippoRuntime != "SIMPLE":
-    let globalPragma = quote do:
-      {.exportc, codegenDecl: "__global__ $# $#$#".}
-    kernelFunc.addPragma(globalPragma[0])
-    kernelFunc.addPragma(globalPragma[1])
+  case node.kind
+  of nnkCall, nnkCommand:
+    if node.len > 0:
+      case node[0].kind
+      of nnkIdent:
+        let funcName = node[0].strVal
+        if wrapperMap.hasKey(funcName):
+          result.add(ident(wrapperMap[funcName]))
+        else:
+          result.add(transformFunctionCalls(node[0], wrapperMap))
+      of nnkSym:
+        let funcName = node[0].strVal
+        if wrapperMap.hasKey(funcName):
+          result.add(ident(wrapperMap[funcName]))
+        else:
+          result.add(transformFunctionCalls(node[0], wrapperMap))
+      else:
+        result.add(transformFunctionCalls(node[0], wrapperMap))
+    
+    # Transform arguments
+    for i in 1 ..< node.len:
+      result.add(transformFunctionCalls(node[i], wrapperMap))
+  else:
+    # Transform all children
+    for child in node:
+      result.add(transformFunctionCalls(child, wrapperMap))
+
+macro autoDeviceKernel*(fn: typed): untyped =
+  ## Automatically create device wrapper functions for called functions and transform kernel to use them
   
-  let kernelWithStackTrace = quote do:
-    {.push stackTrace: off, checks: off.}
-    `kernelFunc`
-    {.pop.}
+  # Extract the actual function definition
+  let actualFunc = 
+    if fn.kind == nnkStmtList and fn.len >= 2:
+      fn[1] # The function is at index 1
+    else:
+      fn
   
-  result = newStmtList()
-  result.add(kernelWithStackTrace)
+  if actualFunc.kind notin {nnkProcDef, nnkFuncDef}:
+    error("autoDeviceKernel expects a function definition")
+    return fn
   
-  # Find all function calls in the kernel body
-  let calledFunctions = findCalledFunctions(fn.body)
+  # Get the function body
+  let functionBody = actualFunc[6]
   
-  # For functions we can't automatically annotate, suggest manual annotation
-  var functionsToAnnotate: seq[string] = @[]
+  # Find all function calls recursively
+  let calledFunctions = findCalledFunctions(functionBody)
   
+  # Create device versions and mapping
+  var deviceFunctions: seq[NimNode] = @[]
+  var functionMapping = initTable[string, string]()
+  var processedFunctions: seq[string] = @[]
+  
+  # Process called functions to create device wrappers
+  proc processFunction(funcNode: NimNode, funcName: string) =
+    if funcName in processedFunctions or not shouldWrapFunction(funcName):
+      return
+    
+    processedFunctions.add(funcName)
+    
+    if funcNode.kind == nnkSym:
+      try:
+        let funcImpl = funcNode.getImpl()
+        if funcImpl.kind in {nnkProcDef, nnkFuncDef, nnkMethodDef}:
+          let deviceName = "gpu_" & funcName
+          
+          # Extract function signature
+          let funcSignature = funcImpl[3] # FormalParams
+          let returnType = funcSignature[0]
+          
+          # Create new parameter symbols and build wrapper signature
+          var wrapperParams = newNimNode(nnkFormalParams)
+          wrapperParams.add(returnType)
+          
+          var paramMapping = newSeq[(NimNode, NimNode)]() # (original, new)
+          var callArgs = newSeq[NimNode]()
+          
+          for i in 1 ..< funcSignature.len:
+            let paramDef = funcSignature[i]
+            if paramDef.kind == nnkIdentDefs:
+              let paramType = paramDef[paramDef.len - 2]
+              
+              # Create new parameter definitions with fresh symbols
+              var newParamDef = newNimNode(nnkIdentDefs)
+              for j in 0 ..< paramDef.len - 2:
+                let originalParam = paramDef[j]
+                let newParam = genSym(nskParam, $originalParam)
+                paramMapping.add((originalParam, newParam))
+                newParamDef.add(newParam)
+                callArgs.add(newParam)
+              
+              newParamDef.add(paramType)
+              newParamDef.add(newEmptyNode())
+              wrapperParams.add(newParamDef)
+          
+          # Create the call to the original function
+          var originalCall = newCall(ident(funcName))
+          for arg in callArgs:
+            originalCall.add(arg)
+          
+          # Create wrapper body
+          let wrapperBody = newStmtList(
+            newNimNode(nnkReturnStmt).add(originalCall)
+          )
+          
+          # Create the device wrapper function
+          var deviceWrapper = newNimNode(nnkProcDef)
+          deviceWrapper.add(ident(deviceName))  # name
+          deviceWrapper.add(newEmptyNode())     # generics
+          deviceWrapper.add(newEmptyNode())     # unused
+          deviceWrapper.add(wrapperParams)      # params
+          
+          # Add device pragmas
+          var pragmas = newNimNode(nnkPragma)
+          when HippoRuntime != "SIMPLE":
+            pragmas.add(ident("exportc"))
+            
+            let codegenDecl = newNimNode(nnkExprColonExpr)
+            codegenDecl.add(ident("codegenDecl"))
+            codegenDecl.add(newStrLitNode("__host__ __device__ $# $#$#"))
+            pragmas.add(codegenDecl)
+          
+          deviceWrapper.add(pragmas)            # pragmas
+          deviceWrapper.add(newEmptyNode())     # reserved
+          deviceWrapper.add(wrapperBody)        # body
+          
+          # Wrap with push/pop pragmas for stackTrace and checks
+          let wrappedDeviceFunc = quote do:
+            {.push stackTrace: off, checks: off.}
+            `deviceWrapper`
+            {.pop.}
+          
+          deviceFunctions.add(wrappedDeviceFunc)
+          functionMapping[funcName] = deviceName
+          
+          # Recursively process functions called by the original function
+          let nestedCalls = findCalledFunctions(funcImpl[6])
+          for nestedCall in nestedCalls:
+            if nestedCall.kind in {nnkSym, nnkIdent}:
+              let nestedName = $nestedCall
+              processFunction(nestedCall, nestedName)
+      except:
+        # If we can't get the implementation, skip this function
+        discard
+  
+  # Process all called functions
   for funcNode in calledFunctions:
     if funcNode.kind in {nnkSym, nnkIdent}:
       let funcName = $funcNode
-      # Skip if already processed or if it's a built-in/standard function
-      if (funcName notin deviceAnnotatedFunctions and 
-          not funcName.startsWith("nim") and 
-          not funcName.startsWith("system") and
-          funcName != "len" and funcName != "high" and funcName != "low" and
-          funcName != "int" and funcName != "uint8" and funcName != "float"):
-        
-        deviceAnnotatedFunctions.add(funcName)
-        functionsToAnnotate.add(funcName)
-        
-        # Try to get the function implementation for nnkSym nodes
-        if funcNode.kind == nnkSym:
-          let funcImpl = funcNode.getImpl()
-          if funcImpl.kind in {nnkProcDef, nnkFuncDef, nnkMethodDef}:
-            let deviceVersion = createHostDeviceVersion(funcName, funcImpl)
-            result.add(deviceVersion)
-            continue
+      processFunction(funcNode, funcName)
   
-  # Issue a single comprehensive warning for all functions that need manual annotation
-  if functionsToAnnotate.len > 0:
-    let funcList = functionsToAnnotate.join(", ")
-    warning("Functions called from autoDeviceKernel should be manually annotated with {.hippoHostDevice.}: " & funcList)
+  # Build the result
+  result = newStmtList()
+  
+  # Add all device functions first
+  for deviceFunc in deviceFunctions:
+    result.add(deviceFunc)
+  
+  # Transform the kernel to use device functions
+  if functionMapping.len > 0:
+    var transformedKernel = copyNimTree(fn)
+    let transformedBody = transformFunctionCalls(functionBody, functionMapping)
+    
+    # Update the kernel body to use device function calls
+    if transformedKernel.kind == nnkStmtList and transformedKernel.len >= 2:
+      transformedKernel[1][6] = transformedBody
+    else:
+      transformedKernel[6] = transformedBody
+    
+    result.add(transformedKernel)
+    
+    # Log what was created
+    let deviceNames = functionMapping.values.toSeq.join(", ")
+    hint("autoDeviceKernel created device wrappers: " & deviceNames)
+  else:
+    # No functions to transform, return original
+    result.add(fn)
 
 
 macro hippoArgs*(args: varargs[untyped]): untyped =
@@ -460,3 +601,5 @@ macro hippoArgs*(args: varargs[untyped]): untyped =
       )
     result = quote do:
       @`seqNode`
+
+

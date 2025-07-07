@@ -9,16 +9,16 @@ type CuComplex {.exportcpp.}= object
   r: cfloat
   i: cfloat
 
-proc newCuComplex(a,b: float): CuComplex = # no pragmas
+proc newCuComplex(a,b: float): CuComplex = # External library function
   return CuComplex(r: a, i: b)
 
-proc magnitude2(this: CuComplex): cfloat = # no pragmas
+proc magnitude2(this: CuComplex): cfloat = # External library function
   return this.r * this.r + this.i * this.i
 
-proc multiply(a,b: CuComplex): CuComplex = # no pragmas
+proc multiply(a,b: CuComplex): CuComplex = # External library function
   return newCuComplex(a.r*b.r - a.i*b.i, a.i*b.r + a.r*b.i)
 
-proc add(a,b: CuComplex): CuComplex = # no pragmas
+proc add(a,b: CuComplex): CuComplex = # External library function
   return newCuComplex(a.r+b.r, a.i+b.i)
 
 # proc `*`(a,b: CuComplex): CuComplex =
@@ -27,7 +27,7 @@ proc add(a,b: CuComplex): CuComplex = # no pragmas
 # proc `+`(a,b: CuComplex): CuComplex =
 #   return newCuComplex(a.r+b.r, a.i+b.i)
 
-proc julia(x,y: int): int = # no pragmas
+proc julia(x,y: int): int = # External library function
   const scale: float = 1.5
   let jx: float = scale * (DIM/2.float - x.float) / (DIM/2.float)
   let jy: float = scale * (DIM/2.float - y.float) / (DIM/2.float)
@@ -97,6 +97,7 @@ proc main() =
   hippoMemcpy(addr image.data[0], devBitmap, image.getSize(), HippoMemcpyDeviceToHost)
 
   image.writeFile("julia.png")
+  echo "Julia set image generated successfully!"
 
   displayUntilExit(image)
 
