@@ -356,9 +356,10 @@ macro hippoConstant*(v: untyped): untyped =
 
 macro autoDeviceKernel*(v: untyped): untyped =
   # TODO
+  # autoDeviceKernel should automatically annotate functions that we call as __device__
   when HippoRuntime != "SIMPLE":
     quote do:
-      {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__host__ __device__ $# $#".}
+      {.push stackTrace: off, checks: off, noinit, exportc .}
       `v`
       {.pop.}
   else:

@@ -1,7 +1,7 @@
 --path:"../../src"
---define:"HippoRuntime:HIP"
+# --define:"HippoRuntime:HIP"
 --define:"pixieNoSimd"
 --define:"zippyNoSimd"
 --define:"crunchyNoSimd"
---cc:hipcc
---define:"useMalloc"
+# --cc:hipcc
+#--define:"useMalloc"
