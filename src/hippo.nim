@@ -1,5 +1,5 @@
 import
-  std/[strformat, os, macros]
+  std/[strformat, os, macros, strutils]
 
 
 # supported runtimes: HIP, HIP_CPU, CUDA, and SIMPLE
@@ -354,18 +354,92 @@ macro hippoConstant*(v: untyped): untyped =
     {.pop.}
 
 
-macro autoDeviceKernel*(v: untyped): untyped =
-  # TODO
-  # autoDeviceKernel should automatically annotate functions that we call as __device__
-  when HippoRuntime != "SIMPLE":
-    quote do:
-      {.push stackTrace: off, checks: off, noinit, exportc .}
-      `v`
-      {.pop.}
+var deviceAnnotatedFunctions {.compileTime.}: seq[string] = @[]
+
+proc findCalledFunctions(n: NimNode): seq[NimNode] =
+  ## Recursively walk AST to find all function calls
+  result = newSeq[NimNode]()
+  case n.kind:
+  of nnkCall, nnkCommand:
+    if n.len > 0 and n[0].kind in {nnkIdent, nnkSym}:
+      result.add(n[0])
+    for child in n:
+      result.add(findCalledFunctions(child))
+  of nnkDotExpr:
+    if n.len > 1 and n[1].kind in {nnkIdent, nnkSym}:
+      result.add(n[1])
+    for child in n:
+      result.add(findCalledFunctions(child))
   else:
-    # TODO proper thread vars
-    quote do:
-      `v`
+    for child in n:
+      result.add(findCalledFunctions(child))
+
+proc createHostDeviceVersion(funcName: string, originalFunc: NimNode): NimNode =
+  ## Create a __host__ __device__ version of a function
+  result = copyNimTree(originalFunc)
+  
+  when HippoRuntime != "SIMPLE":
+    let hostDevicePragma = quote do:
+      {.exportc, codegenDecl: "__host__ __device__ $# $#$#".}
+    
+    result.addPragma(hostDevicePragma[0])
+    result.addPragma(hostDevicePragma[1])
+  
+  # Add stackTrace off and checks off for device compatibility
+  let devicePragmas = quote do:
+    {.push stackTrace: off, checks: off.}
+  result.addPragma(devicePragmas[0])
+
+macro autoDeviceKernel*(fn: untyped): untyped =
+  ## Automatically annotate functions called from this kernel as __host__ __device__
+  
+  # First apply hippoGlobal to the kernel itself
+  var kernelFunc = copyNimTree(fn)
+  when HippoRuntime != "SIMPLE":
+    let globalPragma = quote do:
+      {.exportc, codegenDecl: "__global__ $# $#$#".}
+    kernelFunc.addPragma(globalPragma[0])
+    kernelFunc.addPragma(globalPragma[1])
+  
+  let kernelWithStackTrace = quote do:
+    {.push stackTrace: off, checks: off.}
+    `kernelFunc`
+    {.pop.}
+  
+  result = newStmtList()
+  result.add(kernelWithStackTrace)
+  
+  # Find all function calls in the kernel body
+  let calledFunctions = findCalledFunctions(fn.body)
+  
+  # For functions we can't automatically annotate, suggest manual annotation
+  var functionsToAnnotate: seq[string] = @[]
+  
+  for funcNode in calledFunctions:
+    if funcNode.kind in {nnkSym, nnkIdent}:
+      let funcName = $funcNode
+      # Skip if already processed or if it's a built-in/standard function
+      if (funcName notin deviceAnnotatedFunctions and 
+          not funcName.startsWith("nim") and 
+          not funcName.startsWith("system") and
+          funcName != "len" and funcName != "high" and funcName != "low" and
+          funcName != "int" and funcName != "uint8" and funcName != "float"):
+        
+        deviceAnnotatedFunctions.add(funcName)
+        functionsToAnnotate.add(funcName)
+        
+        # Try to get the function implementation for nnkSym nodes
+        if funcNode.kind == nnkSym:
+          let funcImpl = funcNode.getImpl()
+          if funcImpl.kind in {nnkProcDef, nnkFuncDef, nnkMethodDef}:
+            let deviceVersion = createHostDeviceVersion(funcName, funcImpl)
+            result.add(deviceVersion)
+            continue
+  
+  # Issue a single comprehensive warning for all functions that need manual annotation
+  if functionsToAnnotate.len > 0:
+    let funcList = functionsToAnnotate.join(", ")
+    warning("Functions called from autoDeviceKernel should be manually annotated with {.hippoHostDevice.}: " & funcList)
 
 
 macro hippoArgs*(args: varargs[untyped]): untyped =
