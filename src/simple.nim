@@ -72,6 +72,8 @@ proc handleError(err: HippoError) =
 var
   blockIdx* {.threadvar.}: BlockIdx
   threadIdx* {.threadvar.}: ThreadIdx
+  blockDim* {.threadvar.}: BlockDim
+  gridDim* {.threadvar.}: GridDim
 
 macro unpackCall(fn: untyped, args: untyped): untyped =
   ## Unpack the tuple and call the function with individual arguments, forcing type casting.
@@ -87,17 +89,19 @@ macro unpackCall(fn: untyped, args: untyped): untyped =
 
 when SingleThread:
 
-  template simpleLaunchKernel(fn: untyped, gridDim: Dim3, blockDim: Dim3, args: tuple) =
+  template simpleLaunchKernel(fn: untyped, gridDimArg: Dim3, blockDimArg: Dim3, args: tuple) =
     # Sequential execution
-    for bz in 0..<gridDim.z:
-      for by in 0..<gridDim.y:
-        for bx in 0..<gridDim.x:
+    gridDim = gridDimArg
+    blockDim = blockDimArg
+    for bz in 0..<gridDimArg.z:
+      for by in 0..<gridDimArg.y:
+        for bx in 0..<gridDimArg.x:
           blockIdx.x = bx
           blockIdx.y = by
           blockIdx.z = bz
-          for tz in 0..<blockDim.z:
-            for ty in 0..<blockDim.y:
-              for tx in 0..<blockDim.x:
+          for tz in 0..<blockDimArg.z:
+            for ty in 0..<blockDimArg.y:
+              for tx in 0..<blockDimArg.x:
                 threadIdx.x = tx
                 threadIdx.y = ty
                 threadIdx.z = tz
@@ -115,10 +119,10 @@ else:
     ## Worker procedure that executes the provided closure in a thread.
     closure()
 
-  template simpleLaunchKernel(fn: untyped, gridDim: Dim3, blockDim: Dim3, args: tuple) =
+  template simpleLaunchKernel(fn: untyped, gridDimArg: Dim3, blockDimArg: Dim3, args: tuple) =
     block:
       # Multi-threaded execution
-      let totalBlocks = gridDim.x * gridDim.y * gridDim.z
+      let totalBlocks = gridDimArg.x * gridDimArg.y * gridDimArg.z
       let blocksPerThread = totalBlocks div threads
       let extraBlocks = totalBlocks mod threads
 
@@ -128,18 +132,20 @@ else:
       proc makeClosure(tid: uint, startBlock: uint, endBlock: uint): proc() {.closure, gcsafe.} =
         result = proc() {.closure.} =
           # echo "Thread ", tid, " startBlock=", startBlock, " endBlock=", endBlock
-          let totalBlocksPerPlane = gridDim.x * gridDim.y
+          gridDim = gridDimArg
+          blockDim = blockDimArg
+          let totalBlocksPerPlane = gridDimArg.x * gridDimArg.y
           for blockIndex in startBlock..<endBlock:
             let bz = blockIndex div totalBlocksPerPlane
             let remainder = blockIndex mod totalBlocksPerPlane
-            let by = remainder div gridDim.x
-            let bx = remainder mod gridDim.x
+            let by = remainder div gridDimArg.x
+            let bx = remainder mod gridDimArg.x
             blockIdx.x = bx
             blockIdx.y = by
             blockIdx.z = bz
-            for tz in 0..<blockDim.z:
-              for ty in 0..<blockDim.y:
-                for tx in 0..<blockDim.x:
+            for tz in 0..<blockDimArg.z:
+              for ty in 0..<blockDimArg.y:
+                for tx in 0..<blockDimArg.x:
                   threadIdx.x = tx
                   threadIdx.y = ty
                   threadIdx.z = tz
