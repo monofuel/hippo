@@ -55,8 +55,8 @@ suite "dot product":
       b[i] = (i * 2).float
 
     # copy data to device
-    hippoMemcpy(dev_a, addr a[0], sizeof(float64)*N, hipMemcpyHostToDevice)
-    hippoMemcpy(dev_b, addr b[0], sizeof(float64)*N, hipMemcpyHostToDevice)
+    hippoMemcpy(dev_a, addr a[0], sizeof(float64)*N, HippoMemcpyHostToDevice)
+    hippoMemcpy(dev_b, addr b[0], sizeof(float64)*N, HippoMemcpyHostToDevice)
 
     # launch kernel
     hippoLaunchKernel(
@@ -67,7 +67,7 @@ suite "dot product":
     )
 
     # copy memory back from GPU to CPU
-    hippoMemcpy(addr partial_c[0], dev_partial_c, BlocksPerGrid * sizeof(float64), hipMemcpyDeviceToHost)
+    hippoMemcpy(addr partial_c[0], dev_partial_c, BlocksPerGrid * sizeof(float64), HippoMemcpyDeviceToHost)
 
     # finish up on the CPU
     var c: float64 = 0
