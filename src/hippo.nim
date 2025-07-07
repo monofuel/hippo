@@ -151,6 +151,7 @@ template hippoFree*(p: pointer) =
   else:
     handleError(hipFree(p))
 
+# TODO maybe this should be called hippoDeviceSynchronize to be more consistent?
 template hippoSynchronize*() =
   ## Synchronize the device
   when HippoRuntime == "CUDA":
