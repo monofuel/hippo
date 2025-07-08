@@ -32,11 +32,14 @@ proc getHipPlatform(): string =
   ## hipcc uses HIP_PLATFORM to determine amd / nvidia.
   ## hipcc defaults to amd if amdclang++ or hip clang is found.
   ## https://github.com/ROCm/llvm-project/blob/00fdfae9aeef14c905550601c2218a6b5962f48c/amd/hipcc/bin/hipvars.pm#L131
+  ## 
+  #TODO: this check does not work on nixos because things are not in the normal locations
   let 
     clangPath = getEnv("HIP_CLANG_PATH", "") / "clang++"
     amdClangPath = "/opt/rocm/bin/amdclang++"
     defaultPlatform = if (fileExists(clangPath) or fileExists(amdClangPath)): "amd" else: "nvidia"
     hipPlatform = getEnv("HIP_PLATFORM", defaultPlatform)
+  echo &"DEBUG: HIP Platform: {hipPlatform}"
   result = hipPlatform
 
 const HipPlatform = getHipPlatform()
