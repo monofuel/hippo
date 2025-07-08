@@ -385,6 +385,8 @@ proc shouldWrapFunction(funcName: string): bool =
   # Skip system functions, operators, and built-ins
   if funcName in ["len", "high", "low", "int", "uint8", "float", "cfloat", "addr", "cast", "sizeof"]:
     return false
+  
+  # Skip other nim functions
   if funcName.startsWith("nim"):
     return false
   if funcName.startsWith("system"):
@@ -477,6 +479,8 @@ macro autoDeviceKernel*(fn: typed): untyped =
           let funcSignature = funcImpl[3] # FormalParams
           let returnType = funcSignature[0]
           
+          # TODO this is all wrong, it's just literally wrapping functions without fixing anything...
+
           # Create new parameter symbols and build wrapper signature
           var wrapperParams = newNimNode(nnkFormalParams)
           wrapperParams.add(returnType)
@@ -526,7 +530,7 @@ macro autoDeviceKernel*(fn: typed): untyped =
             
             let codegenDecl = newNimNode(nnkExprColonExpr)
             codegenDecl.add(ident("codegenDecl"))
-            codegenDecl.add(newStrLitNode("__host__ __device__ $# $#$#"))
+            codegenDecl.add(newStrLitNode("__device__ $# $#$#"))
             pragmas.add(codegenDecl)
           
           deviceWrapper.add(pragmas)            # pragmas
