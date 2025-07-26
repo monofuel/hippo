@@ -25,12 +25,11 @@
             linuxPackages.nvidia_x11
             
             # AMD/ROCm packages
-            rocm-opencl-icd
-            rocm-opencl-runtime
-            hip
-            rocm-device-libs
-            rocm-runtime
-            rocm-thunk
+            rocmPackages.clr
+            rocmPackages.hip-common
+            rocmPackages.hipcc
+            rocmPackages.rocm-device-libs
+            rocmPackages.rocm-runtime
             
             # Basic Nim development
             nim
@@ -44,15 +43,15 @@
             export CUDA_PATH=${pkgs.cudatoolkit}
             
             # AMD/ROCm environment setup
-            export ROCM_PATH=${pkgs.rocm-runtime}
-            export HIP_PATH=${pkgs.hip}
+            export ROCM_PATH=${pkgs.rocmPackages.rocm-runtime}
+            export HIP_PATH=${pkgs.rocmPackages.hip-common}
             
             # Combined library paths
-            export LD_LIBRARY_PATH=${pkgs.cudatoolkit}/lib:${pkgs.cudaPackages.cuda_cudart}/lib:${pkgs.linuxPackages.nvidia_x11}/lib:${pkgs.rocm-runtime}/lib:${pkgs.hip}/lib:$LD_LIBRARY_PATH
+            export LD_LIBRARY_PATH=${pkgs.cudatoolkit}/lib:${pkgs.cudaPackages.cuda_cudart}/lib:${pkgs.linuxPackages.nvidia_x11}/lib:${pkgs.rocmPackages.rocm-runtime}/lib:${pkgs.rocmPackages.hip-common}/lib:$LD_LIBRARY_PATH
             
             # Combined compiler flags
-            export EXTRA_CFLAGS="-I${pkgs.cudatoolkit}/include -I${pkgs.hip}/include -I${pkgs.rocm-runtime}/include"
-            export EXTRA_LDFLAGS="-L${pkgs.cudatoolkit}/lib -L${pkgs.cudaPackages.cuda_cudart}/lib -L${pkgs.linuxPackages.nvidia_x11}/lib -L${pkgs.rocm-runtime}/lib -L${pkgs.hip}/lib"
+            export EXTRA_CFLAGS="-I${pkgs.cudatoolkit}/include -I${pkgs.rocmPackages.hip-common}/include -I${pkgs.rocmPackages.rocm-runtime}/include"
+            export EXTRA_LDFLAGS="-L${pkgs.cudatoolkit}/lib -L${pkgs.cudaPackages.cuda_cudart}/lib -L${pkgs.linuxPackages.nvidia_x11}/lib -L${pkgs.rocmPackages.rocm-runtime}/lib -L${pkgs.rocmPackages.hip-common}/lib"
             
             echo "🚀🔥⚡ Unified development environment ready (NVIDIA/CUDA + AMD/ROCm + Basic Nim)"
           '';
@@ -83,12 +82,11 @@
         # AMD/ROCm development only
         amd = pkgs.mkShell {
           buildInputs = with pkgs; [
-            rocm-opencl-icd
-            rocm-opencl-runtime
-            hip
-            rocm-device-libs
-            rocm-runtime
-            rocm-thunk
+            rocmPackages.clr
+            rocmPackages.hip-common
+            rocmPackages.hipcc
+            rocmPackages.rocm-device-libs
+            rocmPackages.rocm-runtime
             nim
             nim-atlas
             nimble
@@ -96,11 +94,11 @@
           ];
 
           shellHook = ''
-            export ROCM_PATH=${pkgs.rocm-runtime}
-            export HIP_PATH=${pkgs.hip}
-            export LD_LIBRARY_PATH=${pkgs.rocm-runtime}/lib:${pkgs.hip}/lib:$LD_LIBRARY_PATH
-            export EXTRA_CFLAGS="-I${pkgs.hip}/include -I${pkgs.rocm-runtime}/include"
-            export EXTRA_LDFLAGS="-L${pkgs.rocm-runtime}/lib -L${pkgs.hip}/lib"
+            export ROCM_PATH=${pkgs.rocmPackages.rocm-runtime}
+            export HIP_PATH=${pkgs.rocmPackages.hip-common}
+            export LD_LIBRARY_PATH=${pkgs.rocmPackages.rocm-runtime}/lib:${pkgs.rocmPackages.hip-common}/lib:$LD_LIBRARY_PATH
+            export EXTRA_CFLAGS="-I${pkgs.rocmPackages.hip-common}/include -I${pkgs.rocmPackages.rocm-runtime}/include"
+            export EXTRA_LDFLAGS="-L${pkgs.rocmPackages.rocm-runtime}/lib -L${pkgs.rocmPackages.hip-common}/lib"
             echo "🔥 AMD/ROCm development environment ready"
           '';
         };
