@@ -11,8 +11,8 @@
 - src/simple.nim is a threads-only pure nim implementation.  This is useful when translating existing CPU code to GPU code.
 
 - examples/* has example code and configuration for every single supported permutation of compiler and target.
-- tests/* default to using the SIMPLE backend.
-  - `nimble test` will run the SIMPLE backend tests by default on cpu.
+- tests/* default to using the hip-cpu backend.
+  - `nimble test` will run the hip-cpu backend tests by default on cpu.
   - `nimble test_amd` will run the tests on AMD with HIP.
   - `nimble test_cuda` will run tests for NVIDIA with CUDA.
 

@@ -1,3 +1,3 @@
-#--define:"HippoRuntime:HIP_CPU"
---define:"HippoRuntime:SIMPLE"
+--define:"HippoRuntime:HIP_CPU"
+#--define:"HippoRuntime:SIMPLE"
 --path:"../src"
