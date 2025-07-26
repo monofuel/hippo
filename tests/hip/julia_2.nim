@@ -1,26 +1,9 @@
-import hippo, boxy, pixie, opengl, windy
+import ../../src/hippo, boxy, pixie, opengl, windy
 import macros
 
 const DIM = 1000
 
-macro hippoAnnotate(body: typed): untyped =
-  proc addGpuPragma(n: NimNode) =
-    if n.kind == nnkProcDef and n.pragma.findChild(it.kind == nnkIdent and $it == "inline") != nil:
-      let gpuPragma = nnkPragma.newTree(
-        nnkExprColonExpr.newTree(ident("__host__")),
-        nnkExprColonExpr.newTree(ident("__device__"))
-      )
-      n.pragma.add(gpuPragma)
 
-  proc traverse(n: NimNode): NimNode =
-    result = copyNimNode(n)
-    for i in 0..<n.len:
-      let child = traverse(n[i])
-      result.add(child)
-      if child.kind == nnkProcDef:
-        addGpuPragma(child)
-
-  result = traverse(body)
 
 
 # Pretend that CuComplex is from another library and we are not allowed to change it
@@ -63,7 +46,7 @@ proc julia(x,y: int): int {.hippoDevice.} =
   # otherwise if the series converges, return 1 to say it is in the set
   return 1
 
-proc juliaKernel(p: pointer) {.hippoAnnotate, hippoGlobal.} =
+proc juliaKernel(p: pointer) {.hippoGlobal.} =
   let x = blockIdx.x.int
   let y = blockIdx.y.int
   let offset = x + y * gridDim.x.int
