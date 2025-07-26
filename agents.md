@@ -1,7 +1,11 @@
 # Hippo
 
 - Hippo is a GPU programming library for Nim.
-- there is a `flake.nix` for setting up the dev environment.
+- there is a `flake.nix` for setting up the basic dev environment.
+  - the default flake.nix is good for testing SIMPLE and HIP-CPU backends.
+  - there are also flake-amd.nix and flake-nvidia.nix, along with a flake-all.nix.
+  - flake-all.nix is useful for testing HIP targetting CUDA.
+  - flake-amd.nix is for HIP, and flake-nvidia is for CUDA.  
 
 ## Organization
 
