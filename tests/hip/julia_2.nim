@@ -1,6 +1,26 @@
 import hippo, boxy, pixie, opengl, windy
+import macros
 
 const DIM = 1000
+
+macro hippoAnnotate(body: typed): untyped =
+  proc addGpuPragma(n: NimNode) =
+    if n.kind == nnkProcDef and n.pragma.findChild(it.kind == nnkIdent and $it == "inline") != nil:
+      let gpuPragma = nnkPragma.newTree(
+        nnkExprColonExpr.newTree(ident("__host__")),
+        nnkExprColonExpr.newTree(ident("__device__"))
+      )
+      n.pragma.add(gpuPragma)
+
+  proc traverse(n: NimNode): NimNode =
+    result = copyNimNode(n)
+    for i in 0..<n.len:
+      let child = traverse(n[i])
+      result.add(child)
+      if child.kind == nnkProcDef:
+        addGpuPragma(child)
+
+  result = traverse(body)
 
 
 # Pretend that CuComplex is from another library and we are not allowed to change it
@@ -9,17 +29,17 @@ type CuComplex {.exportcpp.}= object
   r: cfloat
   i: cfloat
 
-proc newCuComplex(a,b: float): CuComplex = # no pragmas
+proc newCuComplex(a,b: float): CuComplex {.hippoDevice.} =
   return CuComplex(r: a, i: b)
 
-proc magnitude2(this: CuComplex): cfloat = # no pragmas
+proc magnitude2(this: CuComplex): cfloat {.hippoDevice.} =
   return this.r * this.r + this.i * this.i
 
-proc multiply(a,b: CuComplex): CuComplex = # no pragmas
-  return newCuComplex(a.r*b.r - a.i*b.i, a.i*b.r + a.r*b.i)
+proc multiply(a,b: CuComplex): CuComplex {.hippoDevice.} =
+  return CuComplex(r: a.r*b.r - a.i*b.i, i: a.i*b.r + a.r*b.i)
 
-proc add(a,b: CuComplex): CuComplex = # no pragmas
-  return newCuComplex(a.r+b.r, a.i+b.i)
+proc add(a,b: CuComplex): CuComplex {.hippoDevice.} =
+  return CuComplex(r: a.r+b.r, i: a.i+b.i)
 
 # proc `*`(a,b: CuComplex): CuComplex =
 #   return newCuComplex(a.r*b.r - a.i*b.i, a.i*b.r + a.r*b.i)
@@ -27,7 +47,7 @@ proc add(a,b: CuComplex): CuComplex = # no pragmas
 # proc `+`(a,b: CuComplex): CuComplex =
 #   return newCuComplex(a.r+b.r, a.i+b.i)
 
-proc julia(x,y: int): int = # no pragmas
+proc julia(x,y: int): int {.hippoDevice.} =
   const scale: float = 1.5
   let jx: float = scale * (DIM/2.float - x.float) / (DIM/2.float)
   let jy: float = scale * (DIM/2.float - y.float) / (DIM/2.float)
@@ -35,7 +55,7 @@ proc julia(x,y: int): int = # no pragmas
   var a = newCuComplex(jx, jy)
   for i in 0..<200:
     # for 200 iterations, test if the function of a=a*a+c diverges
-    #a = a * a + c
+    #a = a * a + c{.hippoDevice.} 
     a = multiply(a, a)
     a = add(a, c)
     if (a.magnitude2() > 1000):
@@ -43,7 +63,7 @@ proc julia(x,y: int): int = # no pragmas
   # otherwise if the series converges, return 1 to say it is in the set
   return 1
 
-proc juliaKernel(p: pointer) {.autoDeviceKernel, hippoGlobal.} =
+proc juliaKernel(p: pointer) {.hippoAnnotate, hippoGlobal.} =
   let x = blockIdx.x.int
   let y = blockIdx.y.int
   let offset = x + y * gridDim.x.int
