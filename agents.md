@@ -1,11 +1,6 @@
 # Hippo
 
 - Hippo is a GPU programming library for Nim.
-- there is a `flake.nix` for setting up the basic dev environment.
-  - the default flake.nix is good for testing SIMPLE and HIP-CPU backends.
-  - there are also flake-amd.nix and flake-nvidia.nix, along with a flake-all.nix.
-  - flake-all.nix is useful for testing HIP targetting CUDA.
-  - flake-amd.nix is for HIP, and flake-nvidia is for CUDA.  
 
 ## Organization
 
@@ -19,6 +14,15 @@
   - `nimble test` will run the hip-cpu backend tests by default on cpu.
   - `nimble test_amd` will run the tests on AMD with HIP.
   - `nimble test_cuda` will run tests for NVIDIA with CUDA.
+
+## Nix Flakes
+
+- there is a `flake.nix` for setting up the basic dev environment.
+
+nix develop .#basic    # CPU-only Nim development (default)
+nix develop .#nvidia   # NVIDIA/CUDA + Nim
+nix develop .#amd      # AMD/ROCm + Nim  
+nix develop .#all      # Everything combined, useful to run HIP targetting NVIDIA
 
 ## Function Names
 

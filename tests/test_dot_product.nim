@@ -18,6 +18,7 @@ proc dot(a, b, c: ptr[float64]){.hippoGlobal.} =
   var temp: float64 = 0
   while tid < N:
     # TODO not sure how to handle functions like `pluseq___dot_u17` with nim / cuda
+    #temp += aArray[tid] * bArray[tid]
     temp = temp + (aArray[tid] * bArray[tid])
     tid += blockDim.x * gridDim.x
   
@@ -33,6 +34,7 @@ proc dot(a, b, c: ptr[float64]){.hippoGlobal.} =
   while i != 0:
     if cacheIndex < i:
       # TODO not sure how to handle functions like `pluseq___dot_u17` with nim / cuda
+      #cache[cacheIndex] += cache[cacheIndex + i]
       cache[cacheIndex] = cache[cacheIndex] + cache[cacheIndex + i]
     hippoSyncthreads()
     i = i div 2
