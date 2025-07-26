@@ -8,13 +8,29 @@
 - src/hippo.nim is the core of the library. it uses compile time switches depending on the compiler and target.
 - src/cuda.nim is for the CUDA nvcc backend of hippo.
 - src/hip.nim is for the HIP backend of Hippo. This can be used for ROCM, HIP-CPU, or HIP targetting CUDA.
-- src/simple.nim is a threads-only pure nim implementation. 
+- src/simple.nim is a threads-only pure nim implementation.  This is useful when translating existing CPU code to GPU code.
 
 - examples/* has example code and configuration for every single supported permutation of compiler and target.
 - tests/* default to using the SIMPLE backend.
   - `nimble test` will run the SIMPLE backend tests by default on cpu.
   - `nimble test_amd` will run the tests on AMD with HIP.
   - `nimble test_cuda` will run tests for NVIDIA with CUDA.
+
+## Function Names
+
+- all the cuda / hip functions are conditionally included based on the target.
+- cuda* cpp functions like cudaMalloc, cudaMemcpy, cudaFree can be used directly for nvidia.
+- hip* cpp functions like hipMalloc, hipMemcpy, hipFree can be used directly for AMD.
+
+- src/hippo.nim defines a set of `hippo*` functions that are Nim-friendly and work for any platform. for example, hippoMalloc() returns a struct for a device pointer that will automatically free itself when garbage collected, thus hippoFree() does not have to be called.
+
+## Known backend quirks
+
+- when using hip, hip platform detection ("amd" or "nvidia") may not work as expected if it cannot find a compiler, or if both compilers are present. You can set `HIP_PLATFORM` on the environment to force one or the other at compile time.
+
+- the HIP-CPU backend requires libtbb to be installed, this can be picky on certain distros.
+- the GPU compilers (hipcc, nvcc) can sometimes give lots of warnings about the cpp code that Nim produces, but this is mostly OK.
+- all Hippo backends require you to compile with `nim cpp`. the only exception is the SIMPLE backend, which can compile with either `nim c` or `nim cpp`. it can even work with threads disabled, in which case it will fall back to single thread execution.
 
 ## Nim best practices
 
