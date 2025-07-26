@@ -33,8 +33,8 @@ suite "vector_sum":
       b[i] = i * i
 
     # copy data to device
-    hippoMemcpy(dev_a, addr a[0], sizeof(int32)*N, hipMemcpyHostToDevice)
-    hippoMemcpy(dev_b, addr b[0], sizeof(int32)*N, hipMemcpyHostToDevice)
+    hippoMemcpy(dev_a, addr a[0], sizeof(int32)*N, HippoMemcpyHostToDevice)
+    hippoMemcpy(dev_b, addr b[0], sizeof(int32)*N, HippoMemcpyHostToDevice)
 
     # launch kernel
     hippoLaunchKernel(
@@ -44,7 +44,7 @@ suite "vector_sum":
     )
 
     # copy result back to host
-    hippoMemcpy(addr c[0], dev_c, sizeof(int32)*N, hipMemcpyDeviceToHost)
+    hippoMemcpy(addr c[0], dev_c, sizeof(int32)*N, HippoMemcpyDeviceToHost)
 
     # validate results on cpu
     for i in 0..<N:
@@ -65,8 +65,8 @@ suite "vector_sum":
       b[i] = i * i
 
     # copy data to device
-    hippoMemcpy(dev_a, addr a[0], sizeof(int32)*N, hipMemcpyHostToDevice)
-    hippoMemcpy(dev_b, addr b[0], sizeof(int32)*N, hipMemcpyHostToDevice)
+    hippoMemcpy(dev_a, addr a[0], sizeof(int32)*N, HippoMemcpyHostToDevice)
+    hippoMemcpy(dev_b, addr b[0], sizeof(int32)*N, HippoMemcpyHostToDevice)
 
     # launch kernel
     hippoLaunchKernel(
@@ -76,7 +76,7 @@ suite "vector_sum":
     )
 
     # copy result back to host
-    hippoMemcpy(addr c[0], dev_c, sizeof(int32)*N, hipMemcpyDeviceToHost)
+    hippoMemcpy(addr c[0], dev_c, sizeof(int32)*N, HippoMemcpyDeviceToHost)
 
     # validate results on cpu
     for i in 0..<N:
