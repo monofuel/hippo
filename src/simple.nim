@@ -130,7 +130,7 @@ else:
       threadHandles.setLen(threads)
 
       proc makeClosure(tid: uint, startBlock: uint, endBlock: uint): proc() {.closure, gcsafe.} =
-        result = proc() {.closure.} =
+        result = proc() {.closure, gcsafe.} =
           # echo "Thread ", tid, " startBlock=", startBlock, " endBlock=", endBlock
           gridDim = gridDimArg
           blockDim = blockDimArg
@@ -150,7 +150,8 @@ else:
                   threadIdx.y = ty
                   threadIdx.z = tz
                   # echo "threadId", getThreadId(), " Thread ", tid, " blockIdx=", blockIdx, " threadIdx=", threadIdx, " startBlock=", startBlock, " endBlock=", endBlock
-                  unpackCall(fn, args)
+                  {.gcsafe.}: # HACK
+                    unpackCall(fn, args)
 
       var startBlock: uint = 0
       for i in 0..<threads.uint:
