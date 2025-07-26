@@ -94,6 +94,7 @@
           ];
 
           shellHook = ''
+            export HIP_PLATFORM=amd
             export ROCM_PATH=${pkgs.rocmPackages.rocm-runtime}
             export HIP_PATH=${pkgs.rocmPackages.hip-common}
             export LD_LIBRARY_PATH=${pkgs.rocmPackages.rocm-runtime}/lib:${pkgs.rocmPackages.hip-common}/lib:$LD_LIBRARY_PATH
