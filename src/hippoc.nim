@@ -46,7 +46,7 @@ proc annotateDeviceFuncs(n: PNode): PNode =
   if n.safeLen > 0:
     for i in 0..<n.len:
       n[i] = annotateDeviceFuncs(n[i])
-
+echo "4"
 proc passNode(c: PPassContext, n: PNode): PNode =
   result = annotateDeviceFuncs(n)
   if sfMainModule in CustomContext(c).module.flags:
@@ -56,10 +56,6 @@ proc passNode(c: PPassContext, n: PNode): PNode =
 proc passClose(graph: ModuleGraph; p: PPassContext, n: PNode): PNode =
   discard
 
-echo "start"
 registerPass(graph, semPass)
-echo "2"
 registerPass(graph, makePass(passOpen, passNode, passClose))
-echo "3"
 compileProject(graph)
-echo "4"
