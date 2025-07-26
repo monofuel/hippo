@@ -349,7 +349,7 @@ macro hippoConstant*(v: untyped): untyped =
   ## the accesses are serialized and this may cause a 16x slowdown.
   ## eg: `const N {.hippoConstant.} = 1024`
   when HippoRuntime != "SIMPLE":
-  quote do:
+    quote do:
       {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__constant__ $# $#".}
       `v`
       {.pop.}
