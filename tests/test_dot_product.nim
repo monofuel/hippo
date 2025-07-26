@@ -5,6 +5,32 @@ const
   ThreadsPerBlock: int = 256
   BlocksPerGrid: int = min(32, ((N + ThreadsPerBlock - 1) div ThreadsPerBlock))
 
+# requires --stackTrace:off
+
+{.emit: """
+#ifdef __HIPCC__
+  // Redefine N_INLINE before nimbase.h uses it
+  #ifdef N_INLINE
+    #undef N_INLINE
+  #endif
+  #define N_INLINE(rettype, name) __device__ __host__ inline rettype name
+  
+  // Also handle N_NOINLINE for completeness
+  #ifdef N_NOINLINE  
+    #undef N_NOINLINE
+  #endif
+  #define N_NOINLINE(rettype, name) __device__ __host__ __attribute__((__noinline__)) rettype name
+#endif
+""".}
+
+# NOT TESTED
+# my gtx 1070 gpu server is turned off and I'm lazy.
+# {.emit: """
+# #ifdef __CUDACC__
+# #define N_INLINE(rettype, name) __device__ __host__ inline rettype name
+# #endif
+# """.}
+
 proc dot(a, b, c: ptr[float64]){.hippoGlobal.} =
   var cache {.hippoShared.}: array[256, float]
 
@@ -34,8 +60,8 @@ proc dot(a, b, c: ptr[float64]){.hippoGlobal.} =
   while i != 0:
     if cacheIndex < i:
       # TODO not sure how to handle functions like `pluseq___dot_u17` with nim / cuda
-      cache[cacheIndex] += cache[cacheIndex + i]
-      #cache[cacheIndex] = cache[cacheIndex] + cache[cacheIndex + i]
+      #cache[cacheIndex] += cache[cacheIndex + i]
+      cache[cacheIndex] = cache[cacheIndex] + cache[cacheIndex + i]
     hippoSyncthreads()
     i = i div 2
 
