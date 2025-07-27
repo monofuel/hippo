@@ -1,6 +1,6 @@
 import std/[os, strformat, strutils]
 import compiler/[idents, options, modulegraphs, passes, lineinfos, sem, pathutils, ast,
-                astalgo, modules, condsyms, passaux]
+                astalgo, modules, msgs, condsyms, passaux]
 
 let file = "tests/hip/julia_2.nim"
 
@@ -20,7 +20,11 @@ type
     module: PSym
 
 proc passOpen(graph: ModuleGraph; module: PSym; idgen: IdGenerator): PPassContext =
-  CustomContext(module: module)
+  let modFile = graph.config.toFullPath(module.info)
+  let libPath = graph.config.libpath.string
+  if modFile.startsWith(libPath):
+    return nil
+  result = CustomContext(module: module)
 
 proc annotateDeviceFuncs(n: PNode): PNode =
   result = n
@@ -46,8 +50,9 @@ proc annotateDeviceFuncs(n: PNode): PNode =
   if n.safeLen > 0:
     for i in 0..<n.len:
       n[i] = annotateDeviceFuncs(n[i])
-echo "4"
+
 proc passNode(c: PPassContext, n: PNode): PNode =
+  if c.isNil: return n
   result = annotateDeviceFuncs(n)
   if sfMainModule in CustomContext(c).module.flags:
     # Optional: debug output
