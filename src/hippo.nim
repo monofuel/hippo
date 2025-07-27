@@ -1,5 +1,5 @@
 import
-  std/[strformat, os, macros]
+  std/[strformat, os, macros, strutils]
 
 
 # supported runtimes: HIP, HIP_CPU, CUDA, and SIMPLE
@@ -354,9 +354,16 @@ macro hippoConstant*(v: untyped): untyped =
       `v`
       {.pop.}
   else:
-    # TODO proper const vars
     quote do:
       `v`
+
+
+
+macro autoDeviceKernel*(fn: untyped): untyped =
+  ## Automatically annotate functions called from this kernel as __host__ __device__
+  ## TODO
+  discard
+
 
 macro hippoArgs*(args: varargs[untyped]): untyped =
   ## Automatically convert varargs for use with CUDA/HIP.
