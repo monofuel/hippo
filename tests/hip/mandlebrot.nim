@@ -25,10 +25,10 @@ proc magnitude2(this: CuComplex): cfloat {.hippoDevice.} =
   this.r * this.r + this.i * this.i
 
 proc multiply(a, b: CuComplex): CuComplex {.hippoDevice.} =
-  newCuComplex(a.r * b.r - a.i * b.i, a.i * b.r + a.r * b.i)
+  CuComplex(r: a.r * b.r - a.i * b.i, i: a.i * b.r + a.r * b.i)
 
 proc add(a, b: CuComplex): CuComplex {.hippoDevice.} =
-  newCuComplex(a.r + b.r, a.i + b.i)
+  CuComplex(r: a.r + b.r, i: a.i + b.i)
 
 # Mandelbrot evaluation ------------------------------------------------------
 
