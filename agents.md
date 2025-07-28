@@ -83,19 +83,10 @@ This approach ensures full stack traces in CI environments and makes debugging s
 - benchmark is at ./tests/bench_fraggy.nim
 
 - do not `echo` in tests, they should not log anything when successful
-
-## Gold Master Testing
-
-- some of our tests like tests/test_fragments_gold.nim use a pattern of gold master testing
-- they write output to a file in tests/tmp and compare it to a gold master checked into git at tests/gold/
-- if the output differs, the test fails.
-- Sometimes it is OK if the gold master changes in a way that we expect for a change that we make.
-- if we want to update the gold master, you can run the test with `-u` like `nim c -r tests/test_fragments_gold.nim -u` to update the gold master.
-
 ## CI
 
-- CI is ran on gitea
-- .gitea/workflows/build.yml handles running tests in CI
+- CI is ran on github and on gitea
+- .github/workflows/build.yml handles running tests in CI
 
 
 ## Nim
