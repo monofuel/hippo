@@ -1,5 +1,5 @@
 --path:"../../src"
---define:"HippoRuntime:HIP"
+--define:"HippoRuntime:HIP_CPU"
 --define:"pixieNoSimd"
 --define:"zippyNoSimd"
 --define:"crunchyNoSimd"

@@ -89,7 +89,7 @@ proc main() =
   hippoLaunchKernel(
     juliaKernel,
     gridDim=grid,
-    args = hippoArgs(devBitmap)
+    args = hippoArgs(devBitmap.p)
   )
   hippoMemcpy(addr image.data[0], devBitmap, image.getSize(), HippoMemcpyDeviceToHost)
 

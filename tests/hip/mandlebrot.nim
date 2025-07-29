@@ -54,17 +54,20 @@ proc mandelbrotPixel(x, y: int): uint8 {.hippoDevice.} =
 # Kernel --------------------------------------------------------------------
 
 proc mandelbrotKernel(p: pointer) {.hippoGlobal.} =
-  let x = blockIdx.x.int
-  let y = blockIdx.y.int
-  let offset = x + y * gridDim.x.int
+  let tid = blockIdx.x.int * blockDim.x.int + threadIdx.x.int
+  if tid >= DIM * DIM:
+    return
+    
+  let x = tid mod DIM
+  let y = tid div DIM
 
   let value = mandelbrotPixel(x, y)
 
   let res = cast[ptr UncheckedArray[uint8]](p)
-  res[offset * 4 + 0] = 255u8 * value
-  res[offset * 4 + 1] = 0u8
-  res[offset * 4 + 2] = 0u8
-  res[offset * 4 + 3] = 255u8
+  res[tid * 4 + 0] = 255u8 * value
+  res[tid * 4 + 1] = 0u8
+  res[tid * 4 + 2] = 0u8
+  res[tid * 4 + 3] = 255u8
 
 # Utility -------------------------------------------------------------------
 
@@ -94,15 +97,23 @@ proc getSize*(image: Image): int =
 
 proc main() =
   var image = newImage(DIM, DIM)
-
+  
   let devBitmap = hippoMalloc(image.getSize())
-  let grid = newDim3(DIM, DIM)
+  
+  const blockSize = 256
+  let totalElements = DIM * DIM
+  let numBlocks = (totalElements + blockSize - 1) div blockSize
+  let grid = newDim3(numBlocks.uint32)
+  let blockDim = newDim3(blockSize.uint32)
 
   hippoLaunchKernel(
     mandelbrotKernel,
     gridDim = grid,
-    args = hippoArgs(devBitmap)
+    blockDim = blockDim,
+    args = hippoArgs(devBitmap.p)
   )
+  
+  hippoSynchronize()
 
   hippoMemcpy(addr image.data[0], devBitmap, image.getSize(), HippoMemcpyDeviceToHost)
 
