@@ -99,3 +99,20 @@ let
   blockIdx* {.importc, inject, header: "hip/hip_runtime.h".}: BlockIdx
   gridDim* {.importc, inject, header: "hip/hip_runtime.h".}: GridDim
   threadIdx* {.importc, inject, header: "hip/hip_runtime.h".}: ThreadIdx
+
+
+# FP16 Types
+
+type
+  half* {.importcpp: "__half", header: "hip/hip_fp16.h".} = object
+
+# Conversion from float to half - renamed to avoid name collision
+proc toHalf*(x: float32): half {.importcpp: "(__half)#", nodecl.}
+proc toHalf*(x: float64): half {.importcpp: "(__half)#", nodecl.}
+proc toHalf*(x: int): half {.importcpp: "(__half)#", nodecl.}
+
+# Conversion from half to float (for displaying values)
+proc toFloat*(x: half): float32 {.importcpp: "(float)#", nodecl.}
+
+# String representation for debugging
+proc `$`*(x: half): string = $x.toFloat()
