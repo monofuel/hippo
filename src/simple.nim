@@ -57,13 +57,13 @@ proc simpleInit() =
 simpleInit()
 
 proc simpleMalloc(p: ptr pointer, size: int) =
-  p[] = alloc(size)
+  p[] = allocShared(size)
 
 proc simpleMemcpy(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind) =
   copyMem(dst, src, size)
 
 proc simpleFree(p: pointer) =
-  dealloc(p)
+  deallocShared(p)
 
 proc handleError(err: HippoError) =
   ## Simple runtime raises errors as exceptions.
