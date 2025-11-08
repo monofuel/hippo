@@ -42,6 +42,18 @@ nim	blockDim	hippo.html#blockDim_2	let blockDim		98
 nim	blockIdx	hippo.html#blockIdx_2	let blockIdx		99
 nim	gridDim	hippo.html#gridDim_2	let gridDim		100
 nim	threadIdx	hippo.html#threadIdx_2	let threadIdx		101
+nim	expf	hippo.html#expf,cfloat	proc expf(x: cfloat): cfloat		105
+nim	logf	hippo.html#logf,cfloat	proc logf(x: cfloat): cfloat		106
+nim	sinf	hippo.html#sinf,cfloat	proc sinf(x: cfloat): cfloat		107
+nim	cosf	hippo.html#cosf,cfloat	proc cosf(x: cfloat): cfloat		108
+nim	sqrtf	hippo.html#sqrtf,cfloat	proc sqrtf(x: cfloat): cfloat		109
+nim	powf	hippo.html#powf,cfloat,cfloat	proc powf(base: cfloat; exp: cfloat): cfloat		110
+nim	exp	hippo.html#exp,cdouble	proc exp(x: cdouble): cdouble		113
+nim	log	hippo.html#log,cdouble	proc log(x: cdouble): cdouble		114
+nim	sin	hippo.html#sin,cdouble	proc sin(x: cdouble): cdouble		115
+nim	cos	hippo.html#cos,cdouble	proc cos(x: cdouble): cdouble		116
+nim	sqrt	hippo.html#sqrt,cdouble	proc sqrt(x: cdouble): cdouble		117
+nim	pow	hippo.html#pow,cdouble,cdouble	proc pow(base: cdouble; exp: cdouble): cdouble		118
 nim	hippoMalloc	hippo.html#hippoMalloc.t,int	template hippoMalloc(size: int): GpuRef		102
 nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,pointer,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)		115
 nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,GpuRef,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: GpuRef; size: int; kind: HippoMemcpyKind)		126
@@ -58,5 +70,17 @@ nim	hippoHostDevice	hippo.html#hippoHostDevice.m,untyped	macro hippoHostDevice(f
 nim	hippoShared	hippo.html#hippoShared.m,untyped	macro hippoShared(v: untyped): untyped		340
 nim	hippoConstant	hippo.html#hippoConstant.m,untyped	macro hippoConstant(v: untyped): untyped		355
 nim	hippoArgs	hippo.html#hippoArgs.m,varargs[untyped]	macro hippoArgs(args: varargs[untyped]): untyped		372
+nim	hippoExp	hippo.html#hippoExp.t,cfloat	template hippoExp(x: cfloat): cfloat		395
+nim	hippoExp	hippo.html#hippoExp.t,cdouble	template hippoExp(x: cdouble): cdouble		405
+nim	hippoLog	hippo.html#hippoLog.t,cfloat	template hippoLog(x: cfloat): cfloat		415
+nim	hippoLog	hippo.html#hippoLog.t,cdouble	template hippoLog(x: cdouble): cdouble		425
+nim	hippoSin	hippo.html#hippoSin.t,cfloat	template hippoSin(x: cfloat): cfloat		435
+nim	hippoCos	hippo.html#hippoCos.t,cfloat	template hippoCos(x: cfloat): cfloat		445
+nim	hippoSqrt	hippo.html#hippoSqrt.t,cfloat	template hippoSqrt(x: cfloat): cfloat		455
+nim	hippoPow	hippo.html#hippoPow.t,cfloat,cfloat	template hippoPow(base: cfloat; exp: cfloat): cfloat		465
+nim	hippoPow	hippo.html#hippoPow.t,cdouble,cdouble	template hippoPow(base: cdouble; exp: cdouble): cdouble		475
 nimgrp	hiplaunchkernel	hippo.html#hipLaunchKernel-procs-all	proc		52
 nimgrp	hippomemcpy	hippo.html#hippoMemcpy-templates-all	template		115
+nimgrp	hippopow	hippo.html#hippoPow-templates-all	template		465
+nimgrp	hippolog	hippo.html#hippoLog-templates-all	template		415
+nimgrp	hippoexp	hippo.html#hippoExp-templates-all	template		395
