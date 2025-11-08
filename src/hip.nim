@@ -99,3 +99,20 @@ let
   blockIdx* {.importc, inject, header: "hip/hip_runtime.h".}: BlockIdx
   gridDim* {.importc, inject, header: "hip/hip_runtime.h".}: GridDim
   threadIdx* {.importc, inject, header: "hip/hip_runtime.h".}: ThreadIdx
+
+# HIP Math Functions
+# Single-precision floating-point math functions available in device code
+proc expf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "expf(@)".}
+proc logf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "logf(@)".}
+proc sinf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "sinf(@)".}
+proc cosf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "cosf(@)".}
+proc sqrtf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "sqrtf(@)".}
+proc powf*(base: cfloat, exp: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "powf(@)".}
+
+# Double-precision floating-point math functions
+proc exp*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "exp(@)".}
+proc log*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "log(@)".}
+proc sin*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "sin(@)".}
+proc cos*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "cos(@)".}
+proc sqrt*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "sqrt(@)".}
+proc pow*(base: cdouble, exp: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "pow(@)".}

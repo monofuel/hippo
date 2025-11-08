@@ -387,3 +387,97 @@ macro hippoArgs*(args: varargs[untyped]): untyped =
       )
     result = quote do:
       @`seqNode`
+
+# -------------------
+# Hippo Math Functions
+# Runtime-agnostic math functions that work on device
+
+template hippoExp*(x: cfloat): cfloat =
+  ## Exponential function (e^x) for single-precision float
+  when HippoRuntime == "CUDA":
+    expf(x)
+  elif HippoRuntime == "SIMPLE":
+    # For SIMPLE backend, use Nim's math functions
+    cfloat(math.exp(float(x)))
+  else: # HIP, HIP_CPU
+    expf(x)
+
+template hippoExp*(x: cdouble): cdouble =
+  ## Exponential function (e^x) for double-precision float
+  when HippoRuntime == "CUDA":
+    exp(x)
+  elif HippoRuntime == "SIMPLE":
+    # For SIMPLE backend, use Nim's math functions
+    cdouble(math.exp(float(x)))
+  else: # HIP, HIP_CPU
+    exp(x)
+
+template hippoLog*(x: cfloat): cfloat =
+  ## Natural logarithm for single-precision float
+  when HippoRuntime == "CUDA":
+    logf(x)
+  elif HippoRuntime == "SIMPLE":
+    # For SIMPLE backend, use Nim's math functions
+    cfloat(math.ln(float(x)))
+  else: # HIP, HIP_CPU
+    logf(x)
+
+template hippoLog*(x: cdouble): cdouble =
+  ## Natural logarithm for double-precision float
+  when HippoRuntime == "CUDA":
+    log(x)
+  elif HippoRuntime == "SIMPLE":
+    # For SIMPLE backend, use Nim's math functions
+    cdouble(math.ln(float(x)))
+  else: # HIP, HIP_CPU
+    log(x)
+
+template hippoSin*(x: cfloat): cfloat =
+  ## Sine function for single-precision float
+  when HippoRuntime == "CUDA":
+    sinf(x)
+  elif HippoRuntime == "SIMPLE":
+    # For SIMPLE backend, use Nim's math functions
+    cfloat(math.sin(float(x)))
+  else: # HIP, HIP_CPU
+    sinf(x)
+
+template hippoCos*(x: cfloat): cfloat =
+  ## Cosine function for single-precision float
+  when HippoRuntime == "CUDA":
+    cosf(x)
+  elif HippoRuntime == "SIMPLE":
+    # For SIMPLE backend, use Nim's math functions
+    cfloat(math.cos(float(x)))
+  else: # HIP, HIP_CPU
+    cosf(x)
+
+template hippoSqrt*(x: cfloat): cfloat =
+  ## Square root function for single-precision float
+  when HippoRuntime == "CUDA":
+    sqrtf(x)
+  elif HippoRuntime == "SIMPLE":
+    # For SIMPLE backend, use Nim's math functions
+    cfloat(math.sqrt(float(x)))
+  else: # HIP, HIP_CPU
+    sqrtf(x)
+
+template hippoPow*(base: cfloat, exp: cfloat): cfloat =
+  ## Power function (base^exp) for single-precision float
+  when HippoRuntime == "CUDA":
+    powf(base, exp)
+  elif HippoRuntime == "SIMPLE":
+    # For SIMPLE backend, use Nim's math functions
+    cfloat(math.pow(float(base), float(exp)))
+  else: # HIP, HIP_CPU
+    powf(base, exp)
+
+template hippoPow*(base: cdouble, exp: cdouble): cdouble =
+  ## Power function (base^exp) for double-precision float
+  when HippoRuntime == "CUDA":
+    pow(base, exp)
+  elif HippoRuntime == "SIMPLE":
+    # For SIMPLE backend, use Nim's math functions
+    cdouble(math.pow(float(base), float(exp)))
+  else: # HIP, HIP_CPU
+    pow(base, exp)
