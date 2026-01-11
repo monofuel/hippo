@@ -5,6 +5,9 @@ import
 # supported runtimes: HIP, HIP_CPU, CUDA, and SIMPLE
 const HippoRuntime* {.strdefine.} = "HIP"
 
+# supported platforms: amd, nvidia (auto-detected if not specified)
+const HippoPlatform* {.strdefine.} = ""
+
 {.warning: "DEBUG: Using Hippo Runtime: " & HippoRuntime.}
 echo &"DEBUG: Using Hippo Runtime: {HippoRuntime}"
 
@@ -50,7 +53,7 @@ proc getHipPlatform(): string =
     hipPlatform = getEnv("HIP_PLATFORM", defaultPlatform)
   result = hipPlatform
 
-const HipPlatform = getHipPlatform()
+const HipPlatform = if HippoPlatform.len > 0: HippoPlatform else: getHipPlatform()
 
 # HippoRuntime can be set to "HIP", "HIP_CPU", or "CUDA"
 # HIP hipcc will auto detect the runtime of the build system

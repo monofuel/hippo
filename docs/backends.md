@@ -12,11 +12,11 @@ Hippo supports four backends for GPU and CPU execution.
   - `-d:HippoRuntime=HIP` (default) (requires hipcc)
   - `-d:HippoRuntime=CUDA` (requires nvcc)
   - `-d:HippoRuntime=HIP_CPU` for cpu-only usage (does not require hipcc)
-  - `-d:HippoRuntime=SIMPLE` for single-threaded execution on CPU
+  - `-d:HippoRuntime=SIMPLE` for CPU-only nim threading.
 - the HIP runtime also supports two platforms, AMD and NVIDIA.
-  - `-d:HippoPlatform=amd` (default)
-  - `-d:HippoPlatform=nvidia`
-  - hippo tries to guess the platform based on the presence of amdclang++ (this mirrors the behavior of how hipcc detects the platform).
+  - `-d:HippoPlatform=amd` forces AMD platform (bypasses auto-detection)
+  - `-d:HippoPlatform=nvidia` forces NVIDIA platform (bypasses auto-detection)
+  - If not specified, hippo auto-detects the platform based on the presence of amdclang++ (this mirrors the behavior of how hipcc detects the platform).
 
 ## AMD (HIP/ROCm)
 
