@@ -25,13 +25,15 @@ the HIP runtime can also target NVIDIA GPUs via HIP_PLATFORM=nvidia.
 
 **Known pitfalls:**
 - Platform detection may fail if the compiler cannot be found or both AMD and NVIDIA compilers are present. Set `HIP_PLATFORM=amd` environment variable to force AMD platform detection.
+- the hipcc compiler may produce warnings about the C++ code that Nim generates. These warnings are mostly harmless.
+  - TODO make better!
 
 ## NVIDIA (CUDA)
 
 Uses the CUDA runtime with nvcc compiler to target NVIDIA GPUs. Requires `nim cpp` compilation.
 
 **Known issues:**
-- The nvcc compiler may produce warnings about the C++ code that Nim generates. These warnings are mostly harmless.
+- The nvcc compiler may produce a quite frightening amount of warnings about the C++ code that Nim generates. These warnings are mostly harmless.
   - TODO make better!
 
 ## HIP-CPU

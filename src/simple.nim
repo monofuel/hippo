@@ -2,7 +2,7 @@
 ## You must compile with --threads:on for using more cpu cores.
 ## Otherwise it will only use 1 core.
 ## Single threaded mode should 'just work' anywhere, even in js, but won't be fast.
-import std/[cpuinfo, macros]
+import std/[cpuinfo, macros, os, strutils]
 
 const SingleThread = defined(js) or not compileOption("threads")
 
@@ -51,8 +51,12 @@ proc simpleInit() =
   when SingleThread:
     threads = 1
   else:
-    # TODO would be cool to use OMP_NUM_THREADS if it's set.
-    threads = countProcessors().uint
+    let envThreads = getEnv("OMP_NUM_THREADS")
+    if envThreads.len > 0:
+      try: threads = parseInt(envThreads).uint
+      except ValueError: threads = countProcessors().uint
+    else:
+      threads = countProcessors().uint
     echo "DEBUG: hippo/simple: Using ", threads, " threads"
 
 simpleInit()
