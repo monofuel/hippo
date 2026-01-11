@@ -35,6 +35,8 @@ jobs:
       run: |
         nimble test -y
         nimble test --gc:orc -y
+        nimble test_simple -y
+        nimble test_simple_no_threads -y
 
     - name: Build Examples
       run: |
