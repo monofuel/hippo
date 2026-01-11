@@ -51,6 +51,7 @@ proc simpleInit() =
   when SingleThread:
     threads = 1
   else:
+    # TODO would be cool to use OMP_NUM_THREADS if it's set.
     threads = countProcessors().uint
     echo "DEBUG: hippo/simple: Using ", threads, " threads"
 
@@ -150,7 +151,8 @@ else:
                   threadIdx.y = ty
                   threadIdx.z = tz
                   # echo "threadId", getThreadId(), " Thread ", tid, " blockIdx=", blockIdx, " threadIdx=", threadIdx, " startBlock=", startBlock, " endBlock=", endBlock
-                  {.gcsafe.}: # HACK
+                  # TODO we should avoid doing dangerous gcsafe stuff.
+                  {.gcsafe.}:
                     unpackCall(fn, args)
 
       var startBlock: uint = 0
@@ -167,6 +169,6 @@ else:
 
 
 proc hippoSyncthreads*() =
-  # could probably use nim iterators to implement syncthreads?
+  # TODO could probably use nim iterators to implement syncthreads?
   # I want something simple that can work anywhere
   raise newException(Exception, "hippoSyncthreads not implemented yet")

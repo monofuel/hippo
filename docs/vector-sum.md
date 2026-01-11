@@ -15,7 +15,7 @@ GPUs accelerate data-parallel tasks by executing the same instruction across tho
 Key concepts:
 - **Host**: CPU and main system memory.
 - **Device**: GPU and its dedicated memory (VRAM), typically separate from host memory.
-  - Note: some systems have unified memory (eg: AMD Ryzen AI Max or Apple Silicon). sometimes the memory is shared, and sometimes a portion is dedicated to the device and acts like a traditional VRAM.
+  - Note: some systems have unified memory (eg: AMD Ryzen AI Max, Steamdeck, or Apple Silicon). sometimes the memory is shared, and sometimes a portion is dedicated to the device and acts like a traditional VRAM.
 - **Kernel**: A function that runs on the GPU, executed by many threads in parallel.
 
 ## Defining GPU Functions
