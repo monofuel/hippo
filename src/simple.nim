@@ -114,11 +114,6 @@ when SingleThread:
 
 else:
 
-  # NB. currently we are only divving up blocks, but not threads.
-  # if you execute a single block with many threads, it runs them all on one cpu thread
-  # should improve that eventually, but computers are hard.
-  # TODO a thread pool would be better, but `std/threadpool` is deprecated and I don't want to pull in dependencies.
-  # There are some fantastic multithreading libraries for nim, but I'm feeling stubborn about not pulling in dependencies.
 
   proc worker(closure: proc () {.closure, gcsafe.}) {.thread.} =
     ## Worker procedure that executes the provided closure in a thread.
@@ -126,21 +121,31 @@ else:
 
   template simpleLaunchKernel(fn: untyped, gridDimArg: Dim3, blockDimArg: Dim3, args: tuple) =
     block:
-      # Multi-threaded execution
+      # Multi-threaded execution - flatten blocks and threads into work items
       let totalBlocks = gridDimArg.x * gridDimArg.y * gridDimArg.z
-      let blocksPerThread = totalBlocks div threads
-      let extraBlocks = totalBlocks mod threads
+      let totalThreadsPerBlock = blockDimArg.x * blockDimArg.y * blockDimArg.z
+      let totalWorkItems = totalBlocks * totalThreadsPerBlock
+      let workItemsPerThread = totalWorkItems div threads
+      let extraWorkItems = totalWorkItems mod threads
 
       var threadHandles: seq[Thread[proc () {.closure.}]]
       threadHandles.setLen(threads)
 
-      proc makeClosure(tid: uint, startBlock: uint, endBlock: uint): proc() {.closure, gcsafe.} =
+      proc makeClosure(tid: uint, startWorkItem: uint, endWorkItem: uint): proc() {.closure, gcsafe.} =
         result = proc() {.closure, gcsafe.} =
-          # echo "Thread ", tid, " startBlock=", startBlock, " endBlock=", endBlock
+          # echo "Thread ", tid, " startWorkItem=", startWorkItem, " endWorkItem=", endWorkItem
           gridDim = gridDimArg
           blockDim = blockDimArg
           let totalBlocksPerPlane = gridDimArg.x * gridDimArg.y
-          for blockIndex in startBlock..<endBlock:
+          let totalThreadsPerBlock = blockDimArg.x * blockDimArg.y * blockDimArg.z
+          let totalThreadsPerBlockPlane = blockDimArg.x * blockDimArg.y
+
+          for workItemIndex in startWorkItem..<endWorkItem:
+            # Convert flattened work item index to block and thread indices
+            let blockIndex = workItemIndex div totalThreadsPerBlock
+            let threadIndex = workItemIndex mod totalThreadsPerBlock
+
+            # Convert blockIndex to 3D blockIdx
             let bz = blockIndex div totalBlocksPerPlane
             let remainder = blockIndex mod totalBlocksPerPlane
             let by = remainder div gridDimArg.x
@@ -148,25 +153,29 @@ else:
             blockIdx.x = bx
             blockIdx.y = by
             blockIdx.z = bz
-            for tz in 0..<blockDimArg.z:
-              for ty in 0..<blockDimArg.y:
-                for tx in 0..<blockDimArg.x:
-                  threadIdx.x = tx
-                  threadIdx.y = ty
-                  threadIdx.z = tz
-                  # echo "threadId", getThreadId(), " Thread ", tid, " blockIdx=", blockIdx, " threadIdx=", threadIdx, " startBlock=", startBlock, " endBlock=", endBlock
-                  # TODO we should avoid doing dangerous gcsafe stuff.
-                  {.gcsafe.}:
-                    unpackCall(fn, args)
 
-      var startBlock: uint = 0
+            # Convert threadIndex to 3D threadIdx
+            let tz = threadIndex div totalThreadsPerBlockPlane
+            let threadRemainder = threadIndex mod totalThreadsPerBlockPlane
+            let ty = threadRemainder div blockDimArg.x
+            let tx = threadRemainder mod blockDimArg.x
+            threadIdx.x = tx
+            threadIdx.y = ty
+            threadIdx.z = tz
+
+            # echo "threadId", getThreadId(), " Thread ", tid, " workItemIndex=", workItemIndex, " blockIdx=", blockIdx, " threadIdx=", threadIdx
+            # TODO we should avoid doing dangerous gcsafe stuff.
+            {.gcsafe.}:
+              unpackCall(fn, args)
+
+      var startWorkItem: uint = 0
       for i in 0..<threads.uint:
-        let numBlocks = if i < extraBlocks: blocksPerThread + 1 else: blocksPerThread
-        let myStartBlock = startBlock
-        let myEndBlock = startBlock + numBlocks
-        let closure = makeClosure(i, myStartBlock, myEndBlock)
+        let numWorkItems = if i < extraWorkItems: workItemsPerThread + 1 else: workItemsPerThread
+        let myStartWorkItem = startWorkItem
+        let myEndWorkItem = startWorkItem + numWorkItems
+        let closure = makeClosure(i, myStartWorkItem, myEndWorkItem)
         createThread(threadHandles[i], worker, closure)
-        startBlock = myEndBlock
+        startWorkItem = myEndWorkItem
 
       for th in threadHandles:
         joinThread(th)

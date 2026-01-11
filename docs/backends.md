@@ -59,8 +59,7 @@ The simple backend is extremely useful for translating existing CPU code to GPU 
 you still should be using `hippoMalloc` to get shared memory allocations that are thread-safe. Certain garbage collectors might work fine out of the box, your mileage may vary and I hope you know what you're doing.
 
 **Known issues:**
-- Only parallelizes blocks, not threads within blocks. A single block with many threads will run all threads on one CPU thread.
-  - blocks doesn't really make sense in the context of CPU, but could maybe use more thinking.
+- Parallelizes both blocks and threads across available CPU cores for maximum performance.
 - `hippoSyncthreads()` is not currently implemented and will raise an exception.
 - for nim before 2.0, requires `--threads:on` for multi-core performance. Without threads, execution is limited to a single core.
 - does not support parallelism on js currently.
