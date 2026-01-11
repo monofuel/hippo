@@ -47,10 +47,10 @@ GPU memory is separate from host memory. Workflow:
 3. Perform computations on the device.
 4. Copy results back to the host.
 
-- **hippoMalloc(size: csize_t)**: Allocates GPU memory, returns `HippoPtr`.
+- **hippoMalloc(size: int)**: Allocates GPU memory, returns `GpuRef`.
   - Example: `var dev_a = hippoMalloc(sizeof(int32) * N)`
 
-- **hippoMemcpy(dest: pointer, src: pointer, size: csize_t, kind: HippoMemcpyKind)**: Copies data between host and device.
+- **hippoMemcpy(dest: pointer, src: pointer, size: int, kind: HippoMemcpyKind)**: Copies data between host and device.
   - Directions: `hipMemcpyHostToDevice`, `hipMemcpyDeviceToHost`, etc.
   - Example: `hippoMemcpy(dev_a, addr a[0], sizeof(int32) * N, hipMemcpyHostToDevice)`
   - Use `addr` for host arrays to get raw pointers.
@@ -59,11 +59,11 @@ Hippo handles memory cleanup automatically (see Garbage Collection below).
 
 ## Kernel Launching
 
-Use `hippoLaunchKernel(kernelProc, gridDim: Dim3, blockDim: Dim3 = newDim3(1), args: HippoArgs, stream: HippoStream = nil)`.
+Use `hippoLaunchKernel(kernel: proc, gridDim: Dim3 = newDim3(1,1,1), blockDim: Dim3 = newDim3(1,1,1), sharedMemBytes: uint32 = 0, stream: HippoStream = nil, args: untyped)`.
 
-Threads are grouped into blocks, blocks into a grid. Use `newDim3(x, y, z)` for 1D/2D/3D layouts. For a 1D vector of size N: `gridDim = newDim3(N.uint32)`. Block size defaults to 1; typically 128-1024 for performance.
+Threads are grouped into blocks, blocks into a grid. Use `newDim3(x, y, z)` for 1D/2D/3D layouts. For a 1D vector of size N: `gridDim = newDim3(N.uint32)`. Block size defaults to `newDim3(1,1,1)`; typically 128-1024 for performance.
 
-Pass arguments via `hippoArgs(arg1, arg2, ...)`. Launches are asynchronous; use `hippoDeviceSynchronize()` to wait.
+Pass arguments via `hippoArgs(arg1, arg2, ...)`. Launches are asynchronous; use `hippoSynchronize()` to wait.
 
 Example:
 ```nim
@@ -76,7 +76,7 @@ hippoLaunchKernel(
 
 ## Garbage Collection
 
-Hippo uses Nim's GC to manage GPU resources automatically. `HippoPtr` types (returned by `hippoMalloc`) are GC-managed. When a `HippoPtr` goes out of scope, Hippo calls `hippoFree` internally to release GPU memory.
+Hippo uses Nim's GC to manage GPU resources automatically. `GpuRef` types (returned by `hippoMalloc`) are GC-managed. When a `GpuRef` goes out of scope, Hippo calls `hippoFree` internally to release GPU memory.
 
 For long-running programs, manage scopes carefully to avoid holding memory longer than needed.
 
