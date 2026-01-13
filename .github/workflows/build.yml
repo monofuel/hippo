@@ -38,6 +38,7 @@ jobs:
         nimble test_hip_cpu -y
         nimble test_simple -y
         nimble test_simple_no_threads -y
+        nimble test_hip_cpu -y
 
     - name: Build Examples
       run: |
