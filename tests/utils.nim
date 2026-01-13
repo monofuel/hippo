@@ -1,6 +1,11 @@
 # test utils
 
-import std/unittest
+import std/[unittest, strformat, math]
+
+proc assertAlmostEqual*(a, b: float64, delta: float64 = 1e-10) =
+  ## Assert that two floating point values are approximately equal within a delta tolerance
+  let diff = abs(a - b)
+  assert(diff < delta, &"Values not equal within delta {delta}: {a:e} vs {b:e} (diff: {diff:e})")
 
 template testSkipPlatforms*(name: string, skipPlatforms: varargs[string], body: untyped): untyped =
   ## Test template that skips execution on specified platforms.
