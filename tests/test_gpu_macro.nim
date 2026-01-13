@@ -6,6 +6,7 @@ import
 # Concrete types (standard Nim types to match int, long, float, double)
 type
   Int = int32 # Equivalent to C int
+  Float = float32 # Equivalent to C float
 
 # Helper proc for AST replacement (used in macro)
 proc replaceSym(node: NimNode; oldSym: string; newNode: NimNode): NimNode =
@@ -125,6 +126,10 @@ macro generateForLoopMacro(theType: typedesc, body: untyped): untyped =
 generateForLoopMacro(Int):
   outIt = it * 2 # Map: double
 
+# Generate macro for Float type with map body
+generateForLoopMacro(Float):
+  outIt = it * 1.5f # Map: multiply by 1.5
+
 suite "GPU macro map operations":
   testSkipPlatforms "map multiply by 2", "SIMPLE":
     # This test runs on: HIP, CUDA, HIP_CPU
@@ -146,3 +151,12 @@ suite "GPU macro map operations":
     assert result_int[0] == Int(20)
     assert result_int[1] == Int(0)
     assert result_int[2] == Int(-10)
+
+  testSkipPlatforms "map Float multiply by 1.5", "SIMPLE":
+    # Test with Float values
+    let seq_float: seq[Float] = @[Float(1.0), Float(2.0)]
+    let result_float = customForLoop_Float(seq_float)
+    # Verify results: each element should be multiplied by 1.5
+    assert result_float.len == 2
+    assert result_float[0] == Float(1.5)
+    assert result_float[1] == Float(3.0)
