@@ -46,9 +46,7 @@ proc dot(a, b, c: ptr[float64]){.hippoGlobal.} =
     cArray[blockIdx.x] = cache[0]
 
 suite "dot product":
-  test "dot":
-    skipPlatforms("SIMPLE")
-    echo "SKIP DID NOT WORK"
+  testSkipPlatforms "dot", "SIMPLE":
     var a, b, partial_c: array[N, float64]
 
     # allocate gpu memory
