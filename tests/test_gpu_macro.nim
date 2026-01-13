@@ -141,7 +141,7 @@ generateForLoopMacro(Double):
   outIt = it * it  # Square
 
 suite "GPU macro map operations":
-  testSkipPlatforms "map multiply by 2", "SIMPLE":
+  test "map multiply by 2":
     # This test runs on: HIP, CUDA, HIP_CPU
     # This test skips on: SIMPLE and SIMPLE_NO_THREADS (both thread variants)
     let seq_int: seq[Int] = @[Int(1), Int(2), Int(3)]
@@ -152,7 +152,7 @@ suite "GPU macro map operations":
     assert result_int[1] == Int(4)
     assert result_int[2] == Int(6)
 
-  testSkipPlatforms "map with different values", "SIMPLE":
+  test "map with different values":
     # Test with different input values
     let seq_int: seq[Int] = @[Int(10), Int(0), Int(-5)]
     let result_int = customForLoop_Int(seq_int)
@@ -162,7 +162,7 @@ suite "GPU macro map operations":
     assert result_int[1] == Int(0)
     assert result_int[2] == Int(-10)
 
-  testSkipPlatforms "map Float multiply by 1.5", "SIMPLE":
+  test "map Float multiply by 1.5":
     # Test with Float values
     let seq_float: seq[Float] = @[Float(1.0), Float(2.0)]
     let result_float = customForLoop_Float(seq_float)
@@ -171,7 +171,7 @@ suite "GPU macro map operations":
     assert result_float[0] == Float(1.5)
     assert result_float[1] == Float(3.0)
 
-  testSkipPlatforms "map Long add 1", "SIMPLE":
+  test "map Long add 1":
     # Test with Long values
     let seq_long: seq[Long] = @[Long(10), Long(0)]
     let result_long = customForLoop_Long(seq_long)
@@ -180,7 +180,7 @@ suite "GPU macro map operations":
     assert result_long[0] == Long(11)
     assert result_long[1] == Long(1)
 
-  testSkipPlatforms "map Double square", "SIMPLE":
+  test "map Double square":
     # Test with Double values
     let seq_double: seq[Double] = @[Double(4.0), Double(5.0)]
     let result_double = customForLoop_Double(seq_double)
