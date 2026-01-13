@@ -36,8 +36,12 @@ proc dot(a, b, c, scratch: ptr[float64]){.hippoGlobal.} =
       sum += scratchArray[blockIdx.x * blockDim.x + i]
     cArray[blockIdx.x] = sum
 
+# Limit threads for SIMPLE backend to make testing more predictable
+when HippoRuntime == "SIMPLE":
+  setThreads(4)
+
 suite "syncthreads":
-  testSkipPlatforms "syncthreads", "SIMPLE":
+  test "syncthreads":
     var a, b, partial_c: array[N, float64]
 
     var dev_a = hippoMalloc(sizeof(float64)*N)
