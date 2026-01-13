@@ -6,17 +6,15 @@ template testSkipPlatforms*(name: string, skipPlatforms: varargs[string], body: 
   ## Test template that skips execution on specified platforms.
   ## Runs on all platforms EXCEPT the ones listed in skipPlatforms.
   ##
-  ## Available platforms: "HIP", "CUDA", "HIP_CPU", "SIMPLE"
+  ## Available platforms: "HIP", "CUDA", "HIP_CPU", "SIMPLE", "SIMPLE_NO_THREADS"
   ##
-  ## Example:
-  ##   testSkipPlatforms "my test", "SIMPLE", "HIP_CPU":
-  ##     # test code here - runs on HIP and CUDA but not SIMPLE or HIP_CPU
-  ## Test template that skips execution on specified platforms.
-  ## Runs on all platforms EXCEPT the ones listed in skipPlatforms.
+  ## Note: "SIMPLE" = SIMPLE backend with --threads:on
+  ##       "SIMPLE_NO_THREADS" = SIMPLE backend with --threads:off
+  ##       Specifying "SIMPLE" in skipPlatforms skips BOTH SIMPLE variants
   ##
   ## Example:
   ##   testSkipPlatforms "my test", "SIMPLE":
-  ##     # test code here
+  ##     # test code here - runs on HIP, CUDA, and HIP_CPU but not SIMPLE or SIMPLE_NO_THREADS
 
   # Check if current runtime should be skipped
   const currentRuntime =
@@ -24,7 +22,9 @@ template testSkipPlatforms*(name: string, skipPlatforms: varargs[string], body: 
       when HippoRuntime == "HIP": "HIP"
       elif HippoRuntime == "CUDA": "CUDA"
       elif HippoRuntime == "HIP_CPU": "HIP_CPU"
-      elif HippoRuntime == "SIMPLE": "SIMPLE"
+      elif HippoRuntime == "SIMPLE":
+        when compileOption("threads"): "SIMPLE"
+        else: "SIMPLE_NO_THREADS"
       else: "HIP"  # default
     else:
       "HIP"  # default if not defined
@@ -32,6 +32,10 @@ template testSkipPlatforms*(name: string, skipPlatforms: varargs[string], body: 
   var shouldSkip = false
   for skipPlatform in skipPlatforms:
     if skipPlatform == currentRuntime:
+      shouldSkip = true
+      break
+    # Handle "SIMPLE" matching both SIMPLE and SIMPLE_NO_THREADS
+    elif skipPlatform == "SIMPLE" and (currentRuntime == "SIMPLE" or currentRuntime == "SIMPLE_NO_THREADS"):
       shouldSkip = true
       break
 

@@ -47,6 +47,8 @@ proc dot(a, b, c: ptr[float64]){.hippoGlobal.} =
 
 suite "dot product":
   testSkipPlatforms "dot", "SIMPLE":
+    # This test runs on: HIP, CUDA, HIP_CPU
+    # This test skips on: SIMPLE and SIMPLE_NO_THREADS (both thread variants)
     var a, b, partial_c: array[N, float64]
 
     # allocate gpu memory
