@@ -4,6 +4,18 @@ import std/[strformat, locks]
 # nim c --mm:atomicArc -r syncthreads6.nim
 
 # ──────────────────────────────────────────────────────────────────────────────
+# Configuration constants (easy to modify for testing different scenarios)
+# ──────────────────────────────────────────────────────────────────────────────
+
+const
+  NUM_WORKERS = 4
+  N = 8  # Vector length (multiple of NUM_WORKERS for simplicity)
+  NUM_SCHED_THREADS = 2  # Support for 2 threads as requested
+
+  A: array[N, int] = [1, 2, 3, 4, 5, 6, 7, 8]
+  B: array[N, int] = [8, 7, 6, 5, 4, 3, 2, 1]  # Dot product should be 120
+
+# ──────────────────────────────────────────────────────────────────────────────
 # Very minimal cooperative task pool using closure iterators (now per OS thread)
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -36,14 +48,6 @@ proc runAllTasks(tasks: seq[Task]) =
 # ──────────────────────────────────────────────────────────────────────────────
 # Our toy barrier implemented with a shared counter + generation (now thread-safe)
 # ──────────────────────────────────────────────────────────────────────────────
-
-const
-  NUM_WORKERS = 4
-  N = 8  # Vector length (multiple of NUM_WORKERS for simplicity)
-
-const
-  A: array[N, int] = [1, 2, 3, 4, 5, 6, 7, 8]
-  B: array[N, int] = [8, 7, 6, 5, 4, 3, 2, 1]  # Dot product should be 120
 
 var
   barrierLock: Lock
@@ -132,10 +136,9 @@ proc worker(id: int): Task =
 # Scheduler threads (now using 2 OS threads for the workers)
 # ──────────────────────────────────────────────────────────────────────────────
 
-const NUM_SCHED_THREADS = 2  # Support for 2 threads as requested
-
 proc schedulerThread(groupId: int) {.thread.} =
   ## Runs the scheduler for a group of tasks
+  # NB. this gcsafe is only allowed because tasks is shared, and we are using --mm:atomicArc
   {.gcsafe.}:
     let tasksPerGroup = NUM_WORKERS div NUM_SCHED_THREADS
     let startIdx = groupId * tasksPerGroup
