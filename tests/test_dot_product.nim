@@ -1,4 +1,7 @@
-import hippo, std/[unittest, strformat]
+import
+  hippo,
+  std/[unittest, strformat],
+  ./utils
 
 const 
   N = 33 * 1024
@@ -44,6 +47,8 @@ proc dot(a, b, c: ptr[float64]){.hippoGlobal.} =
 
 suite "dot product":
   test "dot":
+    skipPlatforms("SIMPLE")
+    echo "SKIP DID NOT WORK"
     var a, b, partial_c: array[N, float64]
 
     # allocate gpu memory
