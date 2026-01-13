@@ -9,7 +9,7 @@ requires "nim >= 2.1.9"
 
 
 task test, "Run all tests":
-  # uses HIP_CPU
+  # default is currently HIP_CPU for being easy to test and accurate
   exec "set -e; for f in tests/test*.nim; do nim cpp -r $f; done"
 
 task test_amd, "Run all tests with AMD HIP":
@@ -18,10 +18,12 @@ task test_amd, "Run all tests with AMD HIP":
 task test_cuda, "Run all tests with CUDA":
   exec "set -e; for f in tests/test*.nim; do nim cpp --cc:nvcc --define:'useMalloc' -r $f; done"
 
+task test_hip_cpu, "Run all tests with HIP-CPU backend":
+  # explicit hip_cpu test in case we ever change the default for our tests
+  exec "set -e; for f in tests/test*.nim; do nim cpp --define:'HippoRuntime:HIP_CPU' -r $f; done"
+
 task test_simple, "Run all tests with Simple backend (threads enabled)":
-  # TODO: Get dot_product working on simple backend
-  exec "set -e; nim cpp --threads:on --define:'HippoRuntime:SIMPLE' -r tests/test_vector_sum.nim"
+  exec "set -e; for f in tests/test*.nim; do nim cpp --threads:on --define:'HippoRuntime:SIMPLE' -r $f; done"
 
 task test_simple_no_threads, "Run all tests with Simple backend (threads disabled)":
-  # TODO: Get dot_product working on simple backend
-  exec "set -e; nim cpp --threads:off --define:'HippoRuntime:SIMPLE' -r tests/test_vector_sum.nim"
+  exec "set -e; for f in tests/test*.nim; do nim cpp --threads:off --define:'HippoRuntime:SIMPLE' -r $f; done"

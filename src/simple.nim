@@ -2,7 +2,7 @@
 ## You must compile with --threads:on for using more cpu cores.
 ## Otherwise it will only use 1 core.
 ## Single threaded mode should 'just work' anywhere, even in js, but won't be fast.
-import std/[cpuinfo, macros, os, strutils]
+import std/[cpuinfo, macros, os, strutils, math]
 
 const SingleThread = defined(js) or not compileOption("threads")
 
@@ -185,3 +185,22 @@ proc hippoSyncthreads*() =
   # TODO could probably use nim iterators to implement syncthreads?
   # I want something simple that can work anywhere
   raise newException(Exception, "hippoSyncthreads not implemented yet")
+
+# Math functions matching HIP/CUDA interface
+# Single-precision floating-point math functions
+template sinf*(x: cfloat): cfloat =
+  ## Single-precision sine function
+  math.sin(x.float).cfloat
+
+template cosf*(x: cfloat): cfloat =
+  ## Single-precision cosine function
+  math.cos(x.float).cfloat
+
+# Double-precision floating-point math functions
+template sin*(x: cdouble): cdouble =
+  ## Double-precision sine function
+  math.sin(x.float64).cdouble
+
+template cos*(x: cdouble): cdouble =
+  ## Double-precision cosine function
+  math.cos(x.float64).cdouble
