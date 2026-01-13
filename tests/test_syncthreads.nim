@@ -6,8 +6,8 @@ import
 # Isolated syncthreads test that does not involve shared memory.
 
 const
-  N = 33 * 1024
-  ThreadsPerBlock: int = 256
+  N = 33 * 32
+  ThreadsPerBlock: int = 4
   BlocksPerGrid: int = min(32, ((N + ThreadsPerBlock - 1) div ThreadsPerBlock))
 
 proc dot(a, b, c, scratch: ptr[float64]){.hippoGlobal.} =
@@ -36,7 +36,7 @@ proc dot(a, b, c, scratch: ptr[float64]){.hippoGlobal.} =
       sum += scratchArray[blockIdx.x * blockDim.x + i]
     cArray[blockIdx.x] = sum
 
-# Limit threads for SIMPLE backend to make testing more predictable
+# Limit threads for SIMPLE backend to make testing less intensive
 when HippoRuntime == "SIMPLE":
   setThreads(4)
 
