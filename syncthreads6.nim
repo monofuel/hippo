@@ -8,12 +8,23 @@ import std/[strformat, locks]
 # ──────────────────────────────────────────────────────────────────────────────
 
 const
-  NUM_WORKERS = 4
-  N = 8  # Vector length (multiple of NUM_WORKERS for simplicity)
-  NUM_SCHED_THREADS = 2  # Support for 2 threads as requested
+  NUM_WORKERS = 8
+  N = NUM_WORKERS * 4 # TODO we don't handle the case where N is not a multiple of NUM_WORKERS
+  NUM_SCHED_THREADS = 4  # number of real process threads to use
 
-  A: array[N, int] = [1, 2, 3, 4, 5, 6, 7, 8]
-  B: array[N, int] = [8, 7, 6, 5, 4, 3, 2, 1]  # Dot product should be 120
+proc generateArray(start, step: int): array[N, int] {.compileTime.} =
+  for i in 0..<N:
+    result[i] = start + i * step
+
+const
+  A: array[N, int] = generateArray(1, 1)      # [1, 2, 3, ..., N]
+  B: array[N, int] = generateArray(N, -1)     # [N, N-1, N-2, ..., 1]
+
+proc expectedDotProduct(): int {.compileTime.} =
+  for i in 0..<N:
+    result += A[i] * B[i]
+
+const EXPECTED_RESULT = expectedDotProduct()
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Very minimal cooperative task pool using closure iterators (now per OS thread)
@@ -175,4 +186,4 @@ when isMainModule:
 
   echo "\nAll workers finished!"
   echo &"Final result: {finalResult}"
-  assert finalResult == 120, &"Expected dot product to be 120, but got {finalResult}"
+  assert finalResult == EXPECTED_RESULT, &"Expected dot product to be {EXPECTED_RESULT}, but got {finalResult}"
