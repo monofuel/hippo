@@ -26,7 +26,7 @@ proc useConstantArray(output: ptr[int32]){.hippoGlobal.} =
   outputArray[tid] = arrayValue * 2
 
 suite "constant memory":
-  testSkipPlatforms "constant_scalar", "SIMPLE":
+  test "constant_scalar":
     const NumThreads = 8
     var output = newSeq[int32](NumThreads)
 
@@ -49,7 +49,7 @@ suite "constant memory":
       let expected = int32(TestConstant + i)
       assert(output[i] == expected, fmt"Thread {i}: expected {expected}, got {output[i]}")
 
-  testSkipPlatforms "constant_array", "SIMPLE":
+  test "constant_array":
     const NumThreads = 8
     var output = newSeq[int32](NumThreads)
 

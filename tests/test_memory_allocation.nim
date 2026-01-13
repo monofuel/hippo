@@ -11,7 +11,7 @@ proc writeValue(output: ptr[int32], value: int32){.hippoGlobal.} =
   outputArray[threadIdx.x] = value
 
 suite "memory allocation":
-  testSkipPlatforms "basic_allocation", "SIMPLE":
+  test "basic_allocation":
     const Size = 16
     var output = newSeq[int32](Size)
     var dev_output = hippoMalloc(sizeof(int32) * Size)
@@ -28,7 +28,7 @@ suite "memory allocation":
     for i in 0..<Size:
       assert(output[i] == 42)
 
-  testSkipPlatforms "large_allocation", "SIMPLE":
+  test "large_allocation":
     const Size = 1024 * 10  # 10KB
     var output = newSeq[int32](Size)
     var dev_output = hippoMalloc(sizeof(int32) * Size)
@@ -43,7 +43,7 @@ suite "memory allocation":
     hippoMemcpy(addr output[0], dev_output, sizeof(int32), HippoMemcpyDeviceToHost)
     assert(output[0] == 123)
 
-  testSkipPlatforms "zero_size_allocation", "SIMPLE":
+  test "zero_size_allocation":
     # Test allocating zero bytes (should not crash)
     var dev_zero = hippoMalloc(0)
     # Just verify it doesn't crash - we can't really use zero-sized allocations

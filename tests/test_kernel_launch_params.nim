@@ -12,7 +12,7 @@ proc writeGlobalIndex(output: ptr[int32]){.hippoGlobal.} =
   outputArray[globalIdx] = int32(globalIdx)
 
 suite "kernel launch params":
-  testSkipPlatforms "single_thread", "SIMPLE":
+  test "single_thread":
     var output = newSeq[int32](1)
     var dev_output = hippoMalloc(sizeof(int32))
     hippoLaunchKernel(
@@ -24,7 +24,7 @@ suite "kernel launch params":
     hippoMemcpy(addr output[0], dev_output, sizeof(int32), HippoMemcpyDeviceToHost)
     assert(output[0] == 0)
 
-  testSkipPlatforms "single_block", "SIMPLE":
+  test "single_block":
     const Threads = 8
     var output = newSeq[int32](Threads)
     var dev_output = hippoMalloc(sizeof(int32) * Threads)
@@ -38,7 +38,7 @@ suite "kernel launch params":
     for i in 0..<Threads:
       assert(output[i] == int32(i))
 
-  testSkipPlatforms "multiple_blocks", "SIMPLE":
+  test "multiple_blocks":
     const Blocks = 3
     const ThreadsPerBlock = 4
     const Total = Blocks * ThreadsPerBlock

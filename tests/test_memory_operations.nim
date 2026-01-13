@@ -15,7 +15,7 @@ proc copyData(src: ptr[int32], dst: ptr[int32]){.hippoGlobal.} =
   dstArray[tid] = srcArray[tid] * 2
 
 suite "memory operations":
-  testSkipPlatforms "device_to_device_memcpy", "SIMPLE":
+  test "device_to_device_memcpy":
     const NumElements = 16
     var hostData = newSeq[int32](NumElements)
     var resultData = newSeq[int32](NumElements)
@@ -47,7 +47,7 @@ suite "memory operations":
       let expected = int32((i + 10) * 2)
       assert(resultData[i] == expected, fmt"Element {i}: expected {expected}, got {resultData[i]}")
 
-  testSkipPlatforms "multiple_allocations", "SIMPLE":
+  test "multiple_allocations":
     # Test multiple sequential allocations and deallocations
     const NumBuffers = 3
     const BufferSize = 16

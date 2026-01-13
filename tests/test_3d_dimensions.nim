@@ -33,7 +33,7 @@ proc test3DCoords(output: ptr[int32]){.hippoGlobal.} =
   outputArray[globalIndex] = coords
 
 suite "3d dimensions":
-  testSkipPlatforms "3d_coords", "SIMPLE":
+  test "3d_coords":
     # Calculate expected dimensions
     let totalBlocks = int(GridX * GridY * GridZ)
     let totalThreadsPerBlock = int(BlockX * BlockY * BlockZ)

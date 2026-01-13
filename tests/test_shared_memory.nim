@@ -32,7 +32,7 @@ proc dot(a, b, partial_c: ptr[float64]){.hippoGlobal.} =
   cArray[tid] = sdata[local_tid]
 
 suite "dot product with shared memory but no syncthreads":
-  testSkipPlatforms "dot", "SIMPLE":
+  test "dot":
     var a, b: array[N, float64]
     var partial_c: array[N, float64]  # Now per-thread partials since no block reduction
 

@@ -37,7 +37,7 @@ proc doubleOperations(output: ptr[float64]){.hippoGlobal.} =
   outputArray[tid * 3 + 2] = result3
 
 suite "float precision":
-  testSkipPlatforms "float32_operations", "SIMPLE":
+  test "float32_operations":
     const NumThreads = 4
     const ResultsPerThread = 3
     var output = newSeq[float32](NumThreads * ResultsPerThread)
@@ -64,7 +64,7 @@ suite "float precision":
       assertAlmostEqual(output[i * 3 + 1], expected2, 1e-6)
       assertAlmostEqual(output[i * 3 + 2], expected3, 1e-6)
 
-  testSkipPlatforms "float64_operations", "SIMPLE":
+  test "float64_operations":
     const NumThreads = 4
     const ResultsPerThread = 3
     var output = newSeq[float64](NumThreads * ResultsPerThread)

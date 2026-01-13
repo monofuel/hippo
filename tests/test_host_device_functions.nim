@@ -30,7 +30,7 @@ proc useHostDeviceFunctions(output: ptr[int32]){.hippoGlobal.} =
   outputArray[tid] = result
 
 suite "host device functions":
-  testSkipPlatforms "basic_host_device_interaction", "SIMPLE":
+  test "basic_host_device_interaction":
     const NumThreads = 8
 
     # First, test calling host-device functions from host code

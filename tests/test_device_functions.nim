@@ -35,7 +35,7 @@ proc testDeviceFunctions(output: ptr[int32]){.hippoGlobal.} =
   outputArray[tid * 3 + 2] = result3
 
 suite "device functions":
-  testSkipPlatforms "basic_functionality", "SIMPLE":
+  test "basic_functionality":
     const NumThreads = 16
     const ResultsPerThread = 3
     const TotalResults = NumThreads * ResultsPerThread

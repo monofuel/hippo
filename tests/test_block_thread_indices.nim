@@ -17,7 +17,7 @@ proc writeIndices(output: ptr[int32]){.hippoGlobal.} =
   outputArray[globalIdx] = encoded
 
 suite "block thread indices":
-  testSkipPlatforms "indices_1d", "SIMPLE":
+  test "indices_1d":
     const GridX = 3.uint32
     const BlockX = 4.uint32
 
