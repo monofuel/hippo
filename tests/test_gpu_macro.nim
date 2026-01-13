@@ -7,6 +7,8 @@ import
 type
   Int = int32 # Equivalent to C int
   Float = float32 # Equivalent to C float
+  Long = int64 # Equivalent to C long
+  Double = float64 # Equivalent to C double
 
 # Helper proc for AST replacement (used in macro)
 proc replaceSym(node: NimNode; oldSym: string; newNode: NimNode): NimNode =
@@ -130,6 +132,14 @@ generateForLoopMacro(Int):
 generateForLoopMacro(Float):
   outIt = it * 1.5f # Map: multiply by 1.5
 
+# Generate macro for Long type with map body
+generateForLoopMacro(Long):
+  outIt = it + 1'i64 # Map: add 1
+
+# Generate macro for Double type with map body
+generateForLoopMacro(Double):
+  outIt = it * it  # Square
+
 suite "GPU macro map operations":
   testSkipPlatforms "map multiply by 2", "SIMPLE":
     # This test runs on: HIP, CUDA, HIP_CPU
@@ -160,3 +170,21 @@ suite "GPU macro map operations":
     assert result_float.len == 2
     assert result_float[0] == Float(1.5)
     assert result_float[1] == Float(3.0)
+
+  testSkipPlatforms "map Long add 1", "SIMPLE":
+    # Test with Long values
+    let seq_long: seq[Long] = @[Long(10), Long(0)]
+    let result_long = customForLoop_Long(seq_long)
+    # Verify results: each element should be incremented by 1
+    assert result_long.len == 2
+    assert result_long[0] == Long(11)
+    assert result_long[1] == Long(1)
+
+  testSkipPlatforms "map Double square", "SIMPLE":
+    # Test with Double values
+    let seq_double: seq[Double] = @[Double(4.0), Double(5.0)]
+    let result_double = customForLoop_Double(seq_double)
+    # Verify results: each element should be squared
+    assert result_double.len == 2
+    assert result_double[0] == Double(16.0)
+    assert result_double[1] == Double(25.0)
