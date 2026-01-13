@@ -12,6 +12,8 @@ const
   N = NUM_WORKERS * 4 # TODO we don't handle the case where N is not a multiple of NUM_WORKERS
   NUM_SCHED_THREADS = 4  # number of real process threads to use
 
+# tested 1, 2, and 4 sched threads
+
 proc generateArray(start, step: int): array[N, int] {.compileTime.} =
   for i in 0..<N:
     result[i] = start + i * step
