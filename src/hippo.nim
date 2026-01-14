@@ -204,7 +204,7 @@ proc hippoRefcopy[T](gpuref: GpuRef, target: ref T) =
 
 when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
   macro hipLaunchKernelGGLWithTuple(
-    kernel: proc,
+    kernel: untyped,
     gridDim: Dim3 = newDim3(1,1,1),
     blockDim: Dim3 = newDim3(1,1,1),
     sharedMemBytes: uint32 = 0,
@@ -227,7 +227,7 @@ when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
     result = callNode
 
 template hippoLaunchKernel*(
-  kernel: proc,                     ## The GPU kernel procedure to launch
+  kernel: untyped,                  ## The GPU kernel procedure to launch
   gridDim: Dim3 = newDim3(1,1,1),   ## default to a grid of 1 block
   blockDim: Dim3 = newDim3(1,1,1),  ## default to 1 thread per block
   sharedMemBytes: uint32 = 0,       ## dynamic shared memory amount to allocate
@@ -285,16 +285,74 @@ template hippoLaunchKernel*(
 
 macro hippoGlobal*(fn: untyped): untyped =
   ## Declare a function as `__global__`. global functions are called from the host and run on the device.
-  when HippoRuntime != "SIMPLE":
+  when HippoRuntime == "SIMPLE":
+    # For SIMPLE runtime, transform proc into a proc that returns an iterator
+    expectKind(fn, nnkProcDef)
+    # Extract components
+    let name = fn[0]
+    let generics = fn[1]
+    let params = fn[3]
+    let pragmas = if fn.len > 4 and fn[4].kind == nnkPragma: fn[4] else: newEmptyNode()
+    let body = fn[^1]
+
+    # Create iterator body with yield false at the end
+    let iterBody = newStmtList()
+    if body.kind == nnkStmtList:
+      for stmt in body:
+        iterBody.add(stmt)
+    else:
+      iterBody.add(body)
+    # Add yield false at the end to signal completion
+    iterBody.add(newTree(nnkYieldStmt, newLit(false)))
+
+    # Create anonymous iterator and return it
+    let anonIter = newNimNode(nnkIteratorDef)
+    anonIter.add(newEmptyNode())  # no name for anonymous iterator
+    anonIter.add(newEmptyNode())  # generics
+    anonIter.add(newEmptyNode())  # empty before params
+    anonIter.add(newNimNode(nnkFormalParams).add(ident("bool")))  # return type bool, no params
+    anonIter.add(newEmptyNode())  # pragmas
+    anonIter.add(newEmptyNode())  # reserved
+    anonIter.add(iterBody)
+
+    # Create return statement
+    let returnStmt = newTree(nnkReturnStmt, anonIter)
+
+    # Create proc body that returns the anonymous iterator
+    let procBody = newStmtList()
+    procBody.add(returnStmt)
+
+    # Create proc body that returns the anonymous iterator
+    let returnBody = newStmtList()
+    returnBody.add(newTree(nnkReturnStmt, anonIter))
+
+    # Create new params with auto return type
+    let newParams = params.copyNimTree()
+    # Set return type to auto
+    if newParams.len > 0:
+      newParams[0] = ident("auto")
+    else:
+      newParams.insert(0, ident("auto"))
+
+    # Create the proc definition with auto return type
+    result = newNimNode(nnkProcDef)
+    result.add(name)
+    result.add(generics)
+    result.add(newEmptyNode())  # empty before params
+    result.add(newParams)
+    result.add(pragmas)
+    result.add(newEmptyNode())  # reserved
+    result.add(returnBody)
+  else:
     let globalPragma: NimNode = quote:
       {. exportc, codegenDecl: "__global__ $# $#$#".}
 
     fn.addPragma(globalPragma[0])
     fn.addPragma(globalPragma[1])
-  quote do:
-    {.push stackTrace: off, checks: off.}
-    `fn`
-    {.pop.}
+    result = quote do:
+      {.push stackTrace: off, checks: off.}
+      `fn`
+      {.pop.}
 
 macro hippoDevice*(fn: untyped): untyped =
   ## Declare fuctions for use on the `__device__` (the gpu),

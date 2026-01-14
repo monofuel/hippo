@@ -4,10 +4,11 @@ import
   ./utils
 
 # Isolated syncthreads test that does not involve shared memory.
+# thread 0 reduces the partial sums from all threads in the block, and writes the result to the global array.
 
 const
   N = 33 * 32
-  ThreadsPerBlock: int = 4
+  ThreadsPerBlock: int = 1  # TODO this is wrong, the whole point of this is to test many gpu threads
   BlocksPerGrid: int = min(32, ((N + ThreadsPerBlock - 1) div ThreadsPerBlock))
 
 proc dot(a, b, c, scratch: ptr[float64]){.hippoGlobal.} =
@@ -36,7 +37,7 @@ proc dot(a, b, c, scratch: ptr[float64]){.hippoGlobal.} =
       sum += scratchArray[blockIdx.x * blockDim.x + i]
     cArray[blockIdx.x] = sum
 
-# Limit threads for SIMPLE backend to make testing less intensive
+# Limit CPU threads for SIMPLE backend to make testing less intensive (otherwise it can hog all the cores)
 when HippoRuntime == "SIMPLE":
   setThreads(4)
 
