@@ -47,6 +47,10 @@ proc newDim3*(x: uint32_t = 1; y: uint32_t = 1; z: uint32_t = 1): Dim3 =
 
 proc cudaMalloc*(`ptr`: ptr pointer; size: cint): cudaError_t {.header: "cuda_runtime.h",importcpp: "cudaMalloc(@)".}
 proc cudaMemcpy*(dst: pointer; src: pointer; size: cint; kind: cudaMemcpyKind): cudaError_t {.header: "cuda_runtime.h",importcpp: "cudaMemcpy(@)".}
+proc cudaMemcpyToSymbol*(symbol: pointer; src: pointer; sizeBytes: csize_t;
+                         offset: csize_t = 0;
+                         kind: cudaMemcpyKind = cudaMemcpyHostToDevice): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaMemcpyToSymbol(@)".}
 proc cudaFree*(`ptr`: pointer): cudaError_t {.header: "cuda_runtime.h",importcpp: "cudaFree(@)".}
 
 proc cudaLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;

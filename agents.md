@@ -15,6 +15,8 @@
   - `nimble test_amd` will run the tests on AMD with HIP.
   - `nimble test_cuda` will run tests for NVIDIA with CUDA.
 
+- tests sometimes take a long time to compile and run all of them. please use a large timeout (eg: 10 minutes) when running tests.
+
 ## Nix Flakes
 
 - there is a `flake.nix` for setting up the basic dev environment.
