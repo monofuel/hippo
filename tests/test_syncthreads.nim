@@ -34,7 +34,7 @@ proc dot(a, b, c, scratch: ptr[float64]){.hippoGlobal.} =
   if cacheIndex == 0:
     var sum: float64 = 0
     for i in 0 ..< blockDim.x:
-      sum += scratchArray[blockIdx.x * blockDim.x + i]
+      sum = sum + scratchArray[blockIdx.x * blockDim.x + i]
     cArray[blockIdx.x] = sum
 
 # Limit CPU threads for SIMPLE backend to make testing less intensive (otherwise it can hog all the cores)
