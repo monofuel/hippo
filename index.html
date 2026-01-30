@@ -328,12 +328,12 @@
 
 </ul>
 <ul class="simple nested-toc-section">hippoLaunchKernel
-  <li><a class="reference" href="#hippoLaunchKernel.t%2Cproc%2CDim3%2CDim3%2Cuint32%2CHippoStream%2Cuntyped" title="hippoLaunchKernel(kernel: proc; ## The GPU kernel procedure to launch
+  <li><a class="reference" href="#hippoLaunchKernel.t%2Cuntyped%2CDim3%2CDim3%2Cuint32%2CHippoStream%2Cuntyped" title="hippoLaunchKernel(kernel: untyped; ## The GPU kernel procedure to launch
                   gridDim: Dim3 = newDim3(1, 1, 1); ## default to a grid of 1 block
                   blockDim: Dim3 = newDim3(1, 1, 1); ## default to 1 thread per block
                   sharedMemBytes: uint32 = 0; ## dynamic shared memory amount to allocate
                   stream: HippoStream = nil; ## Which device stream to run under (defaults to null)
-                  args: untyped)">hippoLaunchKernel(kernel: proc; ## The GPU kernel procedure to launch
+                  args: untyped)">hippoLaunchKernel(kernel: untyped; ## The GPU kernel procedure to launch
                   gridDim: Dim3 = newDim3(1, 1, 1); ## default to a grid of 1 block
                   blockDim: Dim3 = newDim3(1, 1, 1); ## default to 1 thread per block
                   sharedMemBytes: uint32 = 0; ## dynamic shared memory amount to allocate
@@ -1201,8 +1201,8 @@
   <dd>
     
     Automatically convert varargs for use with CUDA/HIP. CUDA/HIP expects an array of arguments or pointers depending on platform.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L386" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L386" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L429" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L429" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1214,8 +1214,8 @@
   <dd>
     
     Declared a variable as <tt class="docutils literal"><span class="pre"><span class="Identifier">__constant__</span></span></tt>. Constants are read-only globals that are cached on-chip. constants are useful for data that is being read by all threads in a warp at the same time. if each thread in a warp accesses different addresses in constant memory, the accesses are serialized and this may cause a 16x slowdown. eg: <tt class="docutils literal"><span class="pre"><span class="Keyword">const</span> <span class="Identifier">N</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">hippoConstant</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="DecNumber">1024</span></span></tt>
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L369" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L369" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L412" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L412" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1227,8 +1227,8 @@
   <dd>
     
     Declare fuctions for use on the <tt class="docutils literal"><span class="pre"><span class="Identifier">__device__</span></span></tt> (the gpu), to be called by either <tt class="docutils literal"><span class="pre"><span class="Identifier">device</span></span></tt> or <tt class="docutils literal"><span class="pre"><span class="Identifier">global</span></span></tt> functions.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L310" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L310" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L353" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L353" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1253,8 +1253,8 @@
   <dd>
     
     Explicitly declare a function as a <tt class="docutils literal"><span class="pre"><span class="Identifier">__host__</span></span></tt> function (cpu side). All functions default to <tt class="docutils literal"><span class="pre"><span class="Identifier">host</span></span></tt> functions, so this is not required.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L325" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L325" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L368" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L368" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1266,8 +1266,8 @@
   <dd>
     
     Declare a function as both <tt class="docutils literal"><span class="pre"><span class="Identifier">__host__</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">__device__</span></span></tt>. This is useful for functions that are usable from either the host and the device. eg: <tt class="docutils literal"><span class="pre"><span class="Keyword">proc</span> <span class="Identifier">add</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Punctuation">:</span> <span class="Identifier">int</span><span class="Punctuation">,</span> <span class="Identifier">b</span><span class="Punctuation">:</span> <span class="Identifier">int</span><span class="Punctuation">)</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">hippoHostDevice</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Identifier">a</span> <span class="Operator">+</span> <span class="Identifier">b</span></span></tt>
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L339" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L339" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L382" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L382" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1279,8 +1279,8 @@
   <dd>
     
     Declared a variable as static shared memory <tt class="docutils literal"><span class="pre"><span class="Identifier">__shared__</span></span></tt>. Shared memory is shared between threads in the same block. It is faster than global memory, but is limited in size. They are located on-chip. eg: <tt class="docutils literal"><span class="pre"><span class="Keyword">var</span> <span class="Identifier">cache</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">hippoShared</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">array</span><span class="Punctuation">[</span><span class="DecNumber">256</span><span class="Punctuation">,</span> <span class="Identifier">float</span><span class="Punctuation">]</span></span></tt>
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L354" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L354" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L397" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L397" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1298,8 +1298,8 @@
   <dd>
     
     Cosine function for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L459" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L459" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L502" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L502" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1311,8 +1311,8 @@
   <dd>
     
     Exponential function (e^x) for double-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L419" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L419" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L462" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L462" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1321,8 +1321,8 @@
   <dd>
     
     Exponential function (e^x) for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L409" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L409" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L452" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L452" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1342,8 +1342,8 @@
 
 </div>
 <div id="hippoLaunchKernel-templates-all">
-  <div id="hippoLaunchKernel.t,proc,Dim3,Dim3,uint32,HippoStream,untyped">
-  <dt><pre><span class="Keyword">template</span> <a href="#hippoLaunchKernel.t%2Cproc%2CDim3%2CDim3%2Cuint32%2CHippoStream%2Cuntyped"><span class="Identifier">hippoLaunchKernel</span></a><span class="Other">(</span><span class="Identifier">kernel</span><span class="Other">:</span> <span class="Keyword">proc</span><span class="Other">;</span> <span class="Comment">## The GPU kernel procedure to launch</span>
+  <div id="hippoLaunchKernel.t,untyped,Dim3,Dim3,uint32,HippoStream,untyped">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoLaunchKernel.t%2Cuntyped%2CDim3%2CDim3%2Cuint32%2CHippoStream%2Cuntyped"><span class="Identifier">hippoLaunchKernel</span></a><span class="Other">(</span><span class="Identifier">kernel</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">;</span> <span class="Comment">## The GPU kernel procedure to launch</span>
                            <span class="Identifier">gridDim</span><span class="Other">:</span> <a href="hippo.html#Dim3"><span class="Identifier">Dim3</span></a> <span class="Other">=</span> <span class="Identifier">newDim3</span><span class="Other">(</span><span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">;</span> <span class="Comment">## default to a grid of 1 block</span>
                            <span class="Identifier">blockDim</span><span class="Other">:</span> <a href="hippo.html#Dim3"><span class="Identifier">Dim3</span></a> <span class="Other">=</span> <span class="Identifier">newDim3</span><span class="Other">(</span><span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">,</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">;</span> <span class="Comment">## default to 1 thread per block</span>
                            <span class="Identifier">sharedMemBytes</span><span class="Other">:</span> <span class="Identifier">uint32</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Comment">## dynamic shared memory amount to allocate</span>
@@ -1365,8 +1365,8 @@
   <dd>
     
     Natural logarithm for double-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L439" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L439" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L482" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L482" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1375,8 +1375,8 @@
   <dd>
     
     Natural logarithm for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L429" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L429" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L472" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L472" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1460,8 +1460,8 @@
   <dd>
     
     Power function (base^exp) for double-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L489" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L489" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L532" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L532" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1470,8 +1470,8 @@
   <dd>
     
     Power function (base^exp) for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L479" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L479" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L522" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L522" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1483,8 +1483,8 @@
   <dd>
     
     Sine function for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L449" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L449" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L492" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L492" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1496,8 +1496,8 @@
   <dd>
     
     Square root function for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L469" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L469" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L512" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L512" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1526,7 +1526,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-30 20:41:04 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-30 22:27:17 UTC</small>
       </div>
     </div>
   </div>

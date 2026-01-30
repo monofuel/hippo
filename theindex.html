@@ -186,12 +186,12 @@
           </ul></dd>
 <dt><a name="hippoLaunchKernel" href="#hippoLaunchKernel"><span>hippoLaunchKernel:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="hippo: template hippoLaunchKernel(kernel: proc; ## The GPU kernel procedure to launch
+          data-doc-search-tag="hippo: template hippoLaunchKernel(kernel: untyped; ## The GPU kernel procedure to launch
                   gridDim: Dim3 = newDim3(1, 1, 1); ## default to a grid of 1 block
                   blockDim: Dim3 = newDim3(1, 1, 1); ## default to 1 thread per block
                   sharedMemBytes: uint32 = 0; ## dynamic shared memory amount to allocate
                   stream: HippoStream = nil; ## Which device stream to run under (defaults to null)
-                  args: untyped)" href="hippo.html#hippoLaunchKernel.t%2Cproc%2CDim3%2CDim3%2Cuint32%2CHippoStream%2Cuntyped">hippo: template hippoLaunchKernel(kernel: proc; ## The GPU kernel procedure to launch
+                  args: untyped)" href="hippo.html#hippoLaunchKernel.t%2Cuntyped%2CDim3%2CDim3%2Cuint32%2CHippoStream%2Cuntyped">hippo: template hippoLaunchKernel(kernel: untyped; ## The GPU kernel procedure to launch
                   gridDim: Dim3 = newDim3(1, 1, 1); ## default to a grid of 1 block
                   blockDim: Dim3 = newDim3(1, 1, 1); ## default to 1 thread per block
                   sharedMemBytes: uint32 = 0; ## dynamic shared memory amount to allocate
@@ -374,7 +374,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-30 20:41:04 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-30 22:27:17 UTC</small>
       </div>
     </div>
   </div>
