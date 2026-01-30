@@ -11,7 +11,6 @@ import
 ## GPU threads can sync with all the other threads in a block using `hippoSyncthreads()` just like in CUDA/HIP.
 ## we may be running thousands of GPU threads on top of a pool or 8, 4, or maybe even 1 cpu thread.
 ## BlockDim, GridDim, ThreadIdx, BlockIdx, are all referring to GPU threads.
-## goal: handle thousands of GPU threads with correct __syncthreads() semantics via cooperative scheduling.
 
 
 const SingleThread = defined(js) or not compileOption("threads")

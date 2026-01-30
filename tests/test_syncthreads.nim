@@ -8,7 +8,7 @@ import
 
 const
   N = 33 * 32
-  ThreadsPerBlock: int = 1  # TODO this is wrong, the whole point of this is to test many gpu threads
+  ThreadsPerBlock: int = 256
   BlocksPerGrid: int = min(32, ((N + ThreadsPerBlock - 1) div ThreadsPerBlock))
 
 proc dot(a, b, c, scratch: ptr[float64]){.hippoGlobal.} =
