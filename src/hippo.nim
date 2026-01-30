@@ -156,6 +156,17 @@ template hippoMemcpy*(dst: GpuRef, src: GpuRef, size: int, kind: HippoMemcpyKind
   else:
     handleError(hipMemcpy(dst.p, src.p, size.cint, kind))
 
+template hippoMemcpyToSymbol*(symbol: untyped, src: pointer, size: int,
+                              offset: int = 0,
+                              kind: HippoMemcpyKind = HippoMemcpyHostToDevice) =
+  ## Copy data from host to a device symbol (eg: __constant__ storage).
+  when HippoRuntime == "CUDA":
+    handleError(cudaMemcpyToSymbol(symbol, src, size.csize_t, offset.csize_t, kind))
+  elif HippoRuntime == "SIMPLE":
+    copyMem(addr symbol, src, size)
+  else:
+    handleError(hipMemcpyToSymbol(hipSymbol(symbol), src, size.csize_t, offset.csize_t, kind))
+
 template hippoFree*(p: pointer) =
   ## Free memory on the GPU
   when HippoRuntime == "CUDA":
@@ -364,7 +375,7 @@ macro hippoConstant*(v: untyped): untyped =
   ## eg: `const N {.hippoConstant.} = 1024`
   when HippoRuntime != "SIMPLE":
     quote do:
-      {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__constant__ $# $#".}
+      {.push stackTrace: off, checks: off, exportc, codegenDecl: "__constant__ $# $#".}
       `v`
       {.pop.}
   else:

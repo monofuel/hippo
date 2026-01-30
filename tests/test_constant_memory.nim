@@ -4,9 +4,14 @@ import
   ./utils
 
 # Test hippoConstant memory - read-only cached constants
+#
+# Device constant memory must be backed by a device symbol. Using `const` here
+# makes Nim emit a host-only compile-time constant, which fails on HIP.
+const HostTestConstant = 42'i32
+const HostTestArray: array[4, int32] = [10'i32, 20'i32, 30'i32, 40'i32]
 
-const TestConstant {.hippoConstant.} = 42
-const TestArray {.hippoConstant.}: array[4, int32] = [10, 20, 30, 40]
+var TestConstant {.hippoConstant.}: int32 = HostTestConstant
+var TestArray {.hippoConstant.}: array[4, int32] = HostTestArray
 
 proc useConstant(output: ptr[int32]){.hippoGlobal.} =
   ## Kernel that reads from constant memory
@@ -46,7 +51,7 @@ suite "constant memory":
 
     # Verify results: each thread should have TestConstant + tid
     for i in 0..<NumThreads:
-      let expected = int32(TestConstant + i)
+      let expected = int32(HostTestConstant + i)
       assert(output[i] == expected, fmt"Thread {i}: expected {expected}, got {output[i]}")
 
   test "constant_array":
@@ -55,6 +60,9 @@ suite "constant memory":
 
     # Allocate GPU memory
     var dev_output = hippoMalloc(sizeof(int32) * NumThreads)
+
+    # Ensure device constant memory is populated for array reads.
+    hippoMemcpyToSymbol(TestArray, addr HostTestArray[0], sizeof(HostTestArray))
 
     # Launch kernel that uses constant array
     hippoLaunchKernel(
@@ -69,6 +77,6 @@ suite "constant memory":
 
     # Verify results: each thread should have TestArray[tid mod 4] * 2
     for i in 0..<NumThreads:
-      let arrayValue = TestArray[i mod 4]
+      let arrayValue = HostTestArray[i mod 4]
       let expected = int32(arrayValue * 2)
       assert(output[i] == expected, fmt"Thread {i}: expected {expected} (from array[{i mod 4}]={arrayValue}), got {output[i]}")
