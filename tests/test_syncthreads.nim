@@ -4,9 +4,10 @@ import
   ./utils
 
 # Isolated syncthreads test that does not involve shared memory.
+# thread 0 reduces the partial sums from all threads in the block, and writes the result to the global array.
 
 const
-  N = 33 * 1024
+  N = 33 * 32
   ThreadsPerBlock: int = 256
   BlocksPerGrid: int = min(32, ((N + ThreadsPerBlock - 1) div ThreadsPerBlock))
 
@@ -36,8 +37,12 @@ proc dot(a, b, c, scratch: ptr[float64]){.hippoGlobal.} =
       sum = sum + scratchArray[blockIdx.x * blockDim.x + i]
     cArray[blockIdx.x] = sum
 
+# Limit CPU threads for SIMPLE backend to make testing less intensive (otherwise it can hog all the cores)
+when HippoRuntime == "SIMPLE":
+  setThreads(4)
+
 suite "syncthreads":
-  testSkipPlatforms "syncthreads", "SIMPLE":
+  test "syncthreads":
     var a, b, partial_c: array[N, float64]
 
     var dev_a = hippoMalloc(sizeof(float64)*N)

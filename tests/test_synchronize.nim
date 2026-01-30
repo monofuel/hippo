@@ -23,7 +23,7 @@ proc readAndVerify(input: ptr[int32], output: ptr[int32]){.hippoGlobal.} =
   outputArray[tid] = value + 1
 
 suite "synchronize":
-  testSkipPlatforms "hippo_synchronize", "SIMPLE":
+  test "hippo_synchronize":
     const NumThreads = 16
     const TotalElements = NumThreads
 

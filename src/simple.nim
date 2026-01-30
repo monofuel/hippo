@@ -2,7 +2,16 @@
 ## You must compile with --threads:on for using more cpu cores.
 ## Otherwise it will only use 1 core.
 ## Single threaded mode should 'just work' anywhere, even in js, but won't be fast.
-import std/[cpuinfo, macros, os, strutils, math]
+import
+  std/[cpuinfo, macros, os, strutils, math, tables, locks]
+
+## TERMINOLOGY: `threads` or `SingleThread` refers to the number of CPU threads we are using under the hood.
+## these CPU threads are in a pool that runs the actual gpu kernels.
+## GPU blocks and GPU threads are closures that are a separate distinct concept.
+## GPU threads can sync with all the other threads in a block using `hippoSyncthreads()` just like in CUDA/HIP.
+## we may be running thousands of GPU threads on top of a pool or 8, 4, or maybe even 1 cpu thread.
+## BlockDim, GridDim, ThreadIdx, BlockIdx, are all referring to GPU threads.
+
 
 const SingleThread = defined(js) or not compileOption("threads")
 
@@ -34,10 +43,10 @@ const
   HippoMemcpyDeviceToDevice* = SimpleMemcpyDeviceToDevice
   HippoMemcpyDefault* = SimpleMemcpyDefault
 
-proc newDim3*(x: uint = 1; y: uint = 1; z: uint = 1): Dim3 =
-  result.x = x
-  result.y = y
-  result.z = z
+proc newDim3*(x: SomeInteger = 1; y: SomeInteger = 1; z: SomeInteger = 1): Dim3 =
+  result.x = uint(x)
+  result.y = uint(y)
+  result.z = uint(z)
 
 
 var threads = 1.uint
@@ -74,46 +83,173 @@ proc handleError(err: HippoError) =
   ## Simple runtime raises errors as exceptions.
   discard
 
+macro callWithTuple(fn: typed, args: untyped): untyped =
+  ## Expand a tuple constructor into a call expression and cast args to param types.
+  proc paramTypeAt(params: NimNode, idx: int): NimNode =
+    var count = 0
+    for i in 1..<params.len:
+      let def = params[i]
+      let typ = def[^2]
+      for n in 0..<(def.len - 2):
+        if count == idx:
+          return typ
+        inc count
+    result = newEmptyNode()
+
+  result = newCall(fn)
+  var params = newEmptyNode()
+  if fn.kind == nnkSym:
+    let impl = fn.getImpl
+    if impl.kind == nnkProcDef:
+      params = impl[3]
+  if params.kind == nnkEmpty:
+    let fnType = fn.getType
+    if fnType.kind == nnkProcTy:
+      params = fnType[0]
+
+  if args.kind in {nnkTupleConstr, nnkPar}:
+    var i = 0
+    for child in args:
+      let paramType = if params.kind != nnkEmpty: paramTypeAt(params, i) else: newEmptyNode()
+      if paramType.kind != nnkEmpty:
+        result.add(newTree(nnkCast, paramType, child))
+      else:
+        result.add(child)
+      inc i
+  else:
+    let paramType = if params.kind != nnkEmpty: paramTypeAt(params, 0) else: newEmptyNode()
+    if paramType.kind != nnkEmpty:
+      result.add(newTree(nnkCast, paramType, args))
+    else:
+      result.add(args)
+
 var
   blockIdx* {.threadvar.}: BlockIdx
   threadIdx* {.threadvar.}: ThreadIdx
   blockDim* {.threadvar.}: BlockDim
   gridDim* {.threadvar.}: GridDim
 
-macro unpackCall(fn: untyped, args: untyped): untyped =
-  ## Unpack the tuple and call the function with individual arguments, forcing type casting.
-  let fnType = fn.getTypeInst()
-  assert fnType.kind == nnkProcTy, "Expected a procedure type"
-  let params = fnType[0]
-  result = newCall(fn)
-  for i in 1..<params.len:
-    let paramType = params[i][1]
-    let argExpr = newTree(nnkBracketExpr, args, newLit(i - 1))
-    let castedArg = newTree(nnkCast, paramType, argExpr)
-    result.add(castedArg)
+type
+  BlockBarrier = object
+    lock: Lock
+    counter: int
+    generation: int
+    numThreads: int
+    lastLaunchId: int  # Track which kernel launch this barrier belongs to
+  Task = iterator (): bool {.gcsafe.}  # Closure iterator that yields true while working, false when done
+
+var blockBarriers: Table[uint64, ptr BlockBarrier]
+var currentKernelLaunch*: int = 0
+var syncthreadsCalled*: bool = false  # Global flag for syncthreads
+
+proc runAllTasks(tasks: seq[Task]) {.gcsafe.} =
+  ## Cooperative scheduler that runs tasks in round-robin until all complete.
+  var active = newSeq[Task]()
+  for t in tasks: active.add(t)
+
+  while active.len > 0:
+    var i = 0
+    while i < active.len:
+      let stillWorking = active[i]()
+      if not stillWorking:
+        active.del(i)
+      else:
+        inc i
+
+when not SingleThread:
+  var barriersLock: Lock
+  initLock(barriersLock)
+
+# Export functions so they're accessible from templates expanded in kernel iterators
+proc getBlockId*(blockIdx: BlockIdx): uint64 =
+  # Create a unique identifier for a block
+  result = blockIdx.x.uint64
+  result = result * 1000000'u64 + blockIdx.y.uint64
+  result = result * 1000000'u64 + blockIdx.z.uint64
+
+proc getOrCreateBarrier*(blockId: uint64, numThreads: int, launchId: int): ptr BlockBarrier =
+  when not SingleThread:
+    acquire(barriersLock)
+  if not blockBarriers.hasKey(blockId):
+    var barrier = cast[ptr BlockBarrier](allocShared(sizeof(BlockBarrier)))
+    initLock(barrier.lock)
+    barrier.counter = 0
+    barrier.generation = 0
+    barrier.numThreads = numThreads
+    barrier.lastLaunchId = launchId
+    blockBarriers[blockId] = barrier
+    result = barrier
+  else:
+    result = blockBarriers[blockId]
+  when not SingleThread:
+    release(barriersLock)
+  
+
+
 
 when SingleThread:
-
   template simpleLaunchKernel(fn: untyped, gridDimArg: Dim3, blockDimArg: Dim3, args: tuple) =
-    # Sequential execution
-    gridDim = gridDimArg
-    blockDim = blockDimArg
-    for bz in 0..<gridDimArg.z:
-      for by in 0..<gridDimArg.y:
-        for bx in 0..<gridDimArg.x:
-          blockIdx.x = bx
-          blockIdx.y = by
-          blockIdx.z = bz
-          for tz in 0..<blockDimArg.z:
-            for ty in 0..<blockDimArg.y:
-              for tx in 0..<blockDimArg.x:
-                threadIdx.x = tx
-                threadIdx.y = ty
-                threadIdx.z = tz
-                unpackCall(fn, args)
+    block:
+      inc currentKernelLaunch
+      blockBarriers.clear()
+
+      gridDim = gridDimArg
+      blockDim = blockDimArg
+
+      let totalBlocks = int(gridDimArg.x * gridDimArg.y * gridDimArg.z)
+      let totalThreadsPerBlock = int(blockDimArg.x * blockDimArg.y * blockDimArg.z)
+      let totalBlocksPerPlane = int(gridDimArg.x * gridDimArg.y)
+      let totalThreadsPerBlockPlane = int(blockDimArg.x * blockDimArg.y)
+
+      proc executeBlock(blockIndex: int): proc() {.closure, gcsafe.} =
+        let bz = blockIndex div totalBlocksPerPlane
+        let remainder = blockIndex mod totalBlocksPerPlane
+        let by = remainder div int(gridDimArg.x)
+        let bx = remainder mod int(gridDimArg.x)
+
+        result = proc() {.closure, gcsafe.} =
+          proc makeThreadTask(bxVal, byVal, bzVal, txVal, tyVal, tzVal: uint): Task =
+            iterator (): bool =
+              {.gcsafe.}:
+                blockIdx.x = bxVal
+                blockIdx.y = byVal
+                blockIdx.z = bzVal
+                threadIdx.x = txVal
+                threadIdx.y = tyVal
+                threadIdx.z = tzVal
+                gridDim = gridDimArg
+                blockDim = blockDimArg
+
+                let kernelIter = callWithTuple(fn, args)
+                while true:
+                  blockIdx.x = bxVal
+                  blockIdx.y = byVal
+                  blockIdx.z = bzVal
+                  threadIdx.x = txVal
+                  threadIdx.y = tyVal
+                  threadIdx.z = tzVal
+                  gridDim = gridDimArg
+                  blockDim = blockDimArg
+                  if not kernelIter():
+                    break
+                  yield true
+              yield false
+
+          var blockTasks: seq[Task]
+          for threadIndex in 0..<totalThreadsPerBlock:
+            let tz = threadIndex div totalThreadsPerBlockPlane
+            let threadRemainder = threadIndex mod totalThreadsPerBlockPlane
+            let ty = threadRemainder div int(blockDimArg.x)
+            let tx = threadRemainder mod int(blockDimArg.x)
+            blockTasks.add(makeThreadTask(uint(bx), uint(by), uint(bz), uint(tx), uint(ty), uint(tz)))
+
+          runAllTasks(blockTasks)
+
+      for blockIndex in 0..<totalBlocks:
+        let closure = executeBlock(blockIndex)
+        closure()
 
 else:
-
 
   proc worker(closure: proc () {.closure, gcsafe.}) {.thread.} =
     ## Worker procedure that executes the provided closure in a thread.
@@ -121,70 +257,91 @@ else:
 
   template simpleLaunchKernel(fn: untyped, gridDimArg: Dim3, blockDimArg: Dim3, args: tuple) =
     block:
-      # Multi-threaded execution - flatten blocks and threads into work items
-      let totalBlocks = gridDimArg.x * gridDimArg.y * gridDimArg.z
-      let totalThreadsPerBlock = blockDimArg.x * blockDimArg.y * blockDimArg.z
-      let totalWorkItems = totalBlocks * totalThreadsPerBlock
-      let workItemsPerThread = totalWorkItems div threads
-      let extraWorkItems = totalWorkItems mod threads
+      # Reset barriers for this kernel launch (before threads start)
+      acquire(barriersLock)
+      inc currentKernelLaunch
+      blockBarriers.clear()
+      release(barriersLock)
 
-      var threadHandles: seq[Thread[proc () {.closure.}]]
-      threadHandles.setLen(threads)
+      # Multi-threaded execution: blocks run in parallel OS threads.
+      # Threads within each block run cooperatively using round-robin scheduling.
+      let totalBlocks = int(gridDimArg.x * gridDimArg.y * gridDimArg.z)
+      let totalThreadsPerBlock = int(blockDimArg.x * blockDimArg.y * blockDimArg.z)
+      let totalBlocksPerPlane = int(gridDimArg.x * gridDimArg.y)
+      let totalThreadsPerBlockPlane = int(blockDimArg.x * blockDimArg.y)
 
-      proc makeClosure(tid: uint, startWorkItem: uint, endWorkItem: uint): proc() {.closure, gcsafe.} =
+      proc executeBlock(blockIndex: int): proc() {.closure, gcsafe.} =
+        let bz = blockIndex div totalBlocksPerPlane
+        let remainder = blockIndex mod totalBlocksPerPlane
+        let by = remainder div int(gridDimArg.x)
+        let bx = remainder mod int(gridDimArg.x)
+
         result = proc() {.closure, gcsafe.} =
-          # echo "Thread ", tid, " startWorkItem=", startWorkItem, " endWorkItem=", endWorkItem
-          gridDim = gridDimArg
-          blockDim = blockDimArg
-          let totalBlocksPerPlane = gridDimArg.x * gridDimArg.y
-          let totalThreadsPerBlock = blockDimArg.x * blockDimArg.y * blockDimArg.z
-          let totalThreadsPerBlockPlane = blockDimArg.x * blockDimArg.y
+          proc makeThreadTask(bxVal, byVal, bzVal, txVal, tyVal, tzVal: uint): Task =
+            iterator (): bool =
+              {.gcsafe.}:
+                blockIdx.x = bxVal
+                blockIdx.y = byVal
+                blockIdx.z = bzVal
+                threadIdx.x = txVal
+                threadIdx.y = tyVal
+                threadIdx.z = tzVal
+                gridDim = gridDimArg
+                blockDim = blockDimArg
 
-          for workItemIndex in startWorkItem..<endWorkItem:
-            # Convert flattened work item index to block and thread indices
-            let blockIndex = workItemIndex div totalThreadsPerBlock
-            let threadIndex = workItemIndex mod totalThreadsPerBlock
+                let kernelIter = callWithTuple(fn, args)
+                while true:
+                  blockIdx.x = bxVal
+                  blockIdx.y = byVal
+                  blockIdx.z = bzVal
+                  threadIdx.x = txVal
+                  threadIdx.y = tyVal
+                  threadIdx.z = tzVal
+                  gridDim = gridDimArg
+                  blockDim = blockDimArg
+                  if not kernelIter():
+                    break
+                  yield true
+              yield false
 
-            # Convert blockIndex to 3D blockIdx
-            let bz = blockIndex div totalBlocksPerPlane
-            let remainder = blockIndex mod totalBlocksPerPlane
-            let by = remainder div gridDimArg.x
-            let bx = remainder mod gridDimArg.x
-            blockIdx.x = bx
-            blockIdx.y = by
-            blockIdx.z = bz
-
-            # Convert threadIndex to 3D threadIdx
+          var blockTasks: seq[Task]
+          for threadIndex in 0..<totalThreadsPerBlock:
             let tz = threadIndex div totalThreadsPerBlockPlane
             let threadRemainder = threadIndex mod totalThreadsPerBlockPlane
-            let ty = threadRemainder div blockDimArg.x
-            let tx = threadRemainder mod blockDimArg.x
-            threadIdx.x = tx
-            threadIdx.y = ty
-            threadIdx.z = tz
+            let ty = threadRemainder div int(blockDimArg.x)
+            let tx = threadRemainder mod int(blockDimArg.x)
+            blockTasks.add(makeThreadTask(uint(bx), uint(by), uint(bz), uint(tx), uint(ty), uint(tz)))
 
-            # echo "threadId", getThreadId(), " Thread ", tid, " workItemIndex=", workItemIndex, " blockIdx=", blockIdx, " threadIdx=", threadIdx
-            # TODO we should avoid doing dangerous gcsafe stuff.
-            {.gcsafe.}:
-              unpackCall(fn, args)
+          runAllTasks(blockTasks)
 
-      var startWorkItem: uint = 0
-      for i in 0..<threads.uint:
-        let numWorkItems = if i < extraWorkItems: workItemsPerThread + 1 else: workItemsPerThread
-        let myStartWorkItem = startWorkItem
-        let myEndWorkItem = startWorkItem + numWorkItems
-        let closure = makeClosure(i, myStartWorkItem, myEndWorkItem)
-        createThread(threadHandles[i], worker, closure)
-        startWorkItem = myEndWorkItem
-
-      for th in threadHandles:
-        joinThread(th)
+      for i in 0..<totalBlocks:
+        let closure = executeBlock(i)
+        closure()
 
 
-proc hippoSyncthreads*() =
-  # TODO could probably use nim iterators to implement syncthreads?
-  # I want something simple that can work anywhere
-  raise newException(Exception, "hippoSyncthreads not implemented yet")
+# hippoSyncthreads implementation depends on threading mode
+template hippoSyncthreads*() {.dirty.} =
+  ## Blocking barrier that synchronizes threads within a block.
+  ## Since blocks may run in parallel OS threads, this can be blocking.
+  bind acquire, release
+  let blockId = getBlockId(blockIdx)
+  let barrier = getOrCreateBarrier(blockId, int(blockDim.x * blockDim.y * blockDim.z), currentKernelLaunch)
+
+  acquire(barrier.lock)
+  let myGen = barrier.generation
+  inc barrier.counter
+  if barrier.counter == barrier.numThreads:
+    inc barrier.generation
+    barrier.counter = 0
+  release(barrier.lock)
+
+  while true:
+    acquire(barrier.lock)
+    if barrier.generation > myGen:
+      release(barrier.lock)
+      break
+    release(barrier.lock)
+    yield true
 
 # Math functions matching HIP/CUDA interface
 # Single-precision floating-point math functions
