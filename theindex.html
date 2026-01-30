@@ -134,6 +134,14 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: enum hipMemcpyKind" href="hippo.html#hipMemcpyKind">hippo: enum hipMemcpyKind</a></li>
           </ul></dd>
+<dt><a name="hipMemcpyToSymbol" href="#hipMemcpyToSymbol"><span>hipMemcpyToSymbol:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipMemcpyToSymbol(symbol: pointer; src: pointer; sizeBytes: csize_t;
+                  offset: csize_t = 0;
+                  kind: hipMemcpyKind = hipMemcpyHostToDevice): hipError_t" href="hippo.html#hipMemcpyToSymbol%2Cpointer%2Cpointer%2Ccsize_t%2Ccsize_t%2ChipMemcpyKind">hippo: proc hipMemcpyToSymbol(symbol: pointer; src: pointer; sizeBytes: csize_t;
+                  offset: csize_t = 0;
+                  kind: hipMemcpyKind = hipMemcpyHostToDevice): hipError_t</a></li>
+          </ul></dd>
 <dt><a name="hippoArgs" href="#hippoArgs"><span>hippoArgs:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: macro hippoArgs(args: varargs[untyped]): untyped" href="hippo.html#hippoArgs.m%2Cvarargs%5Buntyped%5D">hippo: macro hippoArgs(args: varargs[untyped]): untyped</a></li>
@@ -234,6 +242,12 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: type HippoMemcpyKind" href="hippo.html#HippoMemcpyKind">hippo: type HippoMemcpyKind</a></li>
           </ul></dd>
+<dt><a name="hippoMemcpyToSymbol" href="#hippoMemcpyToSymbol"><span>hippoMemcpyToSymbol:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoMemcpyToSymbol(symbol: untyped; src: pointer; size: int; offset: int = 0;
+                    kind: HippoMemcpyKind = HippoMemcpyHostToDevice)" href="hippo.html#hippoMemcpyToSymbol.t%2Cuntyped%2Cpointer%2Cint%2Cint%2ChipMemcpyKind">hippo: template hippoMemcpyToSymbol(symbol: untyped; src: pointer; size: int; offset: int = 0;
+                    kind: HippoMemcpyKind = HippoMemcpyHostToDevice)</a></li>
+          </ul></dd>
 <dt><a name="HippoPlatform" href="#HippoPlatform"><span>HippoPlatform:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: const HippoPlatform" href="hippo.html#HippoPlatform">hippo: const HippoPlatform</a></li>
@@ -275,6 +289,10 @@
 <dt><a name="hipStream_t" href="#hipStream_t"><span>hipStream_t:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: type hipStream_t" href="hippo.html#hipStream_t">hippo: type hipStream_t</a></li>
+          </ul></dd>
+<dt><a name="hipSymbol" href="#hipSymbol"><span>hipSymbol:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipSymbol[T](sym: var T): pointer" href="hippo.html#hipSymbol%2CT">hippo: proc hipSymbol[T](sym: var T): pointer</a></li>
           </ul></dd>
 <dt><a name="hipSyncthreads" href="#hipSyncthreads"><span>hipSyncthreads:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -356,7 +374,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-13 07:36:04 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-30 20:41:04 UTC</small>
       </div>
     </div>
   </div>

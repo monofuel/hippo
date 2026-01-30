@@ -17,71 +17,74 @@ nim	ThreadIdx	hippo.html#ThreadIdx	object ThreadIdx		38
 nim	newDim3	hippo.html#newDim3,uint32_t,uint32_t,uint32_t	proc newDim3(x: uint32_t = 1; y: uint32_t = 1; z: uint32_t = 1): Dim3		43
 nim	hipMalloc	hippo.html#hipMalloc,ptr.pointer,cint	proc hipMalloc(ptr: ptr pointer; size: cint): hipError_t		48
 nim	hipMemcpy	hippo.html#hipMemcpy,pointer,pointer,cint,hipMemcpyKind	proc hipMemcpy(dst: pointer; src: pointer; size: cint; kind: hipMemcpyKind): hipError_t		49
-nim	hipFree	hippo.html#hipFree,pointer	proc hipFree(ptr: pointer): hipError_t		50
-nim	hipLaunchKernel	hippo.html#hipLaunchKernel,pointer,Dim3,Dim3,ptr.pointer	proc hipLaunchKernel(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;\n                args: ptr pointer): hipError_t		52
-nim	hipLaunchKernel	hippo.html#hipLaunchKernel,pointer,Dim3,Dim3,ptr.pointer,csize_t,hipStream_t	proc hipLaunchKernel(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;\n                args: ptr pointer; sharedMemBytes: csize_t; stream: hipStream_t): cint		55
-nim	hipDeviceSynchronize	hippo.html#hipDeviceSynchronize	proc hipDeviceSynchronize(): hipError_t		58
-nim	hipSyncthreads	hippo.html#hipSyncthreads	proc hipSyncthreads()		59
-nim	hippoSyncthreads	hippo.html#hippoSyncthreads	proc hippoSyncthreads()		60
-nim	hipLaunchKernelGGL	hippo.html#hipLaunchKernelGGL,proc,Dim3,Dim3,uint32_t,hipStream_t	proc hipLaunchKernelGGL(function_address: proc; numBlocks: Dim3; dimBlocks: Dim3;\n                   sharedMemBytes: uint32_t; stream: hipStream_t)		62
-nim	ConstCString	hippo.html#ConstCString	object ConstCString		71
-nim	toCString	hippo.html#toCString.c,ConstCString	converter toCString(self: ConstCString): cstring		72
-nim	toConstCString	hippo.html#toConstCString.c,cstring	converter toConstCString(self: cstring): ConstCString		73
-nim	`$`	hippo.html#$,ConstCString	proc `$`(self: ConstCString): string		74
-nim	hipGetErrorString	hippo.html#hipGetErrorString,hipError_t	proc hipGetErrorString(err: hipError_t): ConstCString		75
-nim	hipGetLastError	hippo.html#hipGetLastError	proc hipGetLastError(): hipError_t		76
-nim	handleError	hippo.html#handleError,hipError_t	proc handleError(err: hipError_t)		79
-nim	HippoStream	hippo.html#HippoStream	type HippoStream		85
-nim	HippoError	hippo.html#HippoError	type HippoError		86
-nim	HippoMemcpyKind	hippo.html#HippoMemcpyKind	type HippoMemcpyKind		87
-nim	HippoMemcpyHostToHost	hippo.html#HippoMemcpyHostToHost	const HippoMemcpyHostToHost		90
-nim	HippoMemcpyHostToDevice	hippo.html#HippoMemcpyHostToDevice	const HippoMemcpyHostToDevice		91
-nim	HippoMemcpyDeviceToHost	hippo.html#HippoMemcpyDeviceToHost	const HippoMemcpyDeviceToHost		92
-nim	HippoMemcpyDeviceToDevice	hippo.html#HippoMemcpyDeviceToDevice	const HippoMemcpyDeviceToDevice		93
-nim	HippoMemcpyDefault	hippo.html#HippoMemcpyDefault	const HippoMemcpyDefault		94
-nim	blockDim	hippo.html#blockDim_2	let blockDim		98
-nim	blockIdx	hippo.html#blockIdx_2	let blockIdx		99
-nim	gridDim	hippo.html#gridDim_2	let gridDim		100
-nim	threadIdx	hippo.html#threadIdx_2	let threadIdx		101
-nim	expf	hippo.html#expf,cfloat	proc expf(x: cfloat): cfloat		105
-nim	logf	hippo.html#logf,cfloat	proc logf(x: cfloat): cfloat		106
-nim	sinf	hippo.html#sinf,cfloat	proc sinf(x: cfloat): cfloat		107
-nim	cosf	hippo.html#cosf,cfloat	proc cosf(x: cfloat): cfloat		108
-nim	sqrtf	hippo.html#sqrtf,cfloat	proc sqrtf(x: cfloat): cfloat		109
-nim	powf	hippo.html#powf,cfloat,cfloat	proc powf(base: cfloat; exp: cfloat): cfloat		110
-nim	exp	hippo.html#exp,cdouble	proc exp(x: cdouble): cdouble		113
-nim	log	hippo.html#log,cdouble	proc log(x: cdouble): cdouble		114
-nim	sin	hippo.html#sin,cdouble	proc sin(x: cdouble): cdouble		115
-nim	cos	hippo.html#cos,cdouble	proc cos(x: cdouble): cdouble		116
-nim	sqrt	hippo.html#sqrt,cdouble	proc sqrt(x: cdouble): cdouble		117
-nim	pow	hippo.html#pow,cdouble,cdouble	proc pow(base: cdouble; exp: cdouble): cdouble		118
+nim	hipMemcpyToSymbol	hippo.html#hipMemcpyToSymbol,pointer,pointer,csize_t,csize_t,hipMemcpyKind	proc hipMemcpyToSymbol(symbol: pointer; src: pointer; sizeBytes: csize_t;\n                  offset: csize_t = 0;\n                  kind: hipMemcpyKind = hipMemcpyHostToDevice): hipError_t		50
+nim	hipSymbol	hippo.html#hipSymbol,T	proc hipSymbol[T](sym: var T): pointer		54
+nim	hipFree	hippo.html#hipFree,pointer	proc hipFree(ptr: pointer): hipError_t		55
+nim	hipLaunchKernel	hippo.html#hipLaunchKernel,pointer,Dim3,Dim3,ptr.pointer	proc hipLaunchKernel(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;\n                args: ptr pointer): hipError_t		57
+nim	hipLaunchKernel	hippo.html#hipLaunchKernel,pointer,Dim3,Dim3,ptr.pointer,csize_t,hipStream_t	proc hipLaunchKernel(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;\n                args: ptr pointer; sharedMemBytes: csize_t; stream: hipStream_t): cint		60
+nim	hipDeviceSynchronize	hippo.html#hipDeviceSynchronize	proc hipDeviceSynchronize(): hipError_t		63
+nim	hipSyncthreads	hippo.html#hipSyncthreads	proc hipSyncthreads()		64
+nim	hippoSyncthreads	hippo.html#hippoSyncthreads	proc hippoSyncthreads()		65
+nim	hipLaunchKernelGGL	hippo.html#hipLaunchKernelGGL,proc,Dim3,Dim3,uint32_t,hipStream_t	proc hipLaunchKernelGGL(function_address: proc; numBlocks: Dim3; dimBlocks: Dim3;\n                   sharedMemBytes: uint32_t; stream: hipStream_t)		67
+nim	ConstCString	hippo.html#ConstCString	object ConstCString		76
+nim	toCString	hippo.html#toCString.c,ConstCString	converter toCString(self: ConstCString): cstring		77
+nim	toConstCString	hippo.html#toConstCString.c,cstring	converter toConstCString(self: cstring): ConstCString		78
+nim	`$`	hippo.html#$,ConstCString	proc `$`(self: ConstCString): string		79
+nim	hipGetErrorString	hippo.html#hipGetErrorString,hipError_t	proc hipGetErrorString(err: hipError_t): ConstCString		80
+nim	hipGetLastError	hippo.html#hipGetLastError	proc hipGetLastError(): hipError_t		81
+nim	handleError	hippo.html#handleError,hipError_t	proc handleError(err: hipError_t)		84
+nim	HippoStream	hippo.html#HippoStream	type HippoStream		90
+nim	HippoError	hippo.html#HippoError	type HippoError		91
+nim	HippoMemcpyKind	hippo.html#HippoMemcpyKind	type HippoMemcpyKind		92
+nim	HippoMemcpyHostToHost	hippo.html#HippoMemcpyHostToHost	const HippoMemcpyHostToHost		95
+nim	HippoMemcpyHostToDevice	hippo.html#HippoMemcpyHostToDevice	const HippoMemcpyHostToDevice		96
+nim	HippoMemcpyDeviceToHost	hippo.html#HippoMemcpyDeviceToHost	const HippoMemcpyDeviceToHost		97
+nim	HippoMemcpyDeviceToDevice	hippo.html#HippoMemcpyDeviceToDevice	const HippoMemcpyDeviceToDevice		98
+nim	HippoMemcpyDefault	hippo.html#HippoMemcpyDefault	const HippoMemcpyDefault		99
+nim	blockDim	hippo.html#blockDim_2	let blockDim		103
+nim	blockIdx	hippo.html#blockIdx_2	let blockIdx		104
+nim	gridDim	hippo.html#gridDim_2	let gridDim		105
+nim	threadIdx	hippo.html#threadIdx_2	let threadIdx		106
+nim	expf	hippo.html#expf,cfloat	proc expf(x: cfloat): cfloat		110
+nim	logf	hippo.html#logf,cfloat	proc logf(x: cfloat): cfloat		111
+nim	sinf	hippo.html#sinf,cfloat	proc sinf(x: cfloat): cfloat		112
+nim	cosf	hippo.html#cosf,cfloat	proc cosf(x: cfloat): cfloat		113
+nim	sqrtf	hippo.html#sqrtf,cfloat	proc sqrtf(x: cfloat): cfloat		114
+nim	powf	hippo.html#powf,cfloat,cfloat	proc powf(base: cfloat; exp: cfloat): cfloat		115
+nim	exp	hippo.html#exp,cdouble	proc exp(x: cdouble): cdouble		118
+nim	log	hippo.html#log,cdouble	proc log(x: cdouble): cdouble		119
+nim	sin	hippo.html#sin,cdouble	proc sin(x: cdouble): cdouble		120
+nim	cos	hippo.html#cos,cdouble	proc cos(x: cdouble): cdouble		121
+nim	sqrt	hippo.html#sqrt,cdouble	proc sqrt(x: cdouble): cdouble		122
+nim	pow	hippo.html#pow,cdouble,cdouble	proc pow(base: cdouble; exp: cdouble): cdouble		123
 nim	hippoMalloc	hippo.html#hippoMalloc.t,int	template hippoMalloc(size: int): GpuRef		105
 nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,pointer,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)		118
 nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,GpuRef,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: GpuRef; size: int; kind: HippoMemcpyKind)		129
 nim	hippoMemcpy	hippo.html#hippoMemcpy.t,GpuRef,pointer,int,hipMemcpyKind	template hippoMemcpy(dst: GpuRef; src: pointer; size: int; kind: HippoMemcpyKind)		139
 nim	hippoMemcpy	hippo.html#hippoMemcpy.t,GpuRef,GpuRef,int,hipMemcpyKind	template hippoMemcpy(dst: GpuRef; src: GpuRef; size: int; kind: HippoMemcpyKind)		149
-nim	hippoFree	hippo.html#hippoFree.t,pointer	template hippoFree(p: pointer)		159
-nim	hippoSynchronize	hippo.html#hippoSynchronize.t	template hippoSynchronize()		169
-nim	`=destroy`	hippo.html#=destroy,GpuMemory	proc `=destroy`(mem: var GpuMemory)		179
-nim	hippoLaunchKernel	hippo.html#hippoLaunchKernel.t,proc,Dim3,Dim3,uint32,HippoStream,untyped	template hippoLaunchKernel(kernel: proc; ## The GPU kernel procedure to launch\n                  gridDim: Dim3 = newDim3(1, 1, 1); ## default to a grid of 1 block\n                  blockDim: Dim3 = newDim3(1, 1, 1); ## default to 1 thread per block\n                  sharedMemBytes: uint32 = 0; ## dynamic shared memory amount to allocate\n                  stream: HippoStream = nil; ## Which device stream to run under (defaults to null)\n                  args: untyped)		229
-nim	hippoGlobal	hippo.html#hippoGlobal.m,untyped	macro hippoGlobal(fn: untyped): untyped		286
-nim	hippoDevice	hippo.html#hippoDevice.m,untyped	macro hippoDevice(fn: untyped): untyped		299
-nim	hippoHost	hippo.html#hippoHost.m,untyped	macro hippoHost(fn: untyped): untyped		314
-nim	hippoHostDevice	hippo.html#hippoHostDevice.m,untyped	macro hippoHostDevice(fn: untyped): untyped		328
-nim	hippoShared	hippo.html#hippoShared.m,untyped	macro hippoShared(v: untyped): untyped		343
-nim	hippoConstant	hippo.html#hippoConstant.m,untyped	macro hippoConstant(v: untyped): untyped		358
-nim	hippoArgs	hippo.html#hippoArgs.m,varargs[untyped]	macro hippoArgs(args: varargs[untyped]): untyped		375
-nim	hippoExp	hippo.html#hippoExp.t,cfloat	template hippoExp(x: cfloat): cfloat		398
-nim	hippoExp	hippo.html#hippoExp.t,cdouble	template hippoExp(x: cdouble): cdouble		408
-nim	hippoLog	hippo.html#hippoLog.t,cfloat	template hippoLog(x: cfloat): cfloat		418
-nim	hippoLog	hippo.html#hippoLog.t,cdouble	template hippoLog(x: cdouble): cdouble		428
-nim	hippoSin	hippo.html#hippoSin.t,cfloat	template hippoSin(x: cfloat): cfloat		438
-nim	hippoCos	hippo.html#hippoCos.t,cfloat	template hippoCos(x: cfloat): cfloat		448
-nim	hippoSqrt	hippo.html#hippoSqrt.t,cfloat	template hippoSqrt(x: cfloat): cfloat		458
-nim	hippoPow	hippo.html#hippoPow.t,cfloat,cfloat	template hippoPow(base: cfloat; exp: cfloat): cfloat		468
-nim	hippoPow	hippo.html#hippoPow.t,cdouble,cdouble	template hippoPow(base: cdouble; exp: cdouble): cdouble		478
-nimgrp	hiplaunchkernel	hippo.html#hipLaunchKernel-procs-all	proc		52
+nim	hippoMemcpyToSymbol	hippo.html#hippoMemcpyToSymbol.t,untyped,pointer,int,int,hipMemcpyKind	template hippoMemcpyToSymbol(symbol: untyped; src: pointer; size: int; offset: int = 0;\n                    kind: HippoMemcpyKind = HippoMemcpyHostToDevice)		159
+nim	hippoFree	hippo.html#hippoFree.t,pointer	template hippoFree(p: pointer)		170
+nim	hippoSynchronize	hippo.html#hippoSynchronize.t	template hippoSynchronize()		180
+nim	`=destroy`	hippo.html#=destroy,GpuMemory	proc `=destroy`(mem: var GpuMemory)		190
+nim	hippoLaunchKernel	hippo.html#hippoLaunchKernel.t,proc,Dim3,Dim3,uint32,HippoStream,untyped	template hippoLaunchKernel(kernel: proc; ## The GPU kernel procedure to launch\n                  gridDim: Dim3 = newDim3(1, 1, 1); ## default to a grid of 1 block\n                  blockDim: Dim3 = newDim3(1, 1, 1); ## default to 1 thread per block\n                  sharedMemBytes: uint32 = 0; ## dynamic shared memory amount to allocate\n                  stream: HippoStream = nil; ## Which device stream to run under (defaults to null)\n                  args: untyped)		240
+nim	hippoGlobal	hippo.html#hippoGlobal.m,untyped	macro hippoGlobal(fn: untyped): untyped		297
+nim	hippoDevice	hippo.html#hippoDevice.m,untyped	macro hippoDevice(fn: untyped): untyped		310
+nim	hippoHost	hippo.html#hippoHost.m,untyped	macro hippoHost(fn: untyped): untyped		325
+nim	hippoHostDevice	hippo.html#hippoHostDevice.m,untyped	macro hippoHostDevice(fn: untyped): untyped		339
+nim	hippoShared	hippo.html#hippoShared.m,untyped	macro hippoShared(v: untyped): untyped		354
+nim	hippoConstant	hippo.html#hippoConstant.m,untyped	macro hippoConstant(v: untyped): untyped		369
+nim	hippoArgs	hippo.html#hippoArgs.m,varargs[untyped]	macro hippoArgs(args: varargs[untyped]): untyped		386
+nim	hippoExp	hippo.html#hippoExp.t,cfloat	template hippoExp(x: cfloat): cfloat		409
+nim	hippoExp	hippo.html#hippoExp.t,cdouble	template hippoExp(x: cdouble): cdouble		419
+nim	hippoLog	hippo.html#hippoLog.t,cfloat	template hippoLog(x: cfloat): cfloat		429
+nim	hippoLog	hippo.html#hippoLog.t,cdouble	template hippoLog(x: cdouble): cdouble		439
+nim	hippoSin	hippo.html#hippoSin.t,cfloat	template hippoSin(x: cfloat): cfloat		449
+nim	hippoCos	hippo.html#hippoCos.t,cfloat	template hippoCos(x: cfloat): cfloat		459
+nim	hippoSqrt	hippo.html#hippoSqrt.t,cfloat	template hippoSqrt(x: cfloat): cfloat		469
+nim	hippoPow	hippo.html#hippoPow.t,cfloat,cfloat	template hippoPow(base: cfloat; exp: cfloat): cfloat		479
+nim	hippoPow	hippo.html#hippoPow.t,cdouble,cdouble	template hippoPow(base: cdouble; exp: cdouble): cdouble		489
+nimgrp	hiplaunchkernel	hippo.html#hipLaunchKernel-procs-all	proc		57
 nimgrp	hippomemcpy	hippo.html#hippoMemcpy-templates-all	template		118
-nimgrp	hippopow	hippo.html#hippoPow-templates-all	template		468
-nimgrp	hippolog	hippo.html#hippoLog-templates-all	template		418
-nimgrp	hippoexp	hippo.html#hippoExp-templates-all	template		398
+nimgrp	hippopow	hippo.html#hippoPow-templates-all	template		479
+nimgrp	hippolog	hippo.html#hippoLog-templates-all	template		429
+nimgrp	hippoexp	hippo.html#hippoExp-templates-all	template		409
