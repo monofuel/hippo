@@ -15,12 +15,13 @@ suite "memory allocation":
     const Size = 16
     var output = newSeq[int32](Size)
     var dev_output = hippoMalloc(sizeof(int32) * Size)
+    var value = 42'i32
 
     hippoLaunchKernel(
       writeValue,
       gridDim = newDim3(1, 1, 1),
       blockDim = newDim3(Size.uint32, 1, 1),
-      args = hippoArgs(dev_output.p, 42.int32)
+      args = hippoArgs(dev_output.p, value)
     )
 
     hippoMemcpy(addr output[0], dev_output, sizeof(int32) * Size, HippoMemcpyDeviceToHost)
@@ -32,12 +33,13 @@ suite "memory allocation":
     const Size = 1024 * 10  # 10KB
     var output = newSeq[int32](Size)
     var dev_output = hippoMalloc(sizeof(int32) * Size)
+    var value = 123'i32
 
     hippoLaunchKernel(
       writeValue,
       gridDim = newDim3(1, 1, 1),
       blockDim = newDim3(1, 1, 1),  # Only use first thread
-      args = hippoArgs(dev_output.p, 123.int32)
+      args = hippoArgs(dev_output.p, value)
     )
 
     hippoMemcpy(addr output[0], dev_output, sizeof(int32), HippoMemcpyDeviceToHost)
