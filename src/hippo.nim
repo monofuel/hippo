@@ -297,62 +297,47 @@ template hippoLaunchKernel*(
 macro hippoGlobal*(fn: untyped): untyped =
   ## Declare a function as `__global__`. global functions are called from the host and run on the device.
   when HippoRuntime == "SIMPLE":
-    # For SIMPLE runtime, transform proc into a proc that returns an iterator
+    # SIMPLE needs kernel bodies as iterators so we can yield at hippoSyncthreads.
     expectKind(fn, nnkProcDef)
-    # Extract components
     let name = fn[0]
     let generics = fn[1]
     let params = fn[3]
     let pragmas = if fn.len > 4 and fn[4].kind == nnkPragma: fn[4] else: newEmptyNode()
     let body = fn[^1]
 
-    # Create iterator body with yield false at the end
     let iterBody = newStmtList()
     if body.kind == nnkStmtList:
       for stmt in body:
         iterBody.add(stmt)
     else:
       iterBody.add(body)
-    # Add yield false at the end to signal completion
     iterBody.add(newTree(nnkYieldStmt, newLit(false)))
 
-    # Create anonymous iterator and return it
     let anonIter = newNimNode(nnkIteratorDef)
-    anonIter.add(newEmptyNode())  # no name for anonymous iterator
-    anonIter.add(newEmptyNode())  # generics
-    anonIter.add(newEmptyNode())  # empty before params
-    anonIter.add(newNimNode(nnkFormalParams).add(ident("bool")))  # return type bool, no params
-    anonIter.add(newEmptyNode())  # pragmas
-    anonIter.add(newEmptyNode())  # reserved
+    anonIter.add(newEmptyNode())
+    anonIter.add(newEmptyNode())
+    anonIter.add(newEmptyNode())
+    anonIter.add(newNimNode(nnkFormalParams).add(ident("bool")))
+    anonIter.add(newEmptyNode())
+    anonIter.add(newEmptyNode())
     anonIter.add(iterBody)
 
-    # Create return statement
-    let returnStmt = newTree(nnkReturnStmt, anonIter)
-
-    # Create proc body that returns the anonymous iterator
-    let procBody = newStmtList()
-    procBody.add(returnStmt)
-
-    # Create proc body that returns the anonymous iterator
     let returnBody = newStmtList()
     returnBody.add(newTree(nnkReturnStmt, anonIter))
 
-    # Create new params with auto return type
     let newParams = params.copyNimTree()
-    # Set return type to auto
     if newParams.len > 0:
       newParams[0] = ident("auto")
     else:
       newParams.insert(0, ident("auto"))
 
-    # Create the proc definition with auto return type
     result = newNimNode(nnkProcDef)
     result.add(name)
     result.add(generics)
-    result.add(newEmptyNode())  # empty before params
+    result.add(newEmptyNode())
     result.add(newParams)
     result.add(pragmas)
-    result.add(newEmptyNode())  # reserved
+    result.add(newEmptyNode())
     result.add(returnBody)
   else:
     let globalPragma: NimNode = quote:
