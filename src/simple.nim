@@ -11,8 +11,7 @@ import
 ## GPU threads can sync with all the other threads in a block using `hippoSyncthreads()` just like in CUDA/HIP.
 ## we may be running thousands of GPU threads on top of a pool or 8, 4, or maybe even 1 cpu thread.
 ## BlockDim, GridDim, ThreadIdx, BlockIdx, are all referring to GPU threads.
-# we should still be able to process thousands of gpu threads and handle __syncthreads() correctly.
-# these should work like coroutines that can be paused (when syncthreads is called) and resumed (when all threads in a block are synced).
+## goal: handle thousands of GPU threads with correct __syncthreads() semantics via cooperative scheduling.
 
 
 const SingleThread = defined(js) or not compileOption("threads")
@@ -45,10 +44,10 @@ const
   HippoMemcpyDeviceToDevice* = SimpleMemcpyDeviceToDevice
   HippoMemcpyDefault* = SimpleMemcpyDefault
 
-proc newDim3*(x: uint = 1; y: uint = 1; z: uint = 1): Dim3 =
-  result.x = x
-  result.y = y
-  result.z = z
+proc newDim3*(x: SomeInteger = 1; y: SomeInteger = 1; z: SomeInteger = 1): Dim3 =
+  result.x = uint(x)
+  result.y = uint(y)
+  result.z = uint(z)
 
 
 var threads = 1.uint
@@ -85,94 +84,173 @@ proc handleError(err: HippoError) =
   ## Simple runtime raises errors as exceptions.
   discard
 
+macro callWithTuple(fn: typed, args: untyped): untyped =
+  ## Expand a tuple constructor into a call expression and cast args to param types.
+  proc paramTypeAt(params: NimNode, idx: int): NimNode =
+    var count = 0
+    for i in 1..<params.len:
+      let def = params[i]
+      let typ = def[^2]
+      for n in 0..<(def.len - 2):
+        if count == idx:
+          return typ
+        inc count
+    result = newEmptyNode()
+
+  result = newCall(fn)
+  var params = newEmptyNode()
+  if fn.kind == nnkSym:
+    let impl = fn.getImpl
+    if impl.kind == nnkProcDef:
+      params = impl[3]
+  if params.kind == nnkEmpty:
+    let fnType = fn.getType
+    if fnType.kind == nnkProcTy:
+      params = fnType[0]
+
+  if args.kind in {nnkTupleConstr, nnkPar}:
+    var i = 0
+    for child in args:
+      let paramType = if params.kind != nnkEmpty: paramTypeAt(params, i) else: newEmptyNode()
+      if paramType.kind != nnkEmpty:
+        result.add(newTree(nnkCast, paramType, child))
+      else:
+        result.add(child)
+      inc i
+  else:
+    let paramType = if params.kind != nnkEmpty: paramTypeAt(params, 0) else: newEmptyNode()
+    if paramType.kind != nnkEmpty:
+      result.add(newTree(nnkCast, paramType, args))
+    else:
+      result.add(args)
+
 var
   blockIdx* {.threadvar.}: BlockIdx
   threadIdx* {.threadvar.}: ThreadIdx
   blockDim* {.threadvar.}: BlockDim
   gridDim* {.threadvar.}: GridDim
 
+type
+  BlockBarrier = object
+    lock: Lock
+    counter: int
+    generation: int
+    numThreads: int
+    lastLaunchId: int  # Track which kernel launch this barrier belongs to
+  Task = iterator (): bool {.gcsafe.}  # Closure iterator that yields true while working, false when done
+
+var blockBarriers: Table[uint64, ptr BlockBarrier]
+var currentKernelLaunch*: int = 0
+var syncthreadsCalled*: bool = false  # Global flag for syncthreads
+
+proc runAllTasks(tasks: seq[Task]) {.gcsafe.} =
+  ## Cooperative scheduler that runs tasks in round-robin until all complete.
+  var active = newSeq[Task]()
+  for t in tasks: active.add(t)
+
+  while active.len > 0:
+    var i = 0
+    while i < active.len:
+      let stillWorking = active[i]()
+      if not stillWorking:
+        active.del(i)
+      else:
+        inc i
+
 when not SingleThread:
-  # Barrier infrastructure for multi-threaded mode
-  type
-    BlockBarrier = object
-      lock: Lock
-      counter: int
-      generation: int
-      numThreads: int
-      lastLaunchId: int  # Track which kernel launch this barrier belongs to
-    Task = iterator (): bool  # Closure iterator that yields true while working, false when done
-  
-  var blockBarriers: Table[uint64, ptr BlockBarrier]
   var barriersLock: Lock
-  var currentKernelLaunch*: int = 0
-  var syncthreadsCalled*: bool = false  # Global flag for syncthreads
-  
   initLock(barriersLock)
-  
-  # Export functions so they're accessible from templates expanded in kernel iterators
-  proc getBlockId*(blockIdx: BlockIdx): uint64 =
-    # Create a unique identifier for a block
-    result = blockIdx.x.uint64
-    result = result * 1000000'u64 + blockIdx.y.uint64
-    result = result * 1000000'u64 + blockIdx.z.uint64
-  
-  proc getOrCreateBarrier*(blockId: uint64, numThreads: int, launchId: int): ptr BlockBarrier =
+
+# Export functions so they're accessible from templates expanded in kernel iterators
+proc getBlockId*(blockIdx: BlockIdx): uint64 =
+  # Create a unique identifier for a block
+  result = blockIdx.x.uint64
+  result = result * 1000000'u64 + blockIdx.y.uint64
+  result = result * 1000000'u64 + blockIdx.z.uint64
+
+proc getOrCreateBarrier*(blockId: uint64, numThreads: int, launchId: int): ptr BlockBarrier =
+  when not SingleThread:
     acquire(barriersLock)
-    if not blockBarriers.hasKey(blockId):
-      var barrier = cast[ptr BlockBarrier](allocShared(sizeof(BlockBarrier)))
-      initLock(barrier.lock)
-      barrier.counter = 0
-      barrier.generation = 0
-      barrier.numThreads = numThreads
-      barrier.lastLaunchId = launchId
-      blockBarriers[blockId] = barrier
-      result = barrier
-      release(barriersLock)
-    else:
-      result = blockBarriers[blockId]
-      release(barriersLock)
+  if not blockBarriers.hasKey(blockId):
+    var barrier = cast[ptr BlockBarrier](allocShared(sizeof(BlockBarrier)))
+    initLock(barrier.lock)
+    barrier.counter = 0
+    barrier.generation = 0
+    barrier.numThreads = numThreads
+    barrier.lastLaunchId = launchId
+    blockBarriers[blockId] = barrier
+    result = barrier
+  else:
+    result = blockBarriers[blockId]
+  when not SingleThread:
+    release(barriersLock)
   
 
 
 
 when SingleThread:
-  # TODO this is wrong. the single thread case should be the multithread with just a cpu pool of 1 worker.
-  # this DOES NOT implement syncthreads correctly. it runs each thread to completion, this is wrong.
-  # in the example of a dot product, thread 0 finishes completely first before any of the other threads had a chance to run and gives an incorrect answer.
-
   template simpleLaunchKernel(fn: untyped, gridDimArg: Dim3, blockDimArg: Dim3, args: tuple) =
-    # Sequential execution
-    gridDim = gridDimArg
-    blockDim = blockDimArg
-    for bz in 0..<gridDimArg.z:
-      for by in 0..<gridDimArg.y:
-        for bx in 0..<gridDimArg.x:
-          blockIdx.x = bx
-          blockIdx.y = by
-          blockIdx.z = bz
-          for tz in 0..<blockDimArg.z:
-            for ty in 0..<blockDimArg.y:
-              for tx in 0..<blockDimArg.x:
-                threadIdx.x = tx
-                threadIdx.y = ty
-                threadIdx.z = tz
-                unpackCall(fn, args)
+    block:
+      inc currentKernelLaunch
+      blockBarriers.clear()
+
+      gridDim = gridDimArg
+      blockDim = blockDimArg
+
+      let totalBlocks = int(gridDimArg.x * gridDimArg.y * gridDimArg.z)
+      let totalThreadsPerBlock = int(blockDimArg.x * blockDimArg.y * blockDimArg.z)
+      let totalBlocksPerPlane = int(gridDimArg.x * gridDimArg.y)
+      let totalThreadsPerBlockPlane = int(blockDimArg.x * blockDimArg.y)
+
+      proc executeBlock(blockIndex: int): proc() {.closure, gcsafe.} =
+        let bz = blockIndex div totalBlocksPerPlane
+        let remainder = blockIndex mod totalBlocksPerPlane
+        let by = remainder div int(gridDimArg.x)
+        let bx = remainder mod int(gridDimArg.x)
+
+        result = proc() {.closure, gcsafe.} =
+          proc makeThreadTask(bxVal, byVal, bzVal, txVal, tyVal, tzVal: uint): Task =
+            iterator (): bool =
+              {.gcsafe.}:
+                blockIdx.x = bxVal
+                blockIdx.y = byVal
+                blockIdx.z = bzVal
+                threadIdx.x = txVal
+                threadIdx.y = tyVal
+                threadIdx.z = tzVal
+                gridDim = gridDimArg
+                blockDim = blockDimArg
+
+                let kernelIter = callWithTuple(fn, args)
+                while true:
+                  blockIdx.x = bxVal
+                  blockIdx.y = byVal
+                  blockIdx.z = bzVal
+                  threadIdx.x = txVal
+                  threadIdx.y = tyVal
+                  threadIdx.z = tzVal
+                  gridDim = gridDimArg
+                  blockDim = blockDimArg
+                  if not kernelIter():
+                    break
+                  yield true
+              yield false
+
+          var blockTasks: seq[Task]
+          for threadIndex in 0..<totalThreadsPerBlock:
+            let tz = threadIndex div totalThreadsPerBlockPlane
+            let threadRemainder = threadIndex mod totalThreadsPerBlockPlane
+            let ty = threadRemainder div int(blockDimArg.x)
+            let tx = threadRemainder mod int(blockDimArg.x)
+            blockTasks.add(makeThreadTask(uint(bx), uint(by), uint(bz), uint(tx), uint(ty), uint(tz)))
+
+          runAllTasks(blockTasks)
+
+      for blockIndex in 0..<totalBlocks:
+        let closure = executeBlock(blockIndex)
+        closure()
 
 else:
-
-  proc runAllTasks(tasks: seq[Task]) =
-    ## Cooperative scheduler that runs tasks in round-robin until all complete.
-    var active = newSeq[Task]()
-    for t in tasks: active.add(t)
-    
-    while active.len > 0:
-      var i = 0
-      while i < active.len:
-        let stillWorking = active[i]()
-        if not stillWorking:
-          active.del(i)
-        else:
-          inc i
 
   proc worker(closure: proc () {.closure, gcsafe.}) {.thread.} =
     ## Worker procedure that executes the provided closure in a thread.
@@ -183,116 +261,88 @@ else:
       # Reset barriers for this kernel launch (before threads start)
       acquire(barriersLock)
       inc currentKernelLaunch
-      let launchId = currentKernelLaunch
-      # Clear barriers table - new barriers will be created as needed
       blockBarriers.clear()
       release(barriersLock)
-      
-      # Multi-threaded execution: blocks run in parallel, threads within each block run cooperatively
-      let totalBlocks = gridDimArg.x * gridDimArg.y * gridDimArg.z
-      let totalThreadsPerBlock = blockDimArg.x * blockDimArg.y * blockDimArg.z
-      let totalBlocksPerPlane = gridDimArg.x * gridDimArg.y
-      let totalThreadsPerBlockPlane = blockDimArg.x * blockDimArg.y
-      
-      # Execute blocks in parallel
-      var blockHandles: seq[Thread[proc () {.closure.}]]
-      blockHandles.setLen(int(totalBlocks))
-      
-      proc executeBlock(blockIndex: uint): proc() {.closure, gcsafe.} =
-        # Set up block indices (capture in closure)
+
+      # Multi-threaded execution: blocks run in parallel OS threads.
+      # Threads within each block run cooperatively using round-robin scheduling.
+      let totalBlocks = int(gridDimArg.x * gridDimArg.y * gridDimArg.z)
+      let totalThreadsPerBlock = int(blockDimArg.x * blockDimArg.y * blockDimArg.z)
+      let totalBlocksPerPlane = int(gridDimArg.x * gridDimArg.y)
+      let totalThreadsPerBlockPlane = int(blockDimArg.x * blockDimArg.y)
+
+      proc executeBlock(blockIndex: int): proc() {.closure, gcsafe.} =
         let bz = blockIndex div totalBlocksPerPlane
         let remainder = blockIndex mod totalBlocksPerPlane
-        let by = remainder div gridDimArg.x
-        let bx = remainder mod gridDimArg.x
-        
+        let by = remainder div int(gridDimArg.x)
+        let bx = remainder mod int(gridDimArg.x)
+
         result = proc() {.closure, gcsafe.} =
-          # Create iterators for each thread in this block
-          # Threads run cooperatively using round-robin scheduling
+          proc makeThreadTask(bxVal, byVal, bzVal, txVal, tyVal, tzVal: uint): Task =
+            iterator (): bool =
+              {.gcsafe.}:
+                blockIdx.x = bxVal
+                blockIdx.y = byVal
+                blockIdx.z = bzVal
+                threadIdx.x = txVal
+                threadIdx.y = tyVal
+                threadIdx.z = tzVal
+                gridDim = gridDimArg
+                blockDim = blockDimArg
+
+                let kernelIter = callWithTuple(fn, args)
+                while true:
+                  blockIdx.x = bxVal
+                  blockIdx.y = byVal
+                  blockIdx.z = bzVal
+                  threadIdx.x = txVal
+                  threadIdx.y = tyVal
+                  threadIdx.z = tzVal
+                  gridDim = gridDimArg
+                  blockDim = blockDimArg
+                  if not kernelIter():
+                    break
+                  yield true
+              yield false
+
           var blockTasks: seq[Task]
-          
           for threadIndex in 0..<totalThreadsPerBlock:
-            # Convert threadIndex to 3D threadIdx
             let tz = threadIndex div totalThreadsPerBlockPlane
             let threadRemainder = threadIndex mod totalThreadsPerBlockPlane
-            let ty = threadRemainder div blockDimArg.x
-            let tx = threadRemainder mod blockDimArg.x
-            
-            # Create iterator for this thread that wraps kernel execution
-            let threadTask = iterator (): bool =
-              # Set thread-local variables
-              blockIdx.x = bx
-              blockIdx.y = by
-              blockIdx.z = bz
-              threadIdx.x = tx
-              threadIdx.y = ty
-              threadIdx.z = tz
-              gridDim = gridDimArg
-              blockDim = blockDimArg
-              
-              # Execute kernel proc (it returns an iterator, so call it and run the iterator in a loop)
-              {.gcsafe.}:
-                # Call the proc to get the iterator instance and run it
-                # Cast pointer arguments to ptr float64 as expected by kernels
-                let kernelIter = fn(
-                  cast[ptr float64](args[0]),
-                  cast[ptr float64](args[1]),
-                  cast[ptr float64](args[2]),
-                  cast[ptr float64](args[3])
-                )
-                while kernelIter():
-                  yield true  # Yield while kernel is running (for syncthreads)
-              
-              # Thread is done
-              yield false
-            
-            blockTasks.add(threadTask)
-          
-          # Run threads sequentially for SIMPLE runtime (no cooperative scheduling needed)
-          {.gcsafe.}:
-            for task in blockTasks:
-              while task():
-                discard
-      
-      # Launch blocks in parallel
-      var blockIdxCounter: uint = 0
-      for i in 0..<int(totalBlocks):
-        let blockIndex = blockIdxCounter
-        let closure = executeBlock(blockIndex)
-        createThread(blockHandles[i], worker, closure)
-        inc blockIdxCounter
-      
-      # Wait for all blocks to complete
-      for th in blockHandles:
-        joinThread(th)
+            let ty = threadRemainder div int(blockDimArg.x)
+            let tx = threadRemainder mod int(blockDimArg.x)
+            blockTasks.add(makeThreadTask(uint(bx), uint(by), uint(bz), uint(tx), uint(ty), uint(tz)))
+
+          runAllTasks(blockTasks)
+
+      for i in 0..<totalBlocks:
+        let closure = executeBlock(i)
+        closure()
 
 
 # hippoSyncthreads implementation depends on threading mode
-when SingleThread:
-  proc hippoSyncthreads*() =
-    ## In single-threaded mode, threads execute sequentially, so syncthreads is a no-op
-    ## TODO this is very, very, very wrong. syncthreads CANNOT be a no-op.
-    ## this breaks the dot product test because thread 0 finishes completely first before any of the other threads had a chance to run and, therefore, gives an incorrect answer.
-    discard
-
-# hippoSyncthreads - blocking barrier for multi-threaded mode
 template hippoSyncthreads*() {.dirty.} =
   ## Blocking barrier that synchronizes threads within a block.
-  ## Since blocks run in parallel OS threads, this can be blocking.
-  when not (defined(js) or not compileOption("threads")):
-    let blockId = getBlockId(blockIdx)
-    let barrier = getOrCreateBarrier(blockId, int(blockDim.x * blockDim.y * blockDim.z), currentKernelLaunch)
+  ## Since blocks may run in parallel OS threads, this can be blocking.
+  bind acquire, release
+  let blockId = getBlockId(blockIdx)
+  let barrier = getOrCreateBarrier(blockId, int(blockDim.x * blockDim.y * blockDim.z), currentKernelLaunch)
 
-    # Simple cooperative barrier using generation counter
-    let myGen = barrier.generation
-    inc barrier.counter
-    let arrived = barrier.counter
-    if arrived == barrier.numThreads:
-      inc barrier.generation
-      barrier.counter = 0
+  acquire(barrier.lock)
+  let myGen = barrier.generation
+  inc barrier.counter
+  if barrier.counter == barrier.numThreads:
+    inc barrier.generation
+    barrier.counter = 0
+  release(barrier.lock)
 
-    # Wait until generation advances
-    while barrier.generation <= myGen:
-      yield true
+  while true:
+    acquire(barrier.lock)
+    if barrier.generation > myGen:
+      release(barrier.lock)
+      break
+    release(barrier.lock)
+    yield true
 
 # Math functions matching HIP/CUDA interface
 # Single-precision floating-point math functions
