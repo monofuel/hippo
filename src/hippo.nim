@@ -1,6 +1,7 @@
 import
   std/[strformat, os, macros]
 
+include ./gpu_macros
 
 # supported runtimes: HIP, HIP_CPU, CUDA, and SIMPLE
 const HippoRuntime* {.strdefine.} = "HIP"
