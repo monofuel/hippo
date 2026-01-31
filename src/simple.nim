@@ -79,9 +79,13 @@ proc simpleMemcpy(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind) 
 proc simpleFree(p: pointer) =
   deallocShared(p)
 
-proc handleError(err: HippoError) =
+proc handleError*(err: HippoError) =
   ## Simple runtime raises errors as exceptions.
   discard
+
+proc hipDeviceSynchronize*(): HippoError =
+  ## SIMPLE backend executes synchronously, so there's nothing to wait for.
+  0
 
 macro callWithTuple(fn: typed, args: untyped): untyped =
   ## Expand a tuple constructor into a call expression and cast args to param types.
@@ -323,25 +327,26 @@ else:
 template hippoSyncthreads*() {.dirty.} =
   ## Blocking barrier that synchronizes threads within a block.
   ## Since blocks may run in parallel OS threads, this can be blocking.
-  bind acquire, release
-  let blockId = getBlockId(blockIdx)
-  let barrier = getOrCreateBarrier(blockId, int(blockDim.x * blockDim.y * blockDim.z), currentKernelLaunch)
+  block:
+    bind acquire, release
+    let blockId {.gensym.} = getBlockId(blockIdx)
+    let barrier {.gensym.} = getOrCreateBarrier(blockId, int(blockDim.x * blockDim.y * blockDim.z), currentKernelLaunch)
 
-  acquire(barrier.lock)
-  let myGen = barrier.generation
-  inc barrier.counter
-  if barrier.counter == barrier.numThreads:
-    inc barrier.generation
-    barrier.counter = 0
-  release(barrier.lock)
-
-  while true:
     acquire(barrier.lock)
-    if barrier.generation > myGen:
-      release(barrier.lock)
-      break
+    let myGen {.gensym.} = barrier.generation
+    inc barrier.counter
+    if barrier.counter == barrier.numThreads:
+      inc barrier.generation
+      barrier.counter = 0
     release(barrier.lock)
-    yield true
+
+    while true:
+      acquire(barrier.lock)
+      if barrier.generation > myGen:
+        release(barrier.lock)
+        break
+      release(barrier.lock)
+      yield true
 
 # Math functions matching HIP/CUDA interface
 # Single-precision floating-point math functions
