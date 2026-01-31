@@ -79,9 +79,13 @@ proc simpleMemcpy(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind) 
 proc simpleFree(p: pointer) =
   deallocShared(p)
 
-proc handleError(err: HippoError) =
+proc handleError*(err: HippoError) =
   ## Simple runtime raises errors as exceptions.
   discard
+
+proc hipDeviceSynchronize*(): HippoError =
+  ## SIMPLE backend executes synchronously, so there's nothing to wait for.
+  0
 
 macro callWithTuple(fn: typed, args: untyped): untyped =
   ## Expand a tuple constructor into a call expression and cast args to param types.
