@@ -156,6 +156,17 @@ template hippoMemcpy*(dst: GpuRef, src: GpuRef, size: int, kind: HippoMemcpyKind
   else:
     handleError(hipMemcpy(dst.p, src.p, size.cint, kind))
 
+template hippoMemcpyToSymbol*(symbol: untyped, src: pointer, size: int,
+                              offset: int = 0,
+                              kind: HippoMemcpyKind = HippoMemcpyHostToDevice) =
+  ## Copy data from host to a device symbol (eg: __constant__ storage).
+  when HippoRuntime == "CUDA":
+    handleError(cudaMemcpyToSymbol(symbol, src, size.csize_t, offset.csize_t, kind))
+  elif HippoRuntime == "SIMPLE":
+    copyMem(addr symbol, src, size)
+  else:
+    handleError(hipMemcpyToSymbol(hipSymbol(symbol), src, size.csize_t, offset.csize_t, kind))
+
 template hippoFree*(p: pointer) =
   ## Free memory on the GPU
   when HippoRuntime == "CUDA":
@@ -204,7 +215,7 @@ proc hippoRefcopy[T](gpuref: GpuRef, target: ref T) =
 
 when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
   macro hipLaunchKernelGGLWithTuple(
-    kernel: proc,
+    kernel: untyped,
     gridDim: Dim3 = newDim3(1,1,1),
     blockDim: Dim3 = newDim3(1,1,1),
     sharedMemBytes: uint32 = 0,
@@ -227,7 +238,7 @@ when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
     result = callNode
 
 template hippoLaunchKernel*(
-  kernel: proc,                     ## The GPU kernel procedure to launch
+  kernel: untyped,                  ## The GPU kernel procedure to launch
   gridDim: Dim3 = newDim3(1,1,1),   ## default to a grid of 1 block
   blockDim: Dim3 = newDim3(1,1,1),  ## default to 1 thread per block
   sharedMemBytes: uint32 = 0,       ## dynamic shared memory amount to allocate
@@ -285,16 +296,59 @@ template hippoLaunchKernel*(
 
 macro hippoGlobal*(fn: untyped): untyped =
   ## Declare a function as `__global__`. global functions are called from the host and run on the device.
-  when HippoRuntime != "SIMPLE":
+  when HippoRuntime == "SIMPLE":
+    # SIMPLE needs kernel bodies as iterators so we can yield at hippoSyncthreads.
+    expectKind(fn, nnkProcDef)
+    let name = fn[0]
+    let generics = fn[1]
+    let params = fn[3]
+    let pragmas = if fn.len > 4 and fn[4].kind == nnkPragma: fn[4] else: newEmptyNode()
+    let body = fn[^1]
+
+    let iterBody = newStmtList()
+    if body.kind == nnkStmtList:
+      for stmt in body:
+        iterBody.add(stmt)
+    else:
+      iterBody.add(body)
+    iterBody.add(newTree(nnkYieldStmt, newLit(false)))
+
+    let anonIter = newNimNode(nnkIteratorDef)
+    anonIter.add(newEmptyNode())
+    anonIter.add(newEmptyNode())
+    anonIter.add(newEmptyNode())
+    anonIter.add(newNimNode(nnkFormalParams).add(ident("bool")))
+    anonIter.add(newEmptyNode())
+    anonIter.add(newEmptyNode())
+    anonIter.add(iterBody)
+
+    let returnBody = newStmtList()
+    returnBody.add(newTree(nnkReturnStmt, anonIter))
+
+    let newParams = params.copyNimTree()
+    if newParams.len > 0:
+      newParams[0] = ident("auto")
+    else:
+      newParams.insert(0, ident("auto"))
+
+    result = newNimNode(nnkProcDef)
+    result.add(name)
+    result.add(generics)
+    result.add(newEmptyNode())
+    result.add(newParams)
+    result.add(pragmas)
+    result.add(newEmptyNode())
+    result.add(returnBody)
+  else:
     let globalPragma: NimNode = quote:
       {. exportc, codegenDecl: "__global__ $# $#$#".}
 
     fn.addPragma(globalPragma[0])
     fn.addPragma(globalPragma[1])
-  quote do:
-    {.push stackTrace: off, checks: off.}
-    `fn`
-    {.pop.}
+    result = quote do:
+      {.push stackTrace: off, checks: off.}
+      `fn`
+      {.pop.}
 
 macro hippoDevice*(fn: untyped): untyped =
   ## Declare fuctions for use on the `__device__` (the gpu),
@@ -364,7 +418,7 @@ macro hippoConstant*(v: untyped): untyped =
   ## eg: `const N {.hippoConstant.} = 1024`
   when HippoRuntime != "SIMPLE":
     quote do:
-      {.push stackTrace: off, checks: off, noinit, exportc, codegenDecl: "__constant__ $# $#".}
+      {.push stackTrace: off, checks: off, exportc, codegenDecl: "__constant__ $# $#".}
       `v`
       {.pop.}
   else:
