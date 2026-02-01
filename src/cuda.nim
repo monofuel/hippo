@@ -86,10 +86,10 @@ proc cudaMemcpyAsync*(dst: pointer; src: pointer; size: csize_t;
   header: "cuda_runtime.h", importcpp: "cudaMemcpyAsync(@)".}
 
 # Page-locked Host Memory
-proc cudaHostAlloc*(ptr: ptr pointer; size: csize_t;
+proc cudaHostAlloc*(p: ptr pointer; size: csize_t;
                     flags: uint32_t): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaHostAlloc(@)".}
-proc cudaFreeHost*(ptr: pointer): cudaError_t {.
+proc cudaFreeHost*(p: pointer): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaFreeHost(@)".}
 
 # Events for Timing
