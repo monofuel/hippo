@@ -98,6 +98,7 @@ suite "Streams":
 
     check correct == min(10, FULL_DATA_SIZE)
 
+    # TODO we should implement nim ref helpers to automatically clean stuff like this up
     # Cleanup
     hippoHostFree(host_a_raw)
     hippoHostFree(host_b_raw)
