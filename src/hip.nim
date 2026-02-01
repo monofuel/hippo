@@ -7,7 +7,7 @@ type
   uint16_t* = uint16
   uint32_t* = uint32
   uint64_t* = uint64
-  hipStream_t* = pointer
+  hipStream_t* {.importcpp: "hipStream_t", header: "hip/hip_runtime.h".} = pointer
   hipError_t* {.importcpp: "hipError_t", header: "hip/hip_runtime.h".} = cint
 
 type
@@ -72,6 +72,56 @@ proc hipLaunchKernelGGL*(
   stream: hipStream_t;
   ) {.
     importcpp: "hipLaunchKernelGGL(@)", header: "hip/hip_runtime.h", varargs.}
+
+# Stream Management
+proc hipStreamCreate*(stream: ptr hipStream_t): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipStreamCreate(@)".}
+proc hipStreamDestroy*(stream: hipStream_t): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipStreamDestroy(@)".}
+proc hipStreamSynchronize*(stream: hipStream_t): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipStreamSynchronize(@)".}
+
+# Async Memory Operations
+proc hipMemcpyAsync*(dst: pointer, src: pointer, sizeBytes: csize_t,
+                     kind: hipMemcpyKind, stream: hipStream_t): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipMemcpyAsync(@)".}
+
+# Page-locked Host Memory
+when defined(HIP_CPU_RUNTIME):
+  # HIP_CPU doesn't implement hipHostAlloc, use hipMalloc as fallback
+  proc hipHostAlloc*(p: ptr pointer; size: csize_t;
+                     flags: uint32_t): hipError_t =
+    # Note: ignores flags for now, just use regular malloc
+    hipMalloc(p, size.cint)
+else:
+  # Real HIP runtime has hipHostAlloc
+  proc hipHostAlloc*(p: ptr pointer; size: csize_t;
+                     flags: uint32_t): hipError_t {.
+    header: "hip/hip_runtime.h", importcpp: "hipHostAlloc(@)".}
+
+proc hipHostFree*(p: pointer): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipHostFree(@)".}
+
+# Events for Timing
+type hipEvent_t* {.importcpp: "hipEvent_t", header: "hip/hip_runtime.h".} = pointer
+proc hipEventCreate*(event: ptr hipEvent_t): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipEventCreate(@)".}
+proc hipEventDestroy*(event: hipEvent_t): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipEventDestroy(@)".}
+proc hipEventRecord*(event: hipEvent_t, stream: hipStream_t = nil): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipEventRecord(@)".}
+proc hipEventSynchronize*(event: hipEvent_t): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipEventSynchronize(@)".}
+proc hipEventElapsedTime*(ms: ptr cfloat, start: hipEvent_t, stop: hipEvent_t): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipEventElapsedTime(@)".}
+
+# Device Properties
+type hipDeviceProp_t* {.importcpp: "hipDeviceProp_t", header: "hip/hip_runtime.h".} = object
+  deviceOverlap*: cint
+proc hipGetDevice*(device: ptr cint): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipGetDevice(@)".}
+proc hipGetDeviceProperties*(prop: ptr hipDeviceProp_t; device: cint): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipGetDeviceProperties(@)".}
 
 type ConstCString* {.importc: "const char*".} = object
 converter toCString*(self: ConstCString): cstring {.importc: "(char*)", noconv, nodecl.}

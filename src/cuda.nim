@@ -72,6 +72,47 @@ proc cudaLaunchKernelGGL*(
   ) {.
     importcpp: "cudaLaunchKernelGGL(@)", header: "cuda_runtime.h", varargs.}
 
+# Stream Management
+proc cudaStreamCreate*(stream: ptr cudaStream_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaStreamCreate(@)".}
+proc cudaStreamDestroy*(stream: cudaStream_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaStreamDestroy(@)".}
+proc cudaStreamSynchronize*(stream: cudaStream_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaStreamSynchronize(@)".}
+
+# Async Memory Operations
+proc cudaMemcpyAsync*(dst: pointer; src: pointer; size: csize_t;
+                      kind: cudaMemcpyKind; stream: cudaStream_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaMemcpyAsync(@)".}
+
+# Page-locked Host Memory
+proc cudaHostAlloc*(p: ptr pointer; size: csize_t;
+                    flags: uint32_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaHostAlloc(@)".}
+proc cudaFreeHost*(p: pointer): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaFreeHost(@)".}
+
+# Events for Timing
+type cudaEvent_t* = pointer
+proc cudaEventCreate*(event: ptr cudaEvent_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaEventCreate(@)".}
+proc cudaEventDestroy*(event: cudaEvent_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaEventDestroy(@)".}
+proc cudaEventRecord*(event: cudaEvent_t; stream: cudaStream_t = nil): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaEventRecord(@)".}
+proc cudaEventSynchronize*(event: cudaEvent_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaEventSynchronize(@)".}
+proc cudaEventElapsedTime*(ms: ptr cfloat; start: cudaEvent_t; stop: cudaEvent_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaEventElapsedTime(@)".}
+
+# Device Properties
+type cudaDeviceProp* {.importcpp: "cudaDeviceProp", header: "cuda_runtime.h".} = object
+  deviceOverlap*: cint
+proc cudaGetDevice*(device: ptr cint): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaGetDevice(@)".}
+proc cudaGetDeviceProperties*(prop: ptr cudaDeviceProp; device: cint): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaGetDeviceProperties(@)".}
+
 
 type ConstCString* {.importc: "const char*".} = object
 converter toCString*(self: ConstCString): cstring {.importc: "(char*)", noconv, nodecl.}
