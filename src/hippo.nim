@@ -80,6 +80,7 @@ when HippoRuntime == "HIP_CPU":
   const
     hipIncludePath = staticExec("pwd") & "/../HIP-CPU/include"
   {.passC: "-I" & hipIncludePath.}
+  {.define: HIP_CPU_RUNTIME.}
   echo "DEBUG: Using HIP CPU runtime"
   include hip
 elif HippoRuntime == "CUDA":

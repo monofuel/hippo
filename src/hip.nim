@@ -87,9 +87,18 @@ proc hipMemcpyAsync*(dst: pointer, src: pointer, sizeBytes: csize_t,
   header: "hip/hip_runtime.h", importcpp: "hipMemcpyAsync(@)".}
 
 # Page-locked Host Memory
-proc hipHostAlloc*(p: ptr pointer; size: csize_t;
-                   flags: uint32_t): hipError_t {.
-  header: "hip/hip_runtime.h", importcpp: "hipHostAlloc(@)".}
+when defined(HIP_CPU_RUNTIME):
+  # HIP_CPU doesn't implement hipHostAlloc, use hipMalloc as fallback
+  proc hipHostAlloc*(p: ptr pointer; size: csize_t;
+                     flags: uint32_t): hipError_t =
+    # Note: ignores flags for now, just use regular malloc
+    hipMalloc(p, size.cint)
+else:
+  # Real HIP runtime has hipHostAlloc
+  proc hipHostAlloc*(p: ptr pointer; size: csize_t;
+                     flags: uint32_t): hipError_t {.
+    header: "hip/hip_runtime.h", importcpp: "hipHostAlloc(@)".}
+
 proc hipHostFree*(p: pointer): hipError_t {.
   header: "hip/hip_runtime.h", importcpp: "hipHostFree(@)".}
 
