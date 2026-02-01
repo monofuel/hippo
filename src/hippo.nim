@@ -188,6 +188,154 @@ template hippoSynchronize*() =
   else:
     handleError(hipDeviceSynchronize())
 
+# Stream Management
+template hippoStreamCreate*(): HippoStream =
+  ## Create a new stream
+  var stream: HippoStream
+  when HippoRuntime == "CUDA":
+    handleError(cudaStreamCreate(addr stream))
+  elif HippoRuntime == "SIMPLE":
+    stream = nil
+  else:
+    handleError(hipStreamCreate(addr stream))
+  stream
+
+template hippoStreamDestroy*(stream: HippoStream) =
+  ## Destroy a stream
+  when HippoRuntime == "CUDA":
+    handleError(cudaStreamDestroy(stream))
+  elif HippoRuntime == "SIMPLE":
+    discard
+  else:
+    handleError(hipStreamDestroy(stream))
+
+template hippoStreamSynchronize*(stream: HippoStream) =
+  ## Synchronize a specific stream
+  when HippoRuntime == "CUDA":
+    handleError(cudaStreamSynchronize(stream))
+  elif HippoRuntime == "SIMPLE":
+    discard
+  else:
+    handleError(hipStreamSynchronize(stream))
+
+# Async Memory Operations
+template hippoMemcpyAsync*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind, stream: HippoStream) =
+  ## Asynchronous memory copy on a stream
+  when HippoRuntime == "CUDA":
+    handleError(cudaMemcpyAsync(dst, src, size.csize_t, kind, stream))
+  elif HippoRuntime == "SIMPLE":
+    hippoMemcpy(dst, src, size, kind)
+  else:
+    handleError(hipMemcpyAsync(dst, src, size.csize_t, kind, stream))
+
+# Page-locked Host Memory
+template hippoHostAlloc*(size: int): pointer =
+  ## Allocate page-locked host memory
+  var hostPtr: pointer
+  when HippoRuntime == "CUDA":
+    handleError(cudaHostAlloc(addr hostPtr, size.csize_t, 0.uint32))
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    handleError(hipHostAlloc(addr hostPtr, size.csize_t, 0.uint32))
+  else:
+    # For SIMPLE, use regular alloc
+    hostPtr = alloc(size)
+  hostPtr
+
+template hippoHostFree*(p: pointer) =
+  ## Free page-locked host memory.
+  when HippoRuntime == "CUDA":
+    handleError(cudaFreeHost(p))
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    handleError(hipHostFree(p))
+  else:
+    dealloc(p)
+
+# Events for Timing
+when HippoRuntime == "CUDA":
+  type HippoEvent* = cudaEvent_t
+elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+  type HippoEvent* = hipEvent_t
+else:
+  type HippoEvent* = pointer
+
+template hippoEventCreate*(): HippoEvent =
+  ## Create a timing event.
+  var event: HippoEvent
+  when HippoRuntime == "CUDA":
+    handleError(cudaEventCreate(addr event))
+  elif HippoRuntime == "SIMPLE":
+    event = nil
+  else:
+    handleError(hipEventCreate(addr event))
+  event
+
+template hippoEventDestroy*(event: HippoEvent) =
+  ## Destroy a timing event.
+  when HippoRuntime == "CUDA":
+    handleError(cudaEventDestroy(event))
+  elif HippoRuntime == "SIMPLE":
+    discard
+  else:
+    handleError(hipEventDestroy(event))
+
+template hippoEventRecord*(event: HippoEvent, stream: HippoStream = nil) =
+  ## Record an event on a stream.
+  when HippoRuntime == "CUDA":
+    handleError(cudaEventRecord(event, stream))
+  elif HippoRuntime == "SIMPLE":
+    discard
+  else:
+    handleError(hipEventRecord(event, stream))
+
+template hippoEventSynchronize*(event: HippoEvent) =
+  ## Wait for an event to complete.
+  when HippoRuntime == "CUDA":
+    handleError(cudaEventSynchronize(event))
+  elif HippoRuntime == "SIMPLE":
+    discard
+  else:
+    handleError(hipEventSynchronize(event))
+
+template hippoEventElapsedTime*(start: HippoEvent, stop: HippoEvent): float32 =
+  ## Get elapsed time between two events.
+  var ms: cfloat
+  when HippoRuntime == "CUDA":
+    handleError(cudaEventElapsedTime(addr ms, start, stop))
+  elif HippoRuntime == "SIMPLE":
+    ms = 0.0
+  else:
+    handleError(hipEventElapsedTime(addr ms, start, stop))
+  ms.float32
+
+# Device Properties
+when HippoRuntime == "CUDA":
+  type HippoDeviceProp* = cudaDeviceProp
+elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+  type HippoDeviceProp* = hipDeviceProp_t
+else:
+  type HippoDeviceProp* = object
+    deviceOverlap*: cint
+
+template hippoGetDevice*(): cint =
+  ## Get the current device index.
+  var device: cint
+  when HippoRuntime == "CUDA":
+    handleError(cudaGetDevice(addr device))
+  elif HippoRuntime == "SIMPLE":
+    device = 0
+  else:
+    handleError(hipGetDevice(addr device))
+  device
+
+template hippoGetDeviceProperties*(prop: var HippoDeviceProp, device: cint) =
+  ## Get device properties for the given device.
+  when HippoRuntime == "CUDA":
+    handleError(cudaGetDeviceProperties(addr prop, device))
+  elif HippoRuntime == "SIMPLE":
+    prop.deviceOverlap = 0
+  else:
+    handleError(hipGetDeviceProperties(addr prop, device))
+
 proc `=destroy`*(mem: var GpuMemory) =
   ## Automatically free device memory when the object goes out of scope
   if mem.p != nil:
