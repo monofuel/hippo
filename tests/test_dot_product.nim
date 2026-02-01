@@ -8,6 +8,50 @@ const
   ThreadsPerBlock: int = 256
   BlocksPerGrid: int = min(32, ((N + ThreadsPerBlock - 1) div ThreadsPerBlock))
 
+# requires --stackTrace:off
+
+{.emit: """
+#ifdef __HIPCC__
+  // Redefine N_INLINE before nimbase.h uses it
+  #ifdef N_INLINE
+    #undef N_INLINE
+  #endif
+  #define N_INLINE(rettype, name) __device__ __host__ inline rettype name
+#endif
+""".}
+
+# Comprehensive device annotation for all Nim runtime functions
+# {.emit: """
+# #ifdef __HIPCC__
+#   // Redefine ALL Nim calling conventions for device compatibility
+#   #ifdef N_INLINE
+#     #undef N_INLINE
+#   #endif
+#   #define N_INLINE(rettype, name) __device__ __host__ inline rettype name
+  
+#   #ifdef N_NOINLINE  
+#     #undef N_NOINLINE
+#   #endif
+#   #define N_NOINLINE(rettype, name) __device__ __host__ rettype name
+  
+#   #ifdef N_NIMCALL
+#     #undef N_NIMCALL
+#   #endif
+#   #define N_NIMCALL(rettype, name) __device__ __host__ rettype name
+  
+#   // Debug: Verify our redefinitions worked
+#   #pragma message("HIP: Redefined Nim calling conventions for device compatibility")
+# #endif
+# """.}
+
+# NOT TESTED
+# my gtx 1070 gpu server is turned off and I'm lazy.
+# {.emit: """
+# #ifdef __CUDACC__
+# #define N_INLINE(rettype, name) __device__ __host__ inline rettype name
+# #endif
+# """.}
+
 proc dot(a, b, c: ptr[float64]){.hippoGlobal.} =
   var cache {.hippoShared.}: array[256, float]
 
@@ -21,10 +65,9 @@ proc dot(a, b, c: ptr[float64]){.hippoGlobal.} =
   var temp: float64 = 0
   while tid < N:
     # TODO not sure how to handle functions like `pluseq___dot_u17` with nim / cuda
-    #temp += aArray[tid] * bArray[tid]
-    temp = temp + (aArray[tid] * bArray[tid])
+    temp += aArray[tid] * bArray[tid]
+    #temp = temp + (aArray[tid] * bArray[tid])
     tid += blockDim.x * gridDim.x
-  
   # set the cache values
   cache[cacheIndex] = temp
 
@@ -37,8 +80,8 @@ proc dot(a, b, c: ptr[float64]){.hippoGlobal.} =
   while i != 0:
     if cacheIndex < i:
       # TODO not sure how to handle functions like `pluseq___dot_u17` with nim / cuda
-      #cache[cacheIndex] += cache[cacheIndex + i]
-      cache[cacheIndex] = cache[cacheIndex] + cache[cacheIndex + i]
+      cache[cacheIndex] += cache[cacheIndex + i]
+      #cache[cacheIndex] = cache[cacheIndex] + cache[cacheIndex + i]
     hippoSyncthreads()
     i = i div 2
 
