@@ -90,6 +90,10 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc handleError(err: hipError_t)" href="hippo.html#handleError%2ChipError_t">hippo: proc handleError(err: hipError_t)</a></li>
           </ul></dd>
+<dt><a name="hipDeviceProp_t" href="#hipDeviceProp_t"><span>hipDeviceProp_t:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: object hipDeviceProp_t" href="hippo.html#hipDeviceProp_t">hippo: object hipDeviceProp_t</a></li>
+          </ul></dd>
 <dt><a name="hipDeviceSynchronize" href="#hipDeviceSynchronize"><span>hipDeviceSynchronize:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipDeviceSynchronize(): hipError_t" href="hippo.html#hipDeviceSynchronize">hippo: proc hipDeviceSynchronize(): hipError_t</a></li>
@@ -98,9 +102,41 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: type hipError_t" href="hippo.html#hipError_t">hippo: type hipError_t</a></li>
           </ul></dd>
+<dt><a name="hipEventCreate" href="#hipEventCreate"><span>hipEventCreate:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipEventCreate(event: ptr hipEvent_t): hipError_t" href="hippo.html#hipEventCreate%2Cptr.hipEvent_t">hippo: proc hipEventCreate(event: ptr hipEvent_t): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipEventDestroy" href="#hipEventDestroy"><span>hipEventDestroy:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipEventDestroy(event: hipEvent_t): hipError_t" href="hippo.html#hipEventDestroy%2ChipEvent_t">hippo: proc hipEventDestroy(event: hipEvent_t): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipEventElapsedTime" href="#hipEventElapsedTime"><span>hipEventElapsedTime:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipEventElapsedTime(ms: ptr cfloat; start: hipEvent_t; stop: hipEvent_t): hipError_t" href="hippo.html#hipEventElapsedTime%2Cptr.cfloat%2ChipEvent_t%2ChipEvent_t">hippo: proc hipEventElapsedTime(ms: ptr cfloat; start: hipEvent_t; stop: hipEvent_t): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipEventRecord" href="#hipEventRecord"><span>hipEventRecord:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipEventRecord(event: hipEvent_t; stream: hipStream_t = nil): hipError_t" href="hippo.html#hipEventRecord%2ChipEvent_t%2ChipStream_t">hippo: proc hipEventRecord(event: hipEvent_t; stream: hipStream_t = nil): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipEventSynchronize" href="#hipEventSynchronize"><span>hipEventSynchronize:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipEventSynchronize(event: hipEvent_t): hipError_t" href="hippo.html#hipEventSynchronize%2ChipEvent_t">hippo: proc hipEventSynchronize(event: hipEvent_t): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipEvent_t" href="#hipEvent_t"><span>hipEvent_t:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: type hipEvent_t" href="hippo.html#hipEvent_t">hippo: type hipEvent_t</a></li>
+          </ul></dd>
 <dt><a name="hipFree" href="#hipFree"><span>hipFree:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipFree(ptr: pointer): hipError_t" href="hippo.html#hipFree%2Cpointer">hippo: proc hipFree(ptr: pointer): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipGetDevice" href="#hipGetDevice"><span>hipGetDevice:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipGetDevice(device: ptr cint): hipError_t" href="hippo.html#hipGetDevice%2Cptr.cint">hippo: proc hipGetDevice(device: ptr cint): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipGetDeviceProperties" href="#hipGetDeviceProperties"><span>hipGetDeviceProperties:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipGetDeviceProperties(prop: ptr hipDeviceProp_t; device: cint): hipError_t" href="hippo.html#hipGetDeviceProperties%2Cptr.hipDeviceProp_t%2Ccint">hippo: proc hipGetDeviceProperties(prop: ptr hipDeviceProp_t; device: cint): hipError_t</a></li>
           </ul></dd>
 <dt><a name="hipGetErrorString" href="#hipGetErrorString"><span>hipGetErrorString:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -109,6 +145,14 @@
 <dt><a name="hipGetLastError" href="#hipGetLastError"><span>hipGetLastError:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipGetLastError(): hipError_t" href="hippo.html#hipGetLastError">hippo: proc hipGetLastError(): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipHostAlloc" href="#hipHostAlloc"><span>hipHostAlloc:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipHostAlloc(p: ptr pointer; size: csize_t; flags: uint32_t): hipError_t" href="hippo.html#hipHostAlloc%2Cptr.pointer%2Ccsize_t%2Cuint32_t">hippo: proc hipHostAlloc(p: ptr pointer; size: csize_t; flags: uint32_t): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipHostFree" href="#hipHostFree"><span>hipHostFree:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipHostFree(p: pointer): hipError_t" href="hippo.html#hipHostFree%2Cpointer">hippo: proc hipHostFree(p: pointer): hipError_t</a></li>
           </ul></dd>
 <dt><a name="hipLaunchKernel" href="#hipLaunchKernel"><span>hipLaunchKernel:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -133,6 +177,12 @@
 <dt><a name="hipMemcpy" href="#hipMemcpy"><span>hipMemcpy:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipMemcpy(dst: pointer; src: pointer; size: cint; kind: hipMemcpyKind): hipError_t" href="hippo.html#hipMemcpy%2Cpointer%2Cpointer%2Ccint%2ChipMemcpyKind">hippo: proc hipMemcpy(dst: pointer; src: pointer; size: cint; kind: hipMemcpyKind): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipMemcpyAsync" href="#hipMemcpyAsync"><span>hipMemcpyAsync:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipMemcpyAsync(dst: pointer; src: pointer; sizeBytes: csize_t;
+               kind: hipMemcpyKind; stream: hipStream_t): hipError_t" href="hippo.html#hipMemcpyAsync%2Cpointer%2Cpointer%2Ccsize_t%2ChipMemcpyKind%2ChipStream_t">hippo: proc hipMemcpyAsync(dst: pointer; src: pointer; sizeBytes: csize_t;
+               kind: hipMemcpyKind; stream: hipStream_t): hipError_t</a></li>
           </ul></dd>
 <dt><a name="hipMemcpyKind" href="#hipMemcpyKind"><span>hipMemcpyKind:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -162,9 +212,37 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: macro hippoDevice(fn: untyped): untyped" href="hippo.html#hippoDevice.m%2Cuntyped">hippo: macro hippoDevice(fn: untyped): untyped</a></li>
           </ul></dd>
+<dt><a name="HippoDeviceProp" href="#HippoDeviceProp"><span>HippoDeviceProp:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: type HippoDeviceProp" href="hippo.html#HippoDeviceProp">hippo: type HippoDeviceProp</a></li>
+          </ul></dd>
 <dt><a name="HippoError" href="#HippoError"><span>HippoError:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: type HippoError" href="hippo.html#HippoError">hippo: type HippoError</a></li>
+          </ul></dd>
+<dt><a name="HippoEvent" href="#HippoEvent"><span>HippoEvent:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: type HippoEvent" href="hippo.html#HippoEvent">hippo: type HippoEvent</a></li>
+          </ul></dd>
+<dt><a name="hippoEventCreate" href="#hippoEventCreate"><span>hippoEventCreate:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoEventCreate(): HippoEvent" href="hippo.html#hippoEventCreate.t">hippo: template hippoEventCreate(): HippoEvent</a></li>
+          </ul></dd>
+<dt><a name="hippoEventDestroy" href="#hippoEventDestroy"><span>hippoEventDestroy:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoEventDestroy(event: HippoEvent)" href="hippo.html#hippoEventDestroy.t%2CHippoEvent">hippo: template hippoEventDestroy(event: HippoEvent)</a></li>
+          </ul></dd>
+<dt><a name="hippoEventElapsedTime" href="#hippoEventElapsedTime"><span>hippoEventElapsedTime:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoEventElapsedTime(start: HippoEvent; stop: HippoEvent): float32" href="hippo.html#hippoEventElapsedTime.t%2CHippoEvent%2CHippoEvent">hippo: template hippoEventElapsedTime(start: HippoEvent; stop: HippoEvent): float32</a></li>
+          </ul></dd>
+<dt><a name="hippoEventRecord" href="#hippoEventRecord"><span>hippoEventRecord:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoEventRecord(event: HippoEvent; stream: HippoStream = nil)" href="hippo.html#hippoEventRecord.t%2CHippoEvent%2CHippoStream">hippo: template hippoEventRecord(event: HippoEvent; stream: HippoStream = nil)</a></li>
+          </ul></dd>
+<dt><a name="hippoEventSynchronize" href="#hippoEventSynchronize"><span>hippoEventSynchronize:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoEventSynchronize(event: HippoEvent)" href="hippo.html#hippoEventSynchronize.t%2CHippoEvent">hippo: template hippoEventSynchronize(event: HippoEvent)</a></li>
           </ul></dd>
 <dt><a name="hippoExp" href="#hippoExp"><span>hippoExp:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -176,6 +254,14 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoFree(p: pointer)" href="hippo.html#hippoFree.t%2Cpointer">hippo: template hippoFree(p: pointer)</a></li>
           </ul></dd>
+<dt><a name="hippoGetDevice" href="#hippoGetDevice"><span>hippoGetDevice:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoGetDevice(): cint" href="hippo.html#hippoGetDevice.t">hippo: template hippoGetDevice(): cint</a></li>
+          </ul></dd>
+<dt><a name="hippoGetDeviceProperties" href="#hippoGetDeviceProperties"><span>hippoGetDeviceProperties:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoGetDeviceProperties(prop: var HippoDeviceProp; device: cint)" href="hippo.html#hippoGetDeviceProperties.t%2ChipDeviceProp_t%2Ccint">hippo: template hippoGetDeviceProperties(prop: var HippoDeviceProp; device: cint)</a></li>
+          </ul></dd>
 <dt><a name="hippoGlobal" href="#hippoGlobal"><span>hippoGlobal:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: macro hippoGlobal(fn: untyped): untyped" href="hippo.html#hippoGlobal.m%2Cuntyped">hippo: macro hippoGlobal(fn: untyped): untyped</a></li>
@@ -184,9 +270,17 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: macro hippoHost(fn: untyped): untyped" href="hippo.html#hippoHost.m%2Cuntyped">hippo: macro hippoHost(fn: untyped): untyped</a></li>
           </ul></dd>
+<dt><a name="hippoHostAlloc" href="#hippoHostAlloc"><span>hippoHostAlloc:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoHostAlloc(size: int): pointer" href="hippo.html#hippoHostAlloc.t%2Cint">hippo: template hippoHostAlloc(size: int): pointer</a></li>
+          </ul></dd>
 <dt><a name="hippoHostDevice" href="#hippoHostDevice"><span>hippoHostDevice:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: macro hippoHostDevice(fn: untyped): untyped" href="hippo.html#hippoHostDevice.m%2Cuntyped">hippo: macro hippoHostDevice(fn: untyped): untyped</a></li>
+          </ul></dd>
+<dt><a name="hippoHostFree" href="#hippoHostFree"><span>hippoHostFree:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoHostFree(p: pointer)" href="hippo.html#hippoHostFree.t%2Cpointer">hippo: template hippoHostFree(p: pointer)</a></li>
           </ul></dd>
 <dt><a name="hippoLaunchKernel" href="#hippoLaunchKernel"><span>hippoLaunchKernel:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -221,6 +315,12 @@
           data-doc-search-tag="hippo: template hippoMemcpy(dst: pointer; src: GpuRef; size: int; kind: HippoMemcpyKind)" href="hippo.html#hippoMemcpy.t%2Cpointer%2CGpuRef%2Cint%2ChipMemcpyKind">hippo: template hippoMemcpy(dst: pointer; src: GpuRef; size: int; kind: HippoMemcpyKind)</a></li>
           <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)" href="hippo.html#hippoMemcpy.t%2Cpointer%2Cpointer%2Cint%2ChipMemcpyKind">hippo: template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)</a></li>
+          </ul></dd>
+<dt><a name="hippoMemcpyAsync" href="#hippoMemcpyAsync"><span>hippoMemcpyAsync:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoMemcpyAsync(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind;
+                 stream: HippoStream)" href="hippo.html#hippoMemcpyAsync.t%2Cpointer%2Cpointer%2Cint%2ChipMemcpyKind%2CHippoStream">hippo: template hippoMemcpyAsync(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind;
+                 stream: HippoStream)</a></li>
           </ul></dd>
 <dt><a name="HippoMemcpyDefault" href="#HippoMemcpyDefault"><span>HippoMemcpyDefault:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -282,6 +382,18 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: type HippoStream" href="hippo.html#HippoStream">hippo: type HippoStream</a></li>
           </ul></dd>
+<dt><a name="hippoStreamCreate" href="#hippoStreamCreate"><span>hippoStreamCreate:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoStreamCreate(): HippoStream" href="hippo.html#hippoStreamCreate.t">hippo: template hippoStreamCreate(): HippoStream</a></li>
+          </ul></dd>
+<dt><a name="hippoStreamDestroy" href="#hippoStreamDestroy"><span>hippoStreamDestroy:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoStreamDestroy(stream: HippoStream)" href="hippo.html#hippoStreamDestroy.t%2CHippoStream">hippo: template hippoStreamDestroy(stream: HippoStream)</a></li>
+          </ul></dd>
+<dt><a name="hippoStreamSynchronize" href="#hippoStreamSynchronize"><span>hippoStreamSynchronize:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoStreamSynchronize(stream: HippoStream)" href="hippo.html#hippoStreamSynchronize.t%2CHippoStream">hippo: template hippoStreamSynchronize(stream: HippoStream)</a></li>
+          </ul></dd>
 <dt><a name="hippoSynchronize" href="#hippoSynchronize"><span>hippoSynchronize:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoSynchronize()" href="hippo.html#hippoSynchronize.t">hippo: template hippoSynchronize()</a></li>
@@ -289,6 +401,18 @@
 <dt><a name="hippoSyncthreads" href="#hippoSyncthreads"><span>hippoSyncthreads:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hippoSyncthreads()" href="hippo.html#hippoSyncthreads">hippo: proc hippoSyncthreads()</a></li>
+          </ul></dd>
+<dt><a name="hipStreamCreate" href="#hipStreamCreate"><span>hipStreamCreate:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipStreamCreate(stream: ptr hipStream_t): hipError_t" href="hippo.html#hipStreamCreate%2Cptr.hipStream_t">hippo: proc hipStreamCreate(stream: ptr hipStream_t): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipStreamDestroy" href="#hipStreamDestroy"><span>hipStreamDestroy:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipStreamDestroy(stream: hipStream_t): hipError_t" href="hippo.html#hipStreamDestroy%2ChipStream_t">hippo: proc hipStreamDestroy(stream: hipStream_t): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipStreamSynchronize" href="#hipStreamSynchronize"><span>hipStreamSynchronize:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipStreamSynchronize(stream: hipStream_t): hipError_t" href="hippo.html#hipStreamSynchronize%2ChipStream_t">hippo: proc hipStreamSynchronize(stream: hipStream_t): hipError_t</a></li>
           </ul></dd>
 <dt><a name="hipStream_t" href="#hipStream_t"><span>hipStream_t:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -378,7 +502,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-31 21:43:19 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-02-01 04:26:13 UTC</small>
       </div>
     </div>
   </div>
