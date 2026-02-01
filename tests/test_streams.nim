@@ -1,7 +1,7 @@
 # test cuda / hip streams
 
 import
-  std/[unittest, random], hippo
+  std/[unittest, random], hippo, ./utils
 
 const
   N = 1024 * 1024
@@ -22,15 +22,13 @@ proc addKernel(a, b, c: ptr[cint]) {.hippoGlobal.} =
     cArray[tid] = ((as_val + bs_val) / 2).cint
 
 suite "Streams":
-  test "single stream test":
-    when HippoRuntime == "SIMPLE":
-      skip()
+  testSkipPlatforms "single stream test", "SIMPLE":
 
     var props: HippoDeviceProp
     let device = hippoGetDevice()
     hippoGetDeviceProperties(props, device)
     if props.deviceOverlap == 0:
-      skip()
+      raise newException(Exception, "Device does not support overlap")
 
     # Create stream
     let stream = hippoStreamCreate()
@@ -61,8 +59,8 @@ suite "Streams":
     # Process data in chunks
     for i in countup(0, FULL_DATA_SIZE - N, N):
       # Copy input data to device asynchronously
-      hippoMemcpyAsync(dev_a.p, addr host_a[i], sizeof(cint) * N, hipMemcpyHostToDevice, stream)
-      hippoMemcpyAsync(dev_b.p, addr host_b[i], sizeof(cint) * N, hipMemcpyHostToDevice, stream)
+      hippoMemcpyAsync(dev_a.p, addr host_a[i], sizeof(cint) * N, HippoMemcpyHostToDevice, stream)
+      hippoMemcpyAsync(dev_b.p, addr host_b[i], sizeof(cint) * N, HippoMemcpyHostToDevice, stream)
 
       # Launch kernel on stream
       hippoLaunchKernel(
@@ -74,7 +72,7 @@ suite "Streams":
       )
 
       # Copy results back to host asynchronously
-      hippoMemcpyAsync(addr host_c[i], dev_c.p, sizeof(cint) * N, hipMemcpyDeviceToHost, stream)
+      hippoMemcpyAsync(addr host_c[i], dev_c.p, sizeof(cint) * N, HippoMemcpyDeviceToHost, stream)
 
     hippoEventRecord(stopEvent, stream)
 
@@ -107,15 +105,13 @@ suite "Streams":
     hippoEventDestroy(stopEvent)
     hippoStreamDestroy(stream)
 
-  test "multi stream test":
-    when HippoRuntime == "SIMPLE":
-      skip()
+  testSkipPlatforms "multi stream test", "SIMPLE":
 
     var props: HippoDeviceProp
     let device = hippoGetDevice()
     hippoGetDeviceProperties(props, device)
     if props.deviceOverlap == 0:
-      skip()
+      raise newException(Exception, "Device does not support overlap")
 
     let stream0 = hippoStreamCreate()
     let stream1 = hippoStreamCreate()
@@ -144,10 +140,10 @@ suite "Streams":
     hippoEventRecord(startEvent)
 
     for i in countup(0, FULL_DATA_SIZE - (N * 2), N * 2):
-      hippoMemcpyAsync(dev_a0.p, addr host_a[i], sizeof(cint) * N, hipMemcpyHostToDevice, stream0)
-      hippoMemcpyAsync(dev_a1.p, addr host_a[i + N], sizeof(cint) * N, hipMemcpyHostToDevice, stream1)
-      hippoMemcpyAsync(dev_b0.p, addr host_b[i], sizeof(cint) * N, hipMemcpyHostToDevice, stream0)
-      hippoMemcpyAsync(dev_b1.p, addr host_b[i + N], sizeof(cint) * N, hipMemcpyHostToDevice, stream1)
+      hippoMemcpyAsync(dev_a0.p, addr host_a[i], sizeof(cint) * N, HippoMemcpyHostToDevice, stream0)
+      hippoMemcpyAsync(dev_a1.p, addr host_a[i + N], sizeof(cint) * N, HippoMemcpyHostToDevice, stream1)
+      hippoMemcpyAsync(dev_b0.p, addr host_b[i], sizeof(cint) * N, HippoMemcpyHostToDevice, stream0)
+      hippoMemcpyAsync(dev_b1.p, addr host_b[i + N], sizeof(cint) * N, HippoMemcpyHostToDevice, stream1)
 
       hippoLaunchKernel(
         addKernel,
@@ -164,8 +160,8 @@ suite "Streams":
         args = hippoArgs(dev_a1.p, dev_b1.p, dev_c1.p)
       )
 
-      hippoMemcpyAsync(addr host_c[i], dev_c0.p, sizeof(cint) * N, hipMemcpyDeviceToHost, stream0)
-      hippoMemcpyAsync(addr host_c[i + N], dev_c1.p, sizeof(cint) * N, hipMemcpyDeviceToHost, stream1)
+      hippoMemcpyAsync(addr host_c[i], dev_c0.p, sizeof(cint) * N, HippoMemcpyDeviceToHost, stream0)
+      hippoMemcpyAsync(addr host_c[i + N], dev_c1.p, sizeof(cint) * N, HippoMemcpyDeviceToHost, stream1)
 
     hippoEventRecord(stopEvent)
 
