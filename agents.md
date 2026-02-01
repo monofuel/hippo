@@ -85,6 +85,9 @@ This approach ensures full stack traces in CI environments and makes debugging s
 - benchmark is at ./tests/bench_fraggy.nim
 
 - do not `echo` in tests, they should not log anything when successful
+- calling `skip()` does NOT stop execution of the test. it just marks it as skipped but continues to run.
+- if a test should be skipped, use `testSkipPlatforms` to skip it on the appropriate platforms, from tests/utils.nim.
+
 ## CI
 
 - CI is ran on github and on gitea
