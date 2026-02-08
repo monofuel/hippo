@@ -7,7 +7,7 @@ type
   uint16_t* = uint16
   uint32_t* = uint32
   uint64_t* = uint64
-  cudaStream_t* = pointer
+  cudaStream_t* {.importcpp: "cudaStream_t", header: "cuda_runtime.h".} = pointer
   cudaError_t* {.importcpp: "cudaError_t", header: "cuda_runtime.h".} = cint
 
 type
@@ -93,7 +93,7 @@ proc cudaFreeHost*(p: pointer): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaFreeHost(@)".}
 
 # Events for Timing
-type cudaEvent_t* = pointer
+type cudaEvent_t* {.importcpp: "cudaEvent_t", header: "cuda_runtime.h".} = pointer
 proc cudaEventCreate*(event: ptr cudaEvent_t): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaEventCreate(@)".}
 proc cudaEventDestroy*(event: cudaEvent_t): cudaError_t {.
