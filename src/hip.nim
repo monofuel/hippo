@@ -104,16 +104,51 @@ proc hipHostFree*(p: pointer): hipError_t {.
 
 # Events for Timing
 type hipEvent_t* {.importcpp: "hipEvent_t", header: "hip/hip_runtime.h".} = pointer
+const
+  HippoEventDefault* = 0'u32
+  HippoEventBlockingSync* = 1'u32
+  HippoEventDisableTiming* = 2'u32
+  HippoEventInterprocess* = 4'u32
+  HippoErrorNotReady* = 600
+
 proc hipEventCreate*(event: ptr hipEvent_t): hipError_t {.
   header: "hip/hip_runtime.h", importcpp: "hipEventCreate(@)".}
+when defined(HIP_CPU_RUNTIME):
+  proc hipEventCreateWithFlags*(event: ptr hipEvent_t; flags: uint32_t): hipError_t =
+    ## HIP-CPU currently exposes this API but does not use event flags in practice.
+    discard flags
+    hipEventCreate(event)
+else:
+  proc hipEventCreateWithFlags*(event: ptr hipEvent_t; flags: uint32_t): hipError_t {.
+    header: "hip/hip_runtime.h", importcpp: "hipEventCreateWithFlags(@)".}
 proc hipEventDestroy*(event: hipEvent_t): hipError_t {.
   header: "hip/hip_runtime.h", importcpp: "hipEventDestroy(@)".}
 proc hipEventRecord*(event: hipEvent_t, stream: hipStream_t = nil): hipError_t {.
   header: "hip/hip_runtime.h", importcpp: "hipEventRecord(@)".}
 proc hipEventSynchronize*(event: hipEvent_t): hipError_t {.
   header: "hip/hip_runtime.h", importcpp: "hipEventSynchronize(@)".}
+when defined(HIP_CPU_RUNTIME):
+  proc hipEventQuery*(event: hipEvent_t): hipError_t =
+    ## HIP-CPU headers in this repo do not declare hipEventQuery.
+    ## Emulate readiness checks by synchronizing and returning success.
+    hipEventSynchronize(event)
+else:
+  proc hipEventQuery*(event: hipEvent_t): hipError_t {.
+    header: "hip/hip_runtime.h", importcpp: "hipEventQuery(@)".}
 proc hipEventElapsedTime*(ms: ptr cfloat, start: hipEvent_t, stop: hipEvent_t): hipError_t {.
   header: "hip/hip_runtime.h", importcpp: "hipEventElapsedTime(@)".}
+when defined(HIP_CPU_RUNTIME):
+  proc hipStreamWaitEvent*(stream: hipStream_t; event: hipEvent_t;
+                           flags: uint32_t = 0'u32): hipError_t =
+    ## HIP-CPU does not currently expose asynchronous stream wait semantics.
+    ## We emulate wait behavior with a direct event synchronize call.
+    discard stream
+    discard flags
+    hipEventSynchronize(event)
+else:
+  proc hipStreamWaitEvent*(stream: hipStream_t; event: hipEvent_t;
+                           flags: uint32_t = 0'u32): hipError_t {.
+    header: "hip/hip_runtime.h", importcpp: "hipStreamWaitEvent(@)".}
 
 # Device Properties
 type hipDeviceProp_t* {.importcpp: "hipDeviceProp_t", header: "hip/hip_runtime.h".} = object

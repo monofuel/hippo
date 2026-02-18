@@ -94,16 +94,30 @@ proc cudaFreeHost*(p: pointer): cudaError_t {.
 
 # Events for Timing
 type cudaEvent_t* = pointer
+const
+  HippoEventDefault* = 0'u32
+  HippoEventBlockingSync* = 1'u32
+  HippoEventDisableTiming* = 2'u32
+  HippoEventInterprocess* = 4'u32
+  HippoErrorNotReady* = 600
+
 proc cudaEventCreate*(event: ptr cudaEvent_t): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaEventCreate(@)".}
+proc cudaEventCreateWithFlags*(event: ptr cudaEvent_t; flags: uint32_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaEventCreateWithFlags(@)".}
 proc cudaEventDestroy*(event: cudaEvent_t): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaEventDestroy(@)".}
 proc cudaEventRecord*(event: cudaEvent_t; stream: cudaStream_t = nil): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaEventRecord(@)".}
+proc cudaEventQuery*(event: cudaEvent_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaEventQuery(@)".}
 proc cudaEventSynchronize*(event: cudaEvent_t): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaEventSynchronize(@)".}
 proc cudaEventElapsedTime*(ms: ptr cfloat; start: cudaEvent_t; stop: cudaEvent_t): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaEventElapsedTime(@)".}
+proc cudaStreamWaitEvent*(stream: cudaStream_t; event: cudaEvent_t;
+                          flags: uint32_t = 0'u32): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaStreamWaitEvent(@)".}
 
 # Device Properties
 type cudaDeviceProp* {.importcpp: "cudaDeviceProp", header: "cuda_runtime.h".} = object

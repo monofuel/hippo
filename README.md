@@ -131,7 +131,7 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
   - [ ] chapter 7 texture memory (this API changed in recent cuda, might skip)
   - [ ] chapter 8 graphics interoperability with [boxy](https://github.com/treeform/boxy/blob/master/examples/basic_glut.nim)
   - [ ] chapter 9 atomics
-  - [ ] chapter 10 streams
+  - [x] chapter 10 streams
   - [ ] chapter 11 multi-gpu
   - [ ] Advanced Atomics
 - [ ] setup CI runners for both nvidia & amd GPUs for testing binaries

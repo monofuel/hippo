@@ -219,6 +219,15 @@ template hippoStreamSynchronize*(stream: HippoStream) =
   else:
     handleError(hipStreamSynchronize(stream))
 
+template hippoStreamWaitEvent*(stream: HippoStream; event: pointer; flags: uint32 = 0'u32) =
+  ## Block stream work until an event is recorded and completed.
+  when HippoRuntime == "CUDA":
+    handleError(cudaStreamWaitEvent(stream, event, flags))
+  elif HippoRuntime == "SIMPLE":
+    discard
+  else:
+    handleError(hipStreamWaitEvent(stream, event, flags))
+
 # Async Memory Operations
 template hippoMemcpyAsync*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind, stream: HippoStream) =
   ## Asynchronous memory copy on a stream
@@ -258,6 +267,12 @@ elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
   type HippoEvent* = hipEvent_t
 else:
   type HippoEvent* = pointer
+  const
+    HippoEventDefault* = 0'u32
+    HippoEventBlockingSync* = 1'u32
+    HippoEventDisableTiming* = 2'u32
+    HippoEventInterprocess* = 4'u32
+    HippoErrorNotReady* = 600
 
 template hippoEventCreate*(): HippoEvent =
   ## Create a timing event.
@@ -279,6 +294,17 @@ template hippoEventDestroy*(event: HippoEvent) =
   else:
     handleError(hipEventDestroy(event))
 
+template hippoEventCreateWithFlags*(flags: uint32 = 0'u32): HippoEvent =
+  ## Create a timing event with explicit runtime flags.
+  var event: HippoEvent
+  when HippoRuntime == "CUDA":
+    handleError(cudaEventCreateWithFlags(addr event, flags))
+  elif HippoRuntime == "SIMPLE":
+    event = nil
+  else:
+    handleError(hipEventCreateWithFlags(addr event, flags))
+  event
+
 template hippoEventRecord*(event: HippoEvent, stream: HippoStream = nil) =
   ## Record an event on a stream.
   when HippoRuntime == "CUDA":
@@ -287,6 +313,27 @@ template hippoEventRecord*(event: HippoEvent, stream: HippoStream = nil) =
     discard
   else:
     handleError(hipEventRecord(event, stream))
+
+template hippoEventQuery*(event: HippoEvent): bool =
+  ## Return true when the event has completed and false when it is still pending.
+  ## On HIP-CPU, this behaves as a blocking synchronize because hipEventQuery is not declared.
+  block:
+    when HippoRuntime == "CUDA":
+      let err = cudaEventQuery(event)
+      if err == HippoErrorNotReady:
+        false
+      else:
+        handleError(err)
+        true
+    elif HippoRuntime == "SIMPLE":
+      true
+    else:
+      let err = hipEventQuery(event)
+      if err == HippoErrorNotReady:
+        false
+      else:
+        handleError(err)
+        true
 
 template hippoEventSynchronize*(event: HippoEvent) =
   ## Wait for an event to complete.
