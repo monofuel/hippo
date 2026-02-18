@@ -238,6 +238,223 @@ template hippoMemcpyAsync*(dst: pointer, src: pointer, size: int, kind: HippoMem
   else:
     handleError(hipMemcpyAsync(dst, src, size.csize_t, kind, stream))
 
+# Atomics
+template hippoAtomicAdd*(address: ptr[int32]; val: int32): int32 =
+  ## Atomically add and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicAdd(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicAdd(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicAdd*(address: ptr[uint32]; val: uint32): uint32 =
+  ## Atomically add and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicAdd(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicAdd(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicSub*(address: ptr[int32]; val: int32): int32 =
+  ## Atomically subtract and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicSub(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicSub(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicSub*(address: ptr[uint32]; val: uint32): uint32 =
+  ## Atomically subtract and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicSub(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicSub(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicExch*(address: ptr[int32]; val: int32): int32 =
+  ## Atomically exchange and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicExch(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicExch(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicExch*(address: ptr[uint32]; val: uint32): uint32 =
+  ## Atomically exchange and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicExch(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicExch(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicCAS*(address: ptr[int32]; compare: int32; val: int32): int32 =
+  ## Atomically compare-and-swap and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicCAS(address, compare, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicCAS(address, compare, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicCAS*(address: ptr[uint32]; compare: uint32; val: uint32): uint32 =
+  ## Atomically compare-and-swap and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicCAS(address, compare, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicCAS(address, compare, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicMin*(address: ptr[int32]; val: int32): int32 =
+  ## Atomically update with min and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicMin(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicMin(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicMin*(address: ptr[uint32]; val: uint32): uint32 =
+  ## Atomically update with min and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicMin(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicMin(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicMax*(address: ptr[int32]; val: int32): int32 =
+  ## Atomically update with max and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicMax(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicMax(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicMax*(address: ptr[uint32]; val: uint32): uint32 =
+  ## Atomically update with max and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicMax(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicMax(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicAnd*(address: ptr[int32]; val: int32): int32 =
+  ## Atomically AND and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicAnd(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicAnd(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicAnd*(address: ptr[uint32]; val: uint32): uint32 =
+  ## Atomically AND and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicAnd(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicAnd(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicOr*(address: ptr[int32]; val: int32): int32 =
+  ## Atomically OR and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicOr(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicOr(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicOr*(address: ptr[uint32]; val: uint32): uint32 =
+  ## Atomically OR and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicOr(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicOr(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicXor*(address: ptr[int32]; val: int32): int32 =
+  ## Atomically XOR and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicXor(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicXor(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicXor*(address: ptr[uint32]; val: uint32): uint32 =
+  ## Atomically XOR and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicXor(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicXor(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
 # Page-locked Host Memory
 template hippoHostAlloc*(size: int): pointer =
   ## Allocate page-locked host memory

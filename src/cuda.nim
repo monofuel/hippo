@@ -63,6 +63,44 @@ proc cudaDeviceSynchronize*(): cudaError_t {.header: "cuda_runtime.h",importcpp:
 proc cudaSyncthreads*() {.importcpp: "__syncthreads()", header: "cuda_runtime.h".}
 proc hippoSyncthreads*() {.importcpp: "__syncthreads()", header: "cuda_runtime.h".}
 
+# Atomics
+proc cudaAtomicAdd*(address: ptr int32; val: int32): int32 {.
+  header: "cuda_runtime.h", importcpp: "atomicAdd(@)".}
+proc cudaAtomicAdd*(address: ptr uint32; val: uint32): uint32 {.
+  header: "cuda_runtime.h", importcpp: "atomicAdd(@)".}
+proc cudaAtomicSub*(address: ptr int32; val: int32): int32 {.
+  header: "cuda_runtime.h", importcpp: "atomicSub(@)".}
+proc cudaAtomicSub*(address: ptr uint32; val: uint32): uint32 {.
+  header: "cuda_runtime.h", importcpp: "atomicSub(@)".}
+proc cudaAtomicExch*(address: ptr int32; val: int32): int32 {.
+  header: "cuda_runtime.h", importcpp: "atomicExch(@)".}
+proc cudaAtomicExch*(address: ptr uint32; val: uint32): uint32 {.
+  header: "cuda_runtime.h", importcpp: "atomicExch(@)".}
+proc cudaAtomicCAS*(address: ptr int32; compare: int32; val: int32): int32 {.
+  header: "cuda_runtime.h", importcpp: "atomicCAS(@)".}
+proc cudaAtomicCAS*(address: ptr uint32; compare: uint32; val: uint32): uint32 {.
+  header: "cuda_runtime.h", importcpp: "atomicCAS(@)".}
+proc cudaAtomicMin*(address: ptr int32; val: int32): int32 {.
+  header: "cuda_runtime.h", importcpp: "atomicMin(@)".}
+proc cudaAtomicMin*(address: ptr uint32; val: uint32): uint32 {.
+  header: "cuda_runtime.h", importcpp: "atomicMin(@)".}
+proc cudaAtomicMax*(address: ptr int32; val: int32): int32 {.
+  header: "cuda_runtime.h", importcpp: "atomicMax(@)".}
+proc cudaAtomicMax*(address: ptr uint32; val: uint32): uint32 {.
+  header: "cuda_runtime.h", importcpp: "atomicMax(@)".}
+proc cudaAtomicAnd*(address: ptr int32; val: int32): int32 {.
+  header: "cuda_runtime.h", importcpp: "atomicAnd(@)".}
+proc cudaAtomicAnd*(address: ptr uint32; val: uint32): uint32 {.
+  header: "cuda_runtime.h", importcpp: "atomicAnd(@)".}
+proc cudaAtomicOr*(address: ptr int32; val: int32): int32 {.
+  header: "cuda_runtime.h", importcpp: "atomicOr(@)".}
+proc cudaAtomicOr*(address: ptr uint32; val: uint32): uint32 {.
+  header: "cuda_runtime.h", importcpp: "atomicOr(@)".}
+proc cudaAtomicXor*(address: ptr int32; val: int32): int32 {.
+  header: "cuda_runtime.h", importcpp: "atomicXor(@)".}
+proc cudaAtomicXor*(address: ptr uint32; val: uint32): uint32 {.
+  header: "cuda_runtime.h", importcpp: "atomicXor(@)".}
+
 proc cudaLaunchKernelGGL*(
   function_address: proc;
   numBlocks: Dim3;
