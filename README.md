@@ -91,6 +91,16 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
 
 - If you want to build for CPU with `-d:"HippoRuntime:HIP_CPU"`, you must have intel tbb libraries installed. `yum install -y tbb-devel`
 
+### NVIDIA A10G Notes
+
+- On NVIDIA A10G (`sm_86`), set `NVCC_PREPEND_FLAGS="-arch=sm_86"` when compiling with `--cc:nvcc`.
+- This avoids PTX/runtime mismatches from nvcc defaults on newer CUDA toolchains.
+- Example:
+
+```bash
+NVCC_PREPEND_FLAGS="-arch=sm_86" nim cpp -r --cc:nvcc examples/vector_sum_cuda.nim
+```
+
 ### Required flags for HIP
 
 - You must compile with nim cpp for c++

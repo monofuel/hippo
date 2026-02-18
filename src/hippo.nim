@@ -471,7 +471,7 @@ template hippoLaunchKernel*(
   elif HippoRuntime == "CUDA":
     var kernelArgs: seq[pointer] = cast[seq[pointer]](args)
     result = cudaLaunchKernel(
-      kernel,
+      cast[pointer](kernel),
       gridDim,
       blockDim,
       addr kernelArgs[0],

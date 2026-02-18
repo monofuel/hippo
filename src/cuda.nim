@@ -7,7 +7,7 @@ type
   uint16_t* = uint16
   uint32_t* = uint32
   uint64_t* = uint64
-  cudaStream_t* = pointer
+  cudaStream_t* {.importcpp: "cudaStream_t", header: "cuda_runtime.h".} = pointer
   cudaError_t* {.importcpp: "cudaError_t", header: "cuda_runtime.h".} = cint
 
 type
@@ -93,14 +93,13 @@ proc cudaFreeHost*(p: pointer): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaFreeHost(@)".}
 
 # Events for Timing
-type cudaEvent_t* = pointer
+type cudaEvent_t* {.importcpp: "cudaEvent_t", header: "cuda_runtime.h".} = pointer
 const
   HippoEventDefault* = 0'u32
   HippoEventBlockingSync* = 1'u32
   HippoEventDisableTiming* = 2'u32
   HippoEventInterprocess* = 4'u32
   HippoErrorNotReady* = 600
-
 proc cudaEventCreate*(event: ptr cudaEvent_t): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaEventCreate(@)".}
 proc cudaEventCreateWithFlags*(event: ptr cudaEvent_t; flags: uint32_t): cudaError_t {.
