@@ -169,6 +169,51 @@
   <li><a class="reference" href="#handleError%2ChipError_t" title="handleError(err: hipError_t)">handleError(err: hipError_t)</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">hipAtomicAdd
+  <li><a class="reference" href="#hipAtomicAdd%2Cptr.int32%2Cint32" title="hipAtomicAdd(address: ptr int32; val: int32): int32">hipAtomicAdd(address: ptr int32; val: int32): int32</a></li>
+<li><a class="reference" href="#hipAtomicAdd%2Cptr.uint32%2Cuint32" title="hipAtomicAdd(address: ptr uint32; val: uint32): uint32">hipAtomicAdd(address: ptr uint32; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hipAtomicAnd
+  <li><a class="reference" href="#hipAtomicAnd%2Cptr.int32%2Cint32" title="hipAtomicAnd(address: ptr int32; val: int32): int32">hipAtomicAnd(address: ptr int32; val: int32): int32</a></li>
+<li><a class="reference" href="#hipAtomicAnd%2Cptr.uint32%2Cuint32" title="hipAtomicAnd(address: ptr uint32; val: uint32): uint32">hipAtomicAnd(address: ptr uint32; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hipAtomicCAS
+  <li><a class="reference" href="#hipAtomicCAS%2Cptr.int32%2Cint32%2Cint32" title="hipAtomicCAS(address: ptr int32; compare: int32; val: int32): int32">hipAtomicCAS(address: ptr int32; compare: int32; val: int32): int32</a></li>
+<li><a class="reference" href="#hipAtomicCAS%2Cptr.uint32%2Cuint32%2Cuint32" title="hipAtomicCAS(address: ptr uint32; compare: uint32; val: uint32): uint32">hipAtomicCAS(address: ptr uint32; compare: uint32; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hipAtomicExch
+  <li><a class="reference" href="#hipAtomicExch%2Cptr.int32%2Cint32" title="hipAtomicExch(address: ptr int32; val: int32): int32">hipAtomicExch(address: ptr int32; val: int32): int32</a></li>
+<li><a class="reference" href="#hipAtomicExch%2Cptr.uint32%2Cuint32" title="hipAtomicExch(address: ptr uint32; val: uint32): uint32">hipAtomicExch(address: ptr uint32; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hipAtomicMax
+  <li><a class="reference" href="#hipAtomicMax%2Cptr.int32%2Cint32" title="hipAtomicMax(address: ptr int32; val: int32): int32">hipAtomicMax(address: ptr int32; val: int32): int32</a></li>
+<li><a class="reference" href="#hipAtomicMax%2Cptr.uint32%2Cuint32" title="hipAtomicMax(address: ptr uint32; val: uint32): uint32">hipAtomicMax(address: ptr uint32; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hipAtomicMin
+  <li><a class="reference" href="#hipAtomicMin%2Cptr.int32%2Cint32" title="hipAtomicMin(address: ptr int32; val: int32): int32">hipAtomicMin(address: ptr int32; val: int32): int32</a></li>
+<li><a class="reference" href="#hipAtomicMin%2Cptr.uint32%2Cuint32" title="hipAtomicMin(address: ptr uint32; val: uint32): uint32">hipAtomicMin(address: ptr uint32; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hipAtomicOr
+  <li><a class="reference" href="#hipAtomicOr%2Cptr.int32%2Cint32" title="hipAtomicOr(address: ptr int32; val: int32): int32">hipAtomicOr(address: ptr int32; val: int32): int32</a></li>
+<li><a class="reference" href="#hipAtomicOr%2Cptr.uint32%2Cuint32" title="hipAtomicOr(address: ptr uint32; val: uint32): uint32">hipAtomicOr(address: ptr uint32; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hipAtomicSub
+  <li><a class="reference" href="#hipAtomicSub%2Cptr.int32%2Cint32" title="hipAtomicSub(address: ptr int32; val: int32): int32">hipAtomicSub(address: ptr int32; val: int32): int32</a></li>
+<li><a class="reference" href="#hipAtomicSub%2Cptr.uint32%2Cuint32" title="hipAtomicSub(address: ptr uint32; val: uint32): uint32">hipAtomicSub(address: ptr uint32; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hipAtomicXor
+  <li><a class="reference" href="#hipAtomicXor%2Cptr.int32%2Cint32" title="hipAtomicXor(address: ptr int32; val: int32): int32">hipAtomicXor(address: ptr int32; val: int32): int32</a></li>
+<li><a class="reference" href="#hipAtomicXor%2Cptr.uint32%2Cuint32" title="hipAtomicXor(address: ptr uint32; val: uint32): uint32">hipAtomicXor(address: ptr uint32; val: uint32): uint32</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">hipDeviceSynchronize
   <li><a class="reference" href="#hipDeviceSynchronize" title="hipDeviceSynchronize(): hipError_t">hipDeviceSynchronize(): hipError_t</a></li>
 
@@ -396,7 +441,52 @@
   <details open>
     <summary><a class="reference reference-toplevel" href="#18" id="68">Templates</a></summary>
     <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">hippoCos
+      <ul class="simple nested-toc-section">hippoAtomicAdd
+  <li><a class="reference" href="#hippoAtomicAdd.t%2Cptr.%2Cint32" title="hippoAtomicAdd(address: ptr [int32]; val: int32): int32">hippoAtomicAdd(address: ptr [int32]; val: int32): int32</a></li>
+<li><a class="reference" href="#hippoAtomicAdd.t%2Cptr.%2Cuint32" title="hippoAtomicAdd(address: ptr [uint32]; val: uint32): uint32">hippoAtomicAdd(address: ptr [uint32]; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hippoAtomicAnd
+  <li><a class="reference" href="#hippoAtomicAnd.t%2Cptr.%2Cint32" title="hippoAtomicAnd(address: ptr [int32]; val: int32): int32">hippoAtomicAnd(address: ptr [int32]; val: int32): int32</a></li>
+<li><a class="reference" href="#hippoAtomicAnd.t%2Cptr.%2Cuint32" title="hippoAtomicAnd(address: ptr [uint32]; val: uint32): uint32">hippoAtomicAnd(address: ptr [uint32]; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hippoAtomicCAS
+  <li><a class="reference" href="#hippoAtomicCAS.t%2Cptr.%2Cint32%2Cint32" title="hippoAtomicCAS(address: ptr [int32]; compare: int32; val: int32): int32">hippoAtomicCAS(address: ptr [int32]; compare: int32; val: int32): int32</a></li>
+<li><a class="reference" href="#hippoAtomicCAS.t%2Cptr.%2Cuint32%2Cuint32" title="hippoAtomicCAS(address: ptr [uint32]; compare: uint32; val: uint32): uint32">hippoAtomicCAS(address: ptr [uint32]; compare: uint32; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hippoAtomicExch
+  <li><a class="reference" href="#hippoAtomicExch.t%2Cptr.%2Cint32" title="hippoAtomicExch(address: ptr [int32]; val: int32): int32">hippoAtomicExch(address: ptr [int32]; val: int32): int32</a></li>
+<li><a class="reference" href="#hippoAtomicExch.t%2Cptr.%2Cuint32" title="hippoAtomicExch(address: ptr [uint32]; val: uint32): uint32">hippoAtomicExch(address: ptr [uint32]; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hippoAtomicMax
+  <li><a class="reference" href="#hippoAtomicMax.t%2Cptr.%2Cint32" title="hippoAtomicMax(address: ptr [int32]; val: int32): int32">hippoAtomicMax(address: ptr [int32]; val: int32): int32</a></li>
+<li><a class="reference" href="#hippoAtomicMax.t%2Cptr.%2Cuint32" title="hippoAtomicMax(address: ptr [uint32]; val: uint32): uint32">hippoAtomicMax(address: ptr [uint32]; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hippoAtomicMin
+  <li><a class="reference" href="#hippoAtomicMin.t%2Cptr.%2Cint32" title="hippoAtomicMin(address: ptr [int32]; val: int32): int32">hippoAtomicMin(address: ptr [int32]; val: int32): int32</a></li>
+<li><a class="reference" href="#hippoAtomicMin.t%2Cptr.%2Cuint32" title="hippoAtomicMin(address: ptr [uint32]; val: uint32): uint32">hippoAtomicMin(address: ptr [uint32]; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hippoAtomicOr
+  <li><a class="reference" href="#hippoAtomicOr.t%2Cptr.%2Cint32" title="hippoAtomicOr(address: ptr [int32]; val: int32): int32">hippoAtomicOr(address: ptr [int32]; val: int32): int32</a></li>
+<li><a class="reference" href="#hippoAtomicOr.t%2Cptr.%2Cuint32" title="hippoAtomicOr(address: ptr [uint32]; val: uint32): uint32">hippoAtomicOr(address: ptr [uint32]; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hippoAtomicSub
+  <li><a class="reference" href="#hippoAtomicSub.t%2Cptr.%2Cint32" title="hippoAtomicSub(address: ptr [int32]; val: int32): int32">hippoAtomicSub(address: ptr [int32]; val: int32): int32</a></li>
+<li><a class="reference" href="#hippoAtomicSub.t%2Cptr.%2Cuint32" title="hippoAtomicSub(address: ptr [uint32]; val: uint32): uint32">hippoAtomicSub(address: ptr [uint32]; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hippoAtomicXor
+  <li><a class="reference" href="#hippoAtomicXor.t%2Cptr.%2Cint32" title="hippoAtomicXor(address: ptr [int32]; val: int32): int32">hippoAtomicXor(address: ptr [int32]; val: int32): int32</a></li>
+<li><a class="reference" href="#hippoAtomicXor.t%2Cptr.%2Cuint32" title="hippoAtomicXor(address: ptr [uint32]; val: uint32): uint32">hippoAtomicXor(address: ptr [uint32]; val: uint32): uint32</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hippoCos
   <li><a class="reference" href="#hippoCos.t%2Ccfloat" title="hippoCos(x: cfloat): cfloat">hippoCos(x: cfloat): cfloat</a></li>
 
 </ul>
@@ -587,8 +677,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L161" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L161" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L199" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L199" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -625,8 +715,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L154" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L154" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L192" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L192" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -645,8 +735,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L106" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L106" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L144" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L144" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -670,8 +760,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L362" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L362" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L579" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L579" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -680,8 +770,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L176" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L176" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L214" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L214" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -690,8 +780,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L267" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L267" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L484" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L484" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -700,8 +790,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L177" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L177" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L215" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L215" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -710,8 +800,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L175" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L175" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L213" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L213" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -800,8 +890,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L188" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L188" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L226" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L226" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -810,8 +900,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L189" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L189" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L227" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L227" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -820,8 +910,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L190" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L190" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L228" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L228" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -830,8 +920,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L191" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L191" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L229" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L229" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -846,8 +936,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L112" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L112" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L150" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L150" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -856,8 +946,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L109" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L109" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L147" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L147" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -866,8 +956,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L108" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L108" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L146" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L146" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -876,8 +966,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L110" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L110" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L148" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L148" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -886,8 +976,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L111" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L111" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L149" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L149" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -896,8 +986,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L184" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L184" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L222" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L222" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -906,8 +996,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L183" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L183" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L221" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L221" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -916,8 +1006,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L182" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L182" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L220" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L220" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -926,8 +1016,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L181" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L181" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L219" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L219" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -936,8 +1026,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L180" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L180" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L218" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L218" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -973,8 +1063,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L164" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L164" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L202" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L202" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -986,8 +1076,8 @@
   <dd>
     
     Automatically free device memory when the object goes out of scope
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L387" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L387" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L604" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L604" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1001,8 +1091,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L206" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L206" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L244" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L244" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1016,8 +1106,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L198" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L198" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L236" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L236" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1031,8 +1121,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L203" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L203" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L241" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L241" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1046,8 +1136,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L195" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L195" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L233" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L233" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1059,8 +1149,251 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L169" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L169" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L207" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L207" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hipAtomicAdd-procs-all">
+  <div id="hipAtomicAdd,ptr.int32,int32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicAdd%2Cptr.int32%2Cint32"><span class="Identifier">hipAtomicAdd</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicAdd(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L68" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L68" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hipAtomicAdd,ptr.uint32,uint32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicAdd%2Cptr.uint32%2Cuint32"><span class="Identifier">hipAtomicAdd</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicAdd(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L70" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L70" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hipAtomicAnd-procs-all">
+  <div id="hipAtomicAnd,ptr.int32,int32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicAnd%2Cptr.int32%2Cint32"><span class="Identifier">hipAtomicAnd</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicAnd(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L92" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L92" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hipAtomicAnd,ptr.uint32,uint32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicAnd%2Cptr.uint32%2Cuint32"><span class="Identifier">hipAtomicAnd</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicAnd(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L94" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L94" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hipAtomicCAS-procs-all">
+  <div id="hipAtomicCAS,ptr.int32,int32,int32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicCAS%2Cptr.int32%2Cint32%2Cint32"><span class="Identifier">hipAtomicCAS</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">compare</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicCAS(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L80" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L80" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hipAtomicCAS,ptr.uint32,uint32,uint32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicCAS%2Cptr.uint32%2Cuint32%2Cuint32"><span class="Identifier">hipAtomicCAS</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">compare</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicCAS(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L82" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L82" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hipAtomicExch-procs-all">
+  <div id="hipAtomicExch,ptr.int32,int32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicExch%2Cptr.int32%2Cint32"><span class="Identifier">hipAtomicExch</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicExch(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L76" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L76" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hipAtomicExch,ptr.uint32,uint32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicExch%2Cptr.uint32%2Cuint32"><span class="Identifier">hipAtomicExch</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicExch(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L78" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L78" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hipAtomicMax-procs-all">
+  <div id="hipAtomicMax,ptr.int32,int32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicMax%2Cptr.int32%2Cint32"><span class="Identifier">hipAtomicMax</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicMax(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L88" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L88" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hipAtomicMax,ptr.uint32,uint32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicMax%2Cptr.uint32%2Cuint32"><span class="Identifier">hipAtomicMax</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicMax(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L90" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L90" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hipAtomicMin-procs-all">
+  <div id="hipAtomicMin,ptr.int32,int32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicMin%2Cptr.int32%2Cint32"><span class="Identifier">hipAtomicMin</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicMin(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L84" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L84" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hipAtomicMin,ptr.uint32,uint32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicMin%2Cptr.uint32%2Cuint32"><span class="Identifier">hipAtomicMin</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicMin(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L86" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L86" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hipAtomicOr-procs-all">
+  <div id="hipAtomicOr,ptr.int32,int32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicOr%2Cptr.int32%2Cint32"><span class="Identifier">hipAtomicOr</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicOr(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L96" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L96" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hipAtomicOr,ptr.uint32,uint32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicOr%2Cptr.uint32%2Cuint32"><span class="Identifier">hipAtomicOr</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicOr(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L98" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L98" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hipAtomicSub-procs-all">
+  <div id="hipAtomicSub,ptr.int32,int32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicSub%2Cptr.int32%2Cint32"><span class="Identifier">hipAtomicSub</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicSub(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L72" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L72" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hipAtomicSub,ptr.uint32,uint32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicSub%2Cptr.uint32%2Cuint32"><span class="Identifier">hipAtomicSub</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicSub(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L74" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L74" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hipAtomicXor-procs-all">
+  <div id="hipAtomicXor,ptr.int32,int32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicXor%2Cptr.int32%2Cint32"><span class="Identifier">hipAtomicXor</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicXor(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L100" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L100" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hipAtomicXor,ptr.uint32,uint32">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipAtomicXor%2Cptr.uint32%2Cuint32"><span class="Identifier">hipAtomicXor</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span> {.
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;atomicXor(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L102" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L102" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1088,8 +1421,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L114" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L114" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L152" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L152" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1103,8 +1436,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L122" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L122" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L160" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L160" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1118,8 +1451,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L124" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L124" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L162" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L162" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1133,8 +1466,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L138" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L138" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L176" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L176" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1147,8 +1480,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L136" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L136" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L174" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L174" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1162,8 +1495,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L126" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L126" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L164" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L164" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1177,8 +1510,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L128" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L128" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L166" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L166" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1205,8 +1538,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L156" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L156" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L194" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L194" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1220,8 +1553,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L158" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L158" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L196" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L196" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1235,8 +1568,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L165" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L165" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L203" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L203" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1250,8 +1583,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L166" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L166" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L204" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L204" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1265,8 +1598,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L98" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L98" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L136" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L136" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1279,8 +1612,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L102" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L102" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L140" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L140" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1326,8 +1659,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L67" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L67" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L105" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L105" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1372,8 +1705,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L85" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L85" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L123" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L123" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1419,8 +1752,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L77" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L77" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L115" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L115" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1434,8 +1767,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L79" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L79" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L117" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L117" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1449,8 +1782,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L81" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L81" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L119" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L119" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1465,8 +1798,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L149" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L149" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L187" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L187" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1509,8 +1842,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L204" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L204" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L242" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L242" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1524,8 +1857,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L196" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L196" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L234" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L234" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1552,8 +1885,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L208" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L208" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L246" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L246" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1566,8 +1899,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L200" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L200" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L238" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L238" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1581,8 +1914,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L205" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L205" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L243" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L243" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1596,8 +1929,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L197" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L197" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L235" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L235" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1611,8 +1944,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L207" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L207" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L245" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L245" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1626,8 +1959,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L199" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L199" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L237" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L237" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1646,8 +1979,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L163" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L163" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L201" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L201" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1660,8 +1993,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L162" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L162" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L200" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L200" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1693,8 +2026,8 @@
   <dd>
     
     Automatically convert varargs for use with CUDA/HIP. CUDA/HIP expects an array of arguments or pointers depending on platform.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L626" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L626" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L843" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L843" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1706,8 +2039,8 @@
   <dd>
     
     Declared a variable as <tt class="docutils literal"><span class="pre"><span class="Identifier">__constant__</span></span></tt>. Constants are read-only globals that are cached on-chip. constants are useful for data that is being read by all threads in a warp at the same time. if each thread in a warp accesses different addresses in constant memory, the accesses are serialized and this may cause a 16x slowdown. eg: <tt class="docutils literal"><span class="pre"><span class="Keyword">const</span> <span class="Identifier">N</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">hippoConstant</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="DecNumber">1024</span></span></tt>
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L609" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L609" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L826" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L826" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1719,8 +2052,8 @@
   <dd>
     
     Declare fuctions for use on the <tt class="docutils literal"><span class="pre"><span class="Identifier">__device__</span></span></tt> (the gpu), to be called by either <tt class="docutils literal"><span class="pre"><span class="Identifier">device</span></span></tt> or <tt class="docutils literal"><span class="pre"><span class="Identifier">global</span></span></tt> functions.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L550" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L550" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L767" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L767" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1732,8 +2065,8 @@
   <dd>
     
     Declare a function as <tt class="docutils literal"><span class="pre"><span class="Identifier">__global__</span></span></tt>. global functions are called from the host and run on the device.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L494" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L494" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L711" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L711" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1745,8 +2078,8 @@
   <dd>
     
     Explicitly declare a function as a <tt class="docutils literal"><span class="pre"><span class="Identifier">__host__</span></span></tt> function (cpu side). All functions default to <tt class="docutils literal"><span class="pre"><span class="Identifier">host</span></span></tt> functions, so this is not required.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L565" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L565" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L782" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L782" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1758,8 +2091,8 @@
   <dd>
     
     Declare a function as both <tt class="docutils literal"><span class="pre"><span class="Identifier">__host__</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">__device__</span></span></tt>. This is useful for functions that are usable from either the host and the device. eg: <tt class="docutils literal"><span class="pre"><span class="Keyword">proc</span> <span class="Identifier">add</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Punctuation">:</span> <span class="Identifier">int</span><span class="Punctuation">,</span> <span class="Identifier">b</span><span class="Punctuation">:</span> <span class="Identifier">int</span><span class="Punctuation">)</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">hippoHostDevice</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Identifier">a</span> <span class="Operator">+</span> <span class="Identifier">b</span></span></tt>
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L579" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L579" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L796" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L796" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1771,8 +2104,8 @@
   <dd>
     
     Declared a variable as static shared memory <tt class="docutils literal"><span class="pre"><span class="Identifier">__shared__</span></span></tt>. Shared memory is shared between threads in the same block. It is faster than global memory, but is limited in size. They are located on-chip. eg: <tt class="docutils literal"><span class="pre"><span class="Keyword">var</span> <span class="Identifier">cache</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">hippoShared</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">array</span><span class="Punctuation">[</span><span class="DecNumber">256</span><span class="Punctuation">,</span> <span class="Identifier">float</span><span class="Punctuation">]</span></span></tt>
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L594" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L594" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L811" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L811" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1784,14 +2117,221 @@
 <div class="section" id="18">
   <h1><a class="toc-backref" href="#18">Templates</a></h1>
   <dl class="item">
-    <div id="hippoCos-templates-all">
+    <div id="hippoAtomicAdd-templates-all">
+  <div id="hippoAtomicAdd.t,ptr.,int32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicAdd.t%2Cptr.%2Cint32"><span class="Identifier">hippoAtomicAdd</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span></pre></dt>
+  <dd>
+    
+    Atomically add and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L242" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L242" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hippoAtomicAdd.t,ptr.,uint32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicAdd.t%2Cptr.%2Cuint32"><span class="Identifier">hippoAtomicAdd</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">uint32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span></pre></dt>
+  <dd>
+    
+    Atomically add and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L254" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L254" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hippoAtomicAnd-templates-all">
+  <div id="hippoAtomicAnd.t,ptr.,int32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicAnd.t%2Cptr.%2Cint32"><span class="Identifier">hippoAtomicAnd</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span></pre></dt>
+  <dd>
+    
+    Atomically AND and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L386" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L386" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hippoAtomicAnd.t,ptr.,uint32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicAnd.t%2Cptr.%2Cuint32"><span class="Identifier">hippoAtomicAnd</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">uint32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span></pre></dt>
+  <dd>
+    
+    Atomically AND and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L398" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L398" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hippoAtomicCAS-templates-all">
+  <div id="hippoAtomicCAS.t,ptr.,int32,int32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicCAS.t%2Cptr.%2Cint32%2Cint32"><span class="Identifier">hippoAtomicCAS</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">compare</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span></pre></dt>
+  <dd>
+    
+    Atomically compare-and-swap and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L314" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L314" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hippoAtomicCAS.t,ptr.,uint32,uint32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicCAS.t%2Cptr.%2Cuint32%2Cuint32"><span class="Identifier">hippoAtomicCAS</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">uint32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">compare</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span></pre></dt>
+  <dd>
+    
+    Atomically compare-and-swap and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L326" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L326" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hippoAtomicExch-templates-all">
+  <div id="hippoAtomicExch.t,ptr.,int32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicExch.t%2Cptr.%2Cint32"><span class="Identifier">hippoAtomicExch</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span></pre></dt>
+  <dd>
+    
+    Atomically exchange and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L290" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L290" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hippoAtomicExch.t,ptr.,uint32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicExch.t%2Cptr.%2Cuint32"><span class="Identifier">hippoAtomicExch</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">uint32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span></pre></dt>
+  <dd>
+    
+    Atomically exchange and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L302" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L302" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hippoAtomicMax-templates-all">
+  <div id="hippoAtomicMax.t,ptr.,int32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicMax.t%2Cptr.%2Cint32"><span class="Identifier">hippoAtomicMax</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span></pre></dt>
+  <dd>
+    
+    Atomically update with max and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L362" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L362" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hippoAtomicMax.t,ptr.,uint32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicMax.t%2Cptr.%2Cuint32"><span class="Identifier">hippoAtomicMax</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">uint32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span></pre></dt>
+  <dd>
+    
+    Atomically update with max and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L374" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L374" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hippoAtomicMin-templates-all">
+  <div id="hippoAtomicMin.t,ptr.,int32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicMin.t%2Cptr.%2Cint32"><span class="Identifier">hippoAtomicMin</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span></pre></dt>
+  <dd>
+    
+    Atomically update with min and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L338" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L338" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hippoAtomicMin.t,ptr.,uint32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicMin.t%2Cptr.%2Cuint32"><span class="Identifier">hippoAtomicMin</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">uint32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span></pre></dt>
+  <dd>
+    
+    Atomically update with min and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L350" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L350" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hippoAtomicOr-templates-all">
+  <div id="hippoAtomicOr.t,ptr.,int32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicOr.t%2Cptr.%2Cint32"><span class="Identifier">hippoAtomicOr</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span></pre></dt>
+  <dd>
+    
+    Atomically OR and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L410" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L410" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hippoAtomicOr.t,ptr.,uint32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicOr.t%2Cptr.%2Cuint32"><span class="Identifier">hippoAtomicOr</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">uint32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span></pre></dt>
+  <dd>
+    
+    Atomically OR and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L422" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L422" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hippoAtomicSub-templates-all">
+  <div id="hippoAtomicSub.t,ptr.,int32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicSub.t%2Cptr.%2Cint32"><span class="Identifier">hippoAtomicSub</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span></pre></dt>
+  <dd>
+    
+    Atomically subtract and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L266" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L266" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hippoAtomicSub.t,ptr.,uint32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicSub.t%2Cptr.%2Cuint32"><span class="Identifier">hippoAtomicSub</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">uint32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span></pre></dt>
+  <dd>
+    
+    Atomically subtract and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L278" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L278" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hippoAtomicXor-templates-all">
+  <div id="hippoAtomicXor.t,ptr.,int32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicXor.t%2Cptr.%2Cint32"><span class="Identifier">hippoAtomicXor</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span></pre></dt>
+  <dd>
+    
+    Atomically XOR and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L434" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L434" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hippoAtomicXor.t,ptr.,uint32">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoAtomicXor.t%2Cptr.%2Cuint32"><span class="Identifier">hippoAtomicXor</span></a><span class="Other">(</span><span class="Identifier">address</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Other">[</span><span class="Identifier">uint32</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint32</span></pre></dt>
+  <dd>
+    
+    Atomically XOR and return the previous value.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L446" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L446" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hippoCos-templates-all">
   <div id="hippoCos.t,cfloat">
   <dt><pre><span class="Keyword">template</span> <a href="#hippoCos.t%2Ccfloat"><span class="Identifier">hippoCos</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cfloat</span></pre></dt>
   <dd>
     
     Cosine function for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L699" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L699" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L916" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L916" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1803,8 +2343,8 @@
   <dd>
     
     Create a timing event.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L277" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L277" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L494" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L494" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1816,8 +2356,8 @@
   <dd>
     
     Create a timing event with explicit runtime flags.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L297" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L297" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L514" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L514" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1829,8 +2369,8 @@
   <dd>
     
     Destroy a timing event.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L288" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L288" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L505" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L505" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1842,8 +2382,8 @@
   <dd>
     
     Get elapsed time between two events.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L347" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L347" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L564" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L564" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1855,8 +2395,8 @@
   <dd>
     
     Return true when the event has completed and false when it is still pending. On HIP-CPU, this behaves as a blocking synchronize because hipEventQuery is not declared.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L317" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L317" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L534" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L534" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1868,8 +2408,8 @@
   <dd>
     
     Record an event on a stream.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L308" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L308" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L525" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L525" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1881,8 +2421,8 @@
   <dd>
     
     Wait for an event to complete.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L338" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L338" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L555" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L555" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1894,8 +2434,8 @@
   <dd>
     
     Exponential function (e^x) for double-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L659" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L659" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L876" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L876" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1904,8 +2444,8 @@
   <dd>
     
     Exponential function (e^x) for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L649" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L649" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L866" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L866" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1930,8 +2470,8 @@
   <dd>
     
     Get the current device index.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L367" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L367" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L584" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L584" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1943,8 +2483,8 @@
   <dd>
     
     Get device properties for the given device.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L378" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L378" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L595" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L595" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1956,8 +2496,8 @@
   <dd>
     
     Allocate page-locked host memory
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L242" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L242" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L459" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L459" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1969,8 +2509,8 @@
   <dd>
     
     Free page-locked host memory.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L254" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L254" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L471" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L471" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1987,8 +2527,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L437" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L437" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L654" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L654" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2000,8 +2540,8 @@
   <dd>
     
     Natural logarithm for double-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L679" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L679" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L896" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L896" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2010,8 +2550,8 @@
   <dd>
     
     Natural logarithm for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L669" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L669" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L886" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L886" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2109,8 +2649,8 @@
   <dd>
     
     Power function (base^exp) for double-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L729" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L729" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L946" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L946" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2119,8 +2659,8 @@
   <dd>
     
     Power function (base^exp) for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L719" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L719" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L936" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L936" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2132,8 +2672,8 @@
   <dd>
     
     Sine function for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L689" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L689" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L906" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L906" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2145,8 +2685,8 @@
   <dd>
     
     Square root function for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L709" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L709" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L926" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L926" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2228,7 +2768,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-02-18 04:41:47 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-02-19 00:51:13 UTC</small>
       </div>
     </div>
   </div>
