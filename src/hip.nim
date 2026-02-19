@@ -64,6 +64,44 @@ proc hipDeviceSynchronize*(): hipError_t {.header: "hip/hip_runtime.h",importcpp
 proc hipSyncthreads*() {.importcpp: "__syncthreads()", header: "hip/hip_runtime.h".}
 proc hippoSyncthreads*() {.importcpp: "__syncthreads()", header: "hip/hip_runtime.h".}
 
+# Atomics
+proc hipAtomicAdd*(address: ptr int32; val: int32): int32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicAdd(@)".}
+proc hipAtomicAdd*(address: ptr uint32; val: uint32): uint32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicAdd(@)".}
+proc hipAtomicSub*(address: ptr int32; val: int32): int32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicSub(@)".}
+proc hipAtomicSub*(address: ptr uint32; val: uint32): uint32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicSub(@)".}
+proc hipAtomicExch*(address: ptr int32; val: int32): int32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicExch(@)".}
+proc hipAtomicExch*(address: ptr uint32; val: uint32): uint32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicExch(@)".}
+proc hipAtomicCAS*(address: ptr int32; compare: int32; val: int32): int32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicCAS(@)".}
+proc hipAtomicCAS*(address: ptr uint32; compare: uint32; val: uint32): uint32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicCAS(@)".}
+proc hipAtomicMin*(address: ptr int32; val: int32): int32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicMin(@)".}
+proc hipAtomicMin*(address: ptr uint32; val: uint32): uint32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicMin(@)".}
+proc hipAtomicMax*(address: ptr int32; val: int32): int32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicMax(@)".}
+proc hipAtomicMax*(address: ptr uint32; val: uint32): uint32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicMax(@)".}
+proc hipAtomicAnd*(address: ptr int32; val: int32): int32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicAnd(@)".}
+proc hipAtomicAnd*(address: ptr uint32; val: uint32): uint32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicAnd(@)".}
+proc hipAtomicOr*(address: ptr int32; val: int32): int32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicOr(@)".}
+proc hipAtomicOr*(address: ptr uint32; val: uint32): uint32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicOr(@)".}
+proc hipAtomicXor*(address: ptr int32; val: int32): int32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicXor(@)".}
+proc hipAtomicXor*(address: ptr uint32; val: uint32): uint32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicXor(@)".}
+
 proc hipLaunchKernelGGL*(
   function_address: proc;
   numBlocks: Dim3;

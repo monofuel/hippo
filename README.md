@@ -137,10 +137,10 @@ NVCC_PREPEND_FLAGS="-arch=sm_86" nim cpp -r --cc:nvcc examples/vector_sum_cuda.n
 - [ ] Ensure that every example from the book "CUDA by Example" can be run with this library
   - [x] chapter 4 vector + julia set
   - [x] chapter 5 shared memory + thread syncing dot product
-  - [ ] chapter 6 constant memory + events
+  - [x] chapter 6 constant memory + events
   - [ ] chapter 7 texture memory (this API changed in recent cuda, might skip)
   - [ ] chapter 8 graphics interoperability with [boxy](https://github.com/treeform/boxy/blob/master/examples/basic_glut.nim)
-  - [ ] chapter 9 atomics
+  - [x] chapter 9 atomics
   - [x] chapter 10 streams
   - [ ] chapter 11 multi-gpu
   - [ ] Advanced Atomics
