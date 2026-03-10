@@ -951,3 +951,13 @@ template hippoPow*(base: cdouble, exp: cdouble): cdouble =
     cdouble(math.pow(float(base), float(exp)))
   else: # HIP, HIP_CPU
     pow(base, exp)
+
+template hippoHalfToFloat*(h: uint16): cfloat =
+  ## Convert IEEE 754 half-precision (uint16) to float32.
+  ## Uses hardware intrinsic on HIP/CUDA, software fallback on SIMPLE.
+  halfToFloat(h)
+
+template hippoFloatToHalf*(f: cfloat): uint16 =
+  ## Convert float32 to IEEE 754 half-precision (uint16).
+  ## Uses hardware intrinsic on HIP/CUDA, software fallback on SIMPLE.
+  floatToHalf(f)

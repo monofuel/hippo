@@ -237,6 +237,14 @@ proc cosf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "cosf(@)
 proc sqrtf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "sqrtf(@)".}
 proc powf*(base: cfloat, exp: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "powf(@)".}
 
+# Half-precision (float16) conversion intrinsics
+proc halfToFloat*(h: uint16): cfloat {.header: "hip/hip_fp16.h",
+    importcpp: "[&]{ __half_raw r; r.x = (#); return __half2float(r); }()".}
+  ## Convert IEEE 754 half-precision (uint16) to float32 using HIP hardware intrinsic.
+proc floatToHalf*(f: cfloat): uint16 {.header: "hip/hip_fp16.h",
+    importcpp: "__half_raw(__float2half(#)).x".}
+  ## Convert float32 to IEEE 754 half-precision (uint16) using HIP hardware intrinsic.
+
 # Double-precision floating-point math functions
 proc exp*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "exp(@)".}
 proc log*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "log(@)".}

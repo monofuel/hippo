@@ -348,6 +348,37 @@ template hippoSyncthreads*() {.dirty.} =
       release(barrier.lock)
       yield true
 
+# Half-precision (float16) conversion — software fallback via bit manipulation
+proc halfToFloat*(h: uint16): cfloat =
+  ## Convert IEEE 754 half-precision (uint16) to float32.
+  let s = uint32(h shr 15)
+  let e = uint32((h shr 10) and 0x1F'u16)
+  let f = uint32(h and 0x3FF'u16)
+  if e == 0'u32:
+    if f == 0'u32:
+      return cast[cfloat](s shl 31)
+    # Subnormal: val = ±f * 2^-24
+    let fBits = (s shl 31) or ((127'u32 - 24) shl 23)
+    return cast[cfloat](fBits) * cfloat(f)
+  elif e == 31'u32:
+    # Inf/NaN → preserve sign, set float32 inf/nan exponent
+    let bits = (s shl 31) or 0x7F800000'u32 or (f shl 13)
+    return cast[cfloat](bits)
+  let bits = (s shl 31) or ((e + 112) shl 23) or (f shl 13)
+  cast[cfloat](bits)
+
+proc floatToHalf*(f: cfloat): uint16 =
+  ## Convert float32 to IEEE 754 half-precision (uint16).
+  let bits = cast[uint32](f)
+  let s = uint16((bits shr 16) and 0x8000'u32)
+  let e = int((bits shr 23) and 0xFF'u32) - 127 + 15
+  let m = bits and 0x7FFFFF'u32
+  if e <= 0:
+    return s  # flush to ±zero
+  if e >= 31:
+    return s or 0x7C00'u16  # ±infinity
+  s or uint16(e shl 10) or uint16(m shr 13)
+
 # Math functions matching HIP/CUDA interface
 # Single-precision floating-point math functions
 template sinf*(x: cfloat): cfloat =
