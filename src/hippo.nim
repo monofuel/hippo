@@ -666,12 +666,12 @@ template hippoLaunchKernel*(
   ## If you need help debugging, you can call hippoSynchronize() to wait for the kernel to finish and report errors.
 
   when HippoRuntime == "HIP" and HipPlatform == "amd":
-    var kernelArgs: seq[pointer] = cast[seq[pointer]](args)
+    var kernelArgs = args  # stack-allocated array of ptr pointer
     result = hipLaunchKernel(
       cast[pointer](kernel),
       gridDim,
       blockDim,
-      addr kernelArgs[0],
+      cast[ptr pointer](addr kernelArgs[0]),
       sharedMemBytes,
       stream
     )
@@ -686,12 +686,12 @@ template hippoLaunchKernel*(
     )
     result = hipGetLastError()
   elif HippoRuntime == "CUDA":
-    var kernelArgs: seq[pointer] = cast[seq[pointer]](args)
+    var kernelArgs = args  # stack-allocated array of ptr pointer
     result = cudaLaunchKernel(
       cast[pointer](kernel),
       gridDim,
       blockDim,
-      addr kernelArgs[0],
+      cast[ptr pointer](addr kernelArgs[0]),
       sharedMemBytes,
       stream
     )
@@ -856,8 +856,7 @@ macro hippoArgs*(args: varargs[untyped]): untyped =
         quote do:
           cast[ptr pointer](addr `arg`)
       )
-    result = quote do:
-      @`seqNode`
+    result = seqNode  # stack-allocated array literal (no heap alloc)
 
 # -------------------
 # Hippo Math Functions
