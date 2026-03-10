@@ -1,4 +1,4 @@
-nimTitle	hippo	hippo.html	module src/hippo		0
+nimTitle	hippo	hippo.html	module hippo		0
 nim	generateForLoopMacro	hippo.html#generateForLoopMacro.m,static[string],typedesc,untyped	macro generateForLoopMacro(name: static[string]; theType: typedesc; body: untyped): untyped		77
 nim	HippoRuntime	hippo.html#HippoRuntime	const HippoRuntime		7
 nim	HippoPlatform	hippo.html#HippoPlatform	const HippoPlatform		10
@@ -152,15 +152,15 @@ nim	hippoHostDevice	hippo.html#hippoHostDevice.m,untyped	macro hippoHostDevice(f
 nim	hippoShared	hippo.html#hippoShared.m,untyped	macro hippoShared(v: untyped): untyped		811
 nim	hippoConstant	hippo.html#hippoConstant.m,untyped	macro hippoConstant(v: untyped): untyped		826
 nim	hippoArgs	hippo.html#hippoArgs.m,varargs[untyped]	macro hippoArgs(args: varargs[untyped]): untyped		843
-nim	hippoExp	hippo.html#hippoExp.t,cfloat	template hippoExp(x: cfloat): cfloat		866
-nim	hippoExp	hippo.html#hippoExp.t,cdouble	template hippoExp(x: cdouble): cdouble		876
-nim	hippoLog	hippo.html#hippoLog.t,cfloat	template hippoLog(x: cfloat): cfloat		886
-nim	hippoLog	hippo.html#hippoLog.t,cdouble	template hippoLog(x: cdouble): cdouble		896
-nim	hippoSin	hippo.html#hippoSin.t,cfloat	template hippoSin(x: cfloat): cfloat		906
-nim	hippoCos	hippo.html#hippoCos.t,cfloat	template hippoCos(x: cfloat): cfloat		916
-nim	hippoSqrt	hippo.html#hippoSqrt.t,cfloat	template hippoSqrt(x: cfloat): cfloat		926
-nim	hippoPow	hippo.html#hippoPow.t,cfloat,cfloat	template hippoPow(base: cfloat; exp: cfloat): cfloat		936
-nim	hippoPow	hippo.html#hippoPow.t,cdouble,cdouble	template hippoPow(base: cdouble; exp: cdouble): cdouble		946
+nim	hippoExp	hippo.html#hippoExp.t,cfloat	template hippoExp(x: cfloat): cfloat		865
+nim	hippoExp	hippo.html#hippoExp.t,cdouble	template hippoExp(x: cdouble): cdouble		875
+nim	hippoLog	hippo.html#hippoLog.t,cfloat	template hippoLog(x: cfloat): cfloat		885
+nim	hippoLog	hippo.html#hippoLog.t,cdouble	template hippoLog(x: cdouble): cdouble		895
+nim	hippoSin	hippo.html#hippoSin.t,cfloat	template hippoSin(x: cfloat): cfloat		905
+nim	hippoCos	hippo.html#hippoCos.t,cfloat	template hippoCos(x: cfloat): cfloat		915
+nim	hippoSqrt	hippo.html#hippoSqrt.t,cfloat	template hippoSqrt(x: cfloat): cfloat		925
+nim	hippoPow	hippo.html#hippoPow.t,cfloat,cfloat	template hippoPow(base: cfloat; exp: cfloat): cfloat		935
+nim	hippoPow	hippo.html#hippoPow.t,cdouble,cdouble	template hippoPow(base: cdouble; exp: cdouble): cdouble		945
 nimgrp	hiplaunchkernel	hippo.html#hipLaunchKernel-procs-all	proc		57
 nimgrp	hipatomicexch	hippo.html#hipAtomicExch-procs-all	proc		76
 nimgrp	hipatomicmin	hippo.html#hipAtomicMin-procs-all	proc		84
@@ -172,14 +172,14 @@ nimgrp	hipatomiccas	hippo.html#hipAtomicCAS-procs-all	proc		80
 nimgrp	hipatomicsub	hippo.html#hipAtomicSub-procs-all	proc		72
 nimgrp	hipatomicadd	hippo.html#hipAtomicAdd-procs-all	proc		68
 nimgrp	hippoatomicxor	hippo.html#hippoAtomicXor-templates-all	template		434
-nimgrp	hippoexp	hippo.html#hippoExp-templates-all	template		866
+nimgrp	hippoexp	hippo.html#hippoExp-templates-all	template		865
 nimgrp	hippoatomicexch	hippo.html#hippoAtomicExch-templates-all	template		290
 nimgrp	hippoatomicand	hippo.html#hippoAtomicAnd-templates-all	template		386
 nimgrp	hippomemcpy	hippo.html#hippoMemcpy-templates-all	template		120
 nimgrp	hippoatomicadd	hippo.html#hippoAtomicAdd-templates-all	template		242
-nimgrp	hippopow	hippo.html#hippoPow-templates-all	template		936
+nimgrp	hippopow	hippo.html#hippoPow-templates-all	template		935
 nimgrp	hippoatomiccas	hippo.html#hippoAtomicCAS-templates-all	template		314
-nimgrp	hippolog	hippo.html#hippoLog-templates-all	template		886
+nimgrp	hippolog	hippo.html#hippoLog-templates-all	template		885
 nimgrp	hippoatomicmax	hippo.html#hippoAtomicMax-templates-all	template		362
 nimgrp	hippoatomicsub	hippo.html#hippoAtomicSub-templates-all	template		266
 nimgrp	hippoatomicmin	hippo.html#hippoAtomicMin-templates-all	template		338
