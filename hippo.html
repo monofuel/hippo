@@ -371,6 +371,11 @@
   <li><a class="reference" href="#powf%2Ccfloat%2Ccfloat" title="powf(base: cfloat; exp: cfloat): cfloat">powf(base: cfloat; exp: cfloat): cfloat</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">shfl
+  <li><a class="reference" href="#shfl%2Ccfloat%2Ccint" title="shfl(val: cfloat; srcLane: cint): cfloat">shfl(val: cfloat; srcLane: cint): cfloat</a></li>
+<li><a class="reference" href="#shfl%2Ccint%2Ccint" title="shfl(val: cint; srcLane: cint): cint">shfl(val: cint; srcLane: cint): cint</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">shflDown
   <li><a class="reference" href="#shflDown%2Ccfloat%2Ccint" title="shflDown(val: cfloat; delta: cint): cfloat">shflDown(val: cfloat; delta: cint): cfloat</a></li>
 <li><a class="reference" href="#shflDown%2Ccint%2Ccint" title="shflDown(val: cint; delta: cint): cint">shflDown(val: cint; delta: cint): cint</a></li>
@@ -611,6 +616,11 @@
 <ul class="simple nested-toc-section">hippoPow
   <li><a class="reference" href="#hippoPow.t%2Ccdouble%2Ccdouble" title="hippoPow(base: cdouble; exp: cdouble): cdouble">hippoPow(base: cdouble; exp: cdouble): cdouble</a></li>
 <li><a class="reference" href="#hippoPow.t%2Ccfloat%2Ccfloat" title="hippoPow(base: cfloat; exp: cfloat): cfloat">hippoPow(base: cfloat; exp: cfloat): cfloat</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hippoShfl
+  <li><a class="reference" href="#hippoShfl.t%2Ccfloat%2Cint" title="hippoShfl(val: cfloat; srcLane: int): cfloat">hippoShfl(val: cfloat; srcLane: int): cfloat</a></li>
+<li><a class="reference" href="#hippoShfl.t%2Ccint%2Cint" title="hippoShfl(val: cint; srcLane: int): cint">hippoShfl(val: cint; srcLane: int): cint</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">hippoShflDown
@@ -1084,8 +1094,8 @@
   <dd>
     
     Warp/wavefront size for the current backend.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L964" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L964" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L972" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L972" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1094,8 +1104,8 @@
   <dd>
     
     AMD wavefront size. Defaults to 32 (RDNA 3+). Set -d:WarpSize=64 for GCN/CDNA GPUs (e.g. MI250, MI300) which use wave64.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L256" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L256" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L262" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L262" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1139,8 +1149,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L264" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L264" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L270" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L270" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1169,8 +1179,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L261" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L261" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L267" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L267" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1918,8 +1928,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L262" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L262" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L268" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L268" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1961,8 +1971,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L266" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L266" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L272" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L272" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1977,6 +1987,31 @@
     
     <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L238" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L238" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="shfl-procs-all">
+  <div id="shfl,cfloat,cint">
+  <dt><pre><span class="Keyword">proc</span> <a href="#shfl%2Ccfloat%2Ccint"><span class="Identifier">shfl</span></a><span class="Other">(</span><span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">srcLane</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cfloat</span> {.<span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span>
+    <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;__shfl(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    Warp shuffle: read float32 from srcLane (broadcast).
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L255" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L255" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="shfl,cint,cint">
+  <dt><pre><span class="Keyword">proc</span> <a href="#shfl%2Ccint%2Ccint"><span class="Identifier">shfl</span></a><span class="Other">(</span><span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">srcLane</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span>
+    <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;__shfl(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    Warp shuffle: read int32 from srcLane (broadcast).
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L258" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L258" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2015,8 +2050,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L263" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L263" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L269" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L269" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2045,8 +2080,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L265" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L265" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L271" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L271" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2558,8 +2593,8 @@
   <dd>
     
     Convert float32 to IEEE 754 half-precision (uint16). Uses hardware intrinsic on HIP/CUDA, software fallback on SIMPLE.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L972" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L972" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L980" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L980" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2610,8 +2645,8 @@
   <dd>
     
     Convert IEEE 754 half-precision (uint16) to float32. Uses hardware intrinsic on HIP/CUDA, software fallback on SIMPLE.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L967" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L967" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L975" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L975" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2793,6 +2828,29 @@
 </div>
 
 </div>
+<div id="hippoShfl-templates-all">
+  <div id="hippoShfl.t,cfloat,int">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoShfl.t%2Ccfloat%2Cint"><span class="Identifier">hippoShfl</span></a><span class="Other">(</span><span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">srcLane</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cfloat</span></pre></dt>
+  <dd>
+    
+    Warp shuffle: read float32 from srcLane (broadcast).
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L964" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L964" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hippoShfl.t,cint,int">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoShfl.t%2Ccint%2Cint"><span class="Identifier">hippoShfl</span></a><span class="Other">(</span><span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">srcLane</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span></pre></dt>
+  <dd>
+    
+    Warp shuffle: read int32 from srcLane (broadcast).
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L968" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L968" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
 <div id="hippoShflDown-templates-all">
   <div id="hippoShflDown.t,cfloat,int">
   <dt><pre><span class="Keyword">template</span> <a href="#hippoShflDown.t%2Ccfloat%2Cint"><span class="Identifier">hippoShflDown</span></a><span class="Other">(</span><span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">delta</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cfloat</span></pre></dt>
@@ -2918,7 +2976,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-03-31 21:46:45 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-03-31 22:18:07 UTC</small>
       </div>
     </div>
   </div>
