@@ -952,6 +952,18 @@ template hippoPow*(base: cdouble, exp: cdouble): cdouble =
   else: # HIP, HIP_CPU
     pow(base, exp)
 
+template hippoShflDown*(val: cfloat, delta: int): cfloat =
+  ## Warp shuffle down for float32. Returns the value from the lane
+  ## `delta` positions below the calling lane within the same warp.
+  shflDown(val, delta.cint)
+
+template hippoShflDown*(val: cint, delta: int): cint =
+  ## Warp shuffle down for int32.
+  shflDown(val, delta.cint)
+
+const HippoWarpSize* = WarpSize
+  ## Warp/wavefront size for the current backend.
+
 template hippoHalfToFloat*(h: uint16): cfloat =
   ## Convert IEEE 754 half-precision (uint16) to float32.
   ## Uses hardware intrinsic on HIP/CUDA, software fallback on SIMPLE.

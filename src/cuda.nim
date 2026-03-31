@@ -215,6 +215,17 @@ proc floatToHalf*(f: cfloat): uint16 {.header: "cuda_fp16.h",
     importcpp: "__half_raw(__float2half(#)).x".}
   ## Convert float32 to IEEE 754 half-precision (uint16) using CUDA hardware intrinsic.
 
+# Warp shuffle intrinsics
+proc shflDown*(val: cfloat, delta: cint): cfloat {.header: "cuda_runtime.h",
+    importcpp: "__shfl_down_sync(0xFFFFFFFF, @)".}
+  ## Warp shuffle down for float32.
+proc shflDown*(val: cint, delta: cint): cint {.header: "cuda_runtime.h",
+    importcpp: "__shfl_down_sync(0xFFFFFFFF, @)".}
+  ## Warp shuffle down for int32.
+
+const WarpSize* = 32
+  ## NVIDIA warp size.
+
 # Double-precision floating-point math functions
 proc exp*(x: cdouble): cdouble {.header: "cuda_runtime.h", importcpp: "exp(@)".}
 proc log*(x: cdouble): cdouble {.header: "cuda_runtime.h", importcpp: "log(@)".}

@@ -245,6 +245,17 @@ proc floatToHalf*(f: cfloat): uint16 {.header: "hip/hip_fp16.h",
     importcpp: "__half_raw(__float2half(#)).x".}
   ## Convert float32 to IEEE 754 half-precision (uint16) using HIP hardware intrinsic.
 
+# Warp shuffle intrinsics
+proc shflDown*(val: cfloat, delta: cint): cfloat {.header: "hip/hip_runtime.h",
+    importcpp: "__shfl_down(@)".}
+  ## Warp shuffle down for float32.
+proc shflDown*(val: cint, delta: cint): cint {.header: "hip/hip_runtime.h",
+    importcpp: "__shfl_down(@)".}
+  ## Warp shuffle down for int32.
+
+const WarpSize* = 64
+  ## AMD wavefront size.
+
 # Double-precision floating-point math functions
 proc exp*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "exp(@)".}
 proc log*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "log(@)".}

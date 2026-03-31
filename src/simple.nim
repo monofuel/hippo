@@ -348,6 +348,15 @@ template hippoSyncthreads*() {.dirty.} =
       release(barrier.lock)
       yield true
 
+# Warp shuffle stubs — no-op in SIMPLE backend (single-threaded per "warp")
+proc shflDown*(val: cfloat, delta: cint): cfloat = val
+  ## Warp shuffle down stub; returns val unchanged.
+proc shflDown*(val: cint, delta: cint): cint = val
+  ## Warp shuffle down stub; returns val unchanged.
+
+const WarpSize* = 1
+  ## SIMPLE backend has no real warps.
+
 # Half-precision (float16) conversion — software fallback via bit manipulation
 proc halfToFloat*(h: uint16): cfloat =
   ## Convert IEEE 754 half-precision (uint16) to float32.
