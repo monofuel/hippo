@@ -133,6 +133,8 @@
 <li><a class="reference" href="#HippoMemcpyHostToHost" title="HippoMemcpyHostToHost = hipMemcpyHostToHost">HippoMemcpyHostToHost</a></li>
 <li><a class="reference" href="#HippoPlatform" title="HippoPlatform {.strdefine.} = &quot;&quot;">HippoPlatform</a></li>
 <li><a class="reference" href="#HippoRuntime" title="HippoRuntime {.strdefine.} = &quot;HIP&quot;">HippoRuntime</a></li>
+<li><a class="reference" href="#HippoWarpSize" title="HippoWarpSize = 32">HippoWarpSize</a></li>
+<li><a class="reference" href="#WarpSize" title="WarpSize {.intdefine.} = 32">WarpSize</a></li>
 
     </ul>
   </details>
@@ -163,6 +165,14 @@
 </ul>
 <ul class="simple nested-toc-section">expf
   <li><a class="reference" href="#expf%2Ccfloat" title="expf(x: cfloat): cfloat">expf(x: cfloat): cfloat</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">floatToHalf
+  <li><a class="reference" href="#floatToHalf%2Ccfloat" title="floatToHalf(f: cfloat): uint16">floatToHalf(f: cfloat): uint16</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">halfToFloat
+  <li><a class="reference" href="#halfToFloat%2Cuint16" title="halfToFloat(h: uint16): cfloat">halfToFloat(h: uint16): cfloat</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">handleError
@@ -361,6 +371,11 @@
   <li><a class="reference" href="#powf%2Ccfloat%2Ccfloat" title="powf(base: cfloat; exp: cfloat): cfloat">powf(base: cfloat; exp: cfloat): cfloat</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">shflDown
+  <li><a class="reference" href="#shflDown%2Ccfloat%2Ccint" title="shflDown(val: cfloat; delta: cint): cfloat">shflDown(val: cfloat; delta: cint): cfloat</a></li>
+<li><a class="reference" href="#shflDown%2Ccint%2Ccint" title="shflDown(val: cint; delta: cint): cint">shflDown(val: cint; delta: cint): cint</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">sin
   <li><a class="reference" href="#sin%2Ccdouble" title="sin(x: cdouble): cdouble">sin(x: cdouble): cdouble</a></li>
 
@@ -523,6 +538,10 @@
 <li><a class="reference" href="#hippoExp.t%2Ccfloat" title="hippoExp(x: cfloat): cfloat">hippoExp(x: cfloat): cfloat</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">hippoFloatToHalf
+  <li><a class="reference" href="#hippoFloatToHalf.t%2Ccfloat" title="hippoFloatToHalf(f: cfloat): uint16">hippoFloatToHalf(f: cfloat): uint16</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">hippoFree
   <li><a class="reference" href="#hippoFree.t%2Cpointer" title="hippoFree(p: pointer)">hippoFree(p: pointer)</a></li>
 
@@ -533,6 +552,10 @@
 </ul>
 <ul class="simple nested-toc-section">hippoGetDeviceProperties
   <li><a class="reference" href="#hippoGetDeviceProperties.t%2ChipDeviceProp_t%2Ccint" title="hippoGetDeviceProperties(prop: var HippoDeviceProp; device: cint)">hippoGetDeviceProperties(prop: var HippoDeviceProp; device: cint)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hippoHalfToFloat
+  <li><a class="reference" href="#hippoHalfToFloat.t%2Cuint16" title="hippoHalfToFloat(h: uint16): cfloat">hippoHalfToFloat(h: uint16): cfloat</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">hippoHostAlloc
@@ -588,6 +611,11 @@
 <ul class="simple nested-toc-section">hippoPow
   <li><a class="reference" href="#hippoPow.t%2Ccdouble%2Ccdouble" title="hippoPow(base: cdouble; exp: cdouble): cdouble">hippoPow(base: cdouble; exp: cdouble): cdouble</a></li>
 <li><a class="reference" href="#hippoPow.t%2Ccfloat%2Ccfloat" title="hippoPow(base: cfloat; exp: cfloat): cfloat">hippoPow(base: cfloat; exp: cfloat): cfloat</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">hippoShflDown
+  <li><a class="reference" href="#hippoShflDown.t%2Ccfloat%2Cint" title="hippoShflDown(val: cfloat; delta: int): cfloat">hippoShflDown(val: cfloat; delta: int): cfloat</a></li>
+<li><a class="reference" href="#hippoShflDown.t%2Ccint%2Cint" title="hippoShflDown(val: cint; delta: int): cint">hippoShflDown(val: cint; delta: int): cint</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">hippoSin
@@ -1051,6 +1079,26 @@
 
   </dd>
 </div>
+<div id="HippoWarpSize">
+  <dt><pre><a href="hippo.html#HippoWarpSize"><span class="Identifier">HippoWarpSize</span></a> <span class="Other">=</span> <span class="DecNumber">32</span></pre></dt>
+  <dd>
+    
+    Warp/wavefront size for the current backend.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L964" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L964" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="WarpSize">
+  <dt><pre><a href="hippo.html#WarpSize"><span class="Identifier">WarpSize</span></a> {.<span class="Identifier">intdefine</span>.} <span class="Other">=</span> <span class="DecNumber">32</span></pre></dt>
+  <dd>
+    
+    AMD wavefront size. Defaults to 32 (RDNA 3+). Set -d:WarpSize=64 for GCN/CDNA GPUs (e.g. MI250, MI300) which use wave64.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L256" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L256" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
 
   </dl>
 </div>
@@ -1091,8 +1139,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L244" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L244" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L264" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L264" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1121,8 +1169,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L241" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L241" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L261" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L261" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1138,6 +1186,34 @@
     
     <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L233" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L233" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="floatToHalf-procs-all">
+  <div id="floatToHalf,cfloat">
+  <dt><pre><span class="Keyword">proc</span> <a href="#floatToHalf%2Ccfloat"><span class="Identifier">floatToHalf</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint16</span> {.<span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_fp16.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;__half_raw(__float2half(#)).x&quot;</span><span class="Other">,</span>
+                                      <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    Convert float32 to IEEE 754 half-precision (uint16) using HIP hardware intrinsic.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L244" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L244" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="halfToFloat-procs-all">
+  <div id="halfToFloat,uint16">
+  <dt><pre><span class="Keyword">proc</span> <a href="#halfToFloat%2Cuint16"><span class="Identifier">halfToFloat</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cfloat</span> {.<span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_fp16.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;[&amp;]{ __half_raw r; r.x = (#); return __half2float(r); }()&quot;</span><span class="Other">,</span>
+                                      <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    Convert IEEE 754 half-precision (uint16) to float32 using HIP hardware intrinsic.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L241" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L241" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1842,8 +1918,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L242" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L242" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L262" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L262" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1885,8 +1961,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L246" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L246" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L266" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L266" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1906,6 +1982,31 @@
 </div>
 
 </div>
+<div id="shflDown-procs-all">
+  <div id="shflDown,cfloat,cint">
+  <dt><pre><span class="Keyword">proc</span> <a href="#shflDown%2Ccfloat%2Ccint"><span class="Identifier">shflDown</span></a><span class="Other">(</span><span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">delta</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cfloat</span> {.<span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span>
+    <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;__shfl_down(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    Warp shuffle down for float32.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L249" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L249" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="shflDown,cint,cint">
+  <dt><pre><span class="Keyword">proc</span> <a href="#shflDown%2Ccint%2Ccint"><span class="Identifier">shflDown</span></a><span class="Other">(</span><span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">delta</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span>
+    <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;__shfl_down(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    Warp shuffle down for int32.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L252" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L252" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
 <div id="sin-procs-all">
   <div id="sin,cdouble">
   <dt><pre><span class="Keyword">proc</span> <a href="#sin%2Ccdouble"><span class="Identifier">sin</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">cdouble</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cdouble</span> {.<span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span>
@@ -1914,8 +2015,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L243" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L243" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L263" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L263" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1944,8 +2045,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L245" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L245" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hip.nim#L265" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hip.nim#L265" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2451,6 +2552,19 @@
 </div>
 
 </div>
+<div id="hippoFloatToHalf-templates-all">
+  <div id="hippoFloatToHalf.t,cfloat">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoFloatToHalf.t%2Ccfloat"><span class="Identifier">hippoFloatToHalf</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint16</span></pre></dt>
+  <dd>
+    
+    Convert float32 to IEEE 754 half-precision (uint16). Uses hardware intrinsic on HIP/CUDA, software fallback on SIMPLE.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L972" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L972" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
 <div id="hippoFree-templates-all">
   <div id="hippoFree.t,pointer">
   <dt><pre><span class="Keyword">template</span> <a href="#hippoFree.t%2Cpointer"><span class="Identifier">hippoFree</span></a><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">)</span></pre></dt>
@@ -2485,6 +2599,19 @@
     Get device properties for the given device.
     <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L595" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L595" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="hippoHalfToFloat-templates-all">
+  <div id="hippoHalfToFloat.t,uint16">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoHalfToFloat.t%2Cuint16"><span class="Identifier">hippoHalfToFloat</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cfloat</span></pre></dt>
+  <dd>
+    
+    Convert IEEE 754 half-precision (uint16) to float32. Uses hardware intrinsic on HIP/CUDA, software fallback on SIMPLE.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L967" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L967" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2666,6 +2793,29 @@
 </div>
 
 </div>
+<div id="hippoShflDown-templates-all">
+  <div id="hippoShflDown.t,cfloat,int">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoShflDown.t%2Ccfloat%2Cint"><span class="Identifier">hippoShflDown</span></a><span class="Other">(</span><span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">;</span> <span class="Identifier">delta</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cfloat</span></pre></dt>
+  <dd>
+    
+    Warp shuffle down for float32. Returns the value from the lane <tt class="docutils literal"><span class="pre"><span class="Identifier">delta</span></span></tt> positions below the calling lane within the same warp.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L955" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L955" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="hippoShflDown.t,cint,int">
+  <dt><pre><span class="Keyword">template</span> <a href="#hippoShflDown.t%2Ccint%2Cint"><span class="Identifier">hippoShflDown</span></a><span class="Other">(</span><span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">delta</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span></pre></dt>
+  <dd>
+    
+    Warp shuffle down for int32.
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L960" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L960" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
 <div id="hippoSin-templates-all">
   <div id="hippoSin.t,cfloat">
   <dt><pre><span class="Keyword">template</span> <a href="#hippoSin.t%2Ccfloat"><span class="Identifier">hippoSin</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">cfloat</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cfloat</span></pre></dt>
@@ -2768,7 +2918,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-03-10 04:27:06 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-03-31 21:46:45 UTC</small>
       </div>
     </div>
   </div>

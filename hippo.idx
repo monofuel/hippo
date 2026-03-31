@@ -93,12 +93,17 @@ nim	sinf	hippo.html#sinf,cfloat	proc sinf(x: cfloat): cfloat		235
 nim	cosf	hippo.html#cosf,cfloat	proc cosf(x: cfloat): cfloat		236
 nim	sqrtf	hippo.html#sqrtf,cfloat	proc sqrtf(x: cfloat): cfloat		237
 nim	powf	hippo.html#powf,cfloat,cfloat	proc powf(base: cfloat; exp: cfloat): cfloat		238
-nim	exp	hippo.html#exp,cdouble	proc exp(x: cdouble): cdouble		241
-nim	log	hippo.html#log,cdouble	proc log(x: cdouble): cdouble		242
-nim	sin	hippo.html#sin,cdouble	proc sin(x: cdouble): cdouble		243
-nim	cos	hippo.html#cos,cdouble	proc cos(x: cdouble): cdouble		244
-nim	sqrt	hippo.html#sqrt,cdouble	proc sqrt(x: cdouble): cdouble		245
-nim	pow	hippo.html#pow,cdouble,cdouble	proc pow(base: cdouble; exp: cdouble): cdouble		246
+nim	halfToFloat	hippo.html#halfToFloat,uint16	proc halfToFloat(h: uint16): cfloat		241
+nim	floatToHalf	hippo.html#floatToHalf,cfloat	proc floatToHalf(f: cfloat): uint16		244
+nim	shflDown	hippo.html#shflDown,cfloat,cint	proc shflDown(val: cfloat; delta: cint): cfloat		249
+nim	shflDown	hippo.html#shflDown,cint,cint	proc shflDown(val: cint; delta: cint): cint		252
+nim	WarpSize	hippo.html#WarpSize	const WarpSize		256
+nim	exp	hippo.html#exp,cdouble	proc exp(x: cdouble): cdouble		261
+nim	log	hippo.html#log,cdouble	proc log(x: cdouble): cdouble		262
+nim	sin	hippo.html#sin,cdouble	proc sin(x: cdouble): cdouble		263
+nim	cos	hippo.html#cos,cdouble	proc cos(x: cdouble): cdouble		264
+nim	sqrt	hippo.html#sqrt,cdouble	proc sqrt(x: cdouble): cdouble		265
+nim	pow	hippo.html#pow,cdouble,cdouble	proc pow(base: cdouble; exp: cdouble): cdouble		266
 nim	hippoMalloc	hippo.html#hippoMalloc.t,int	template hippoMalloc(size: int): GpuRef		107
 nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,pointer,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)		120
 nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,GpuRef,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: GpuRef; size: int; kind: HippoMemcpyKind)		131
@@ -161,6 +166,11 @@ nim	hippoCos	hippo.html#hippoCos.t,cfloat	template hippoCos(x: cfloat): cfloat		
 nim	hippoSqrt	hippo.html#hippoSqrt.t,cfloat	template hippoSqrt(x: cfloat): cfloat		925
 nim	hippoPow	hippo.html#hippoPow.t,cfloat,cfloat	template hippoPow(base: cfloat; exp: cfloat): cfloat		935
 nim	hippoPow	hippo.html#hippoPow.t,cdouble,cdouble	template hippoPow(base: cdouble; exp: cdouble): cdouble		945
+nim	hippoShflDown	hippo.html#hippoShflDown.t,cfloat,int	template hippoShflDown(val: cfloat; delta: int): cfloat		955
+nim	hippoShflDown	hippo.html#hippoShflDown.t,cint,int	template hippoShflDown(val: cint; delta: int): cint		960
+nim	HippoWarpSize	hippo.html#HippoWarpSize	const HippoWarpSize		964
+nim	hippoHalfToFloat	hippo.html#hippoHalfToFloat.t,uint16	template hippoHalfToFloat(h: uint16): cfloat		967
+nim	hippoFloatToHalf	hippo.html#hippoFloatToHalf.t,cfloat	template hippoFloatToHalf(f: cfloat): uint16		972
 nimgrp	hiplaunchkernel	hippo.html#hipLaunchKernel-procs-all	proc		57
 nimgrp	hipatomicexch	hippo.html#hipAtomicExch-procs-all	proc		76
 nimgrp	hipatomicmin	hippo.html#hipAtomicMin-procs-all	proc		84
@@ -169,10 +179,12 @@ nimgrp	hipatomicmax	hippo.html#hipAtomicMax-procs-all	proc		88
 nimgrp	hipatomicand	hippo.html#hipAtomicAnd-procs-all	proc		92
 nimgrp	hipatomicxor	hippo.html#hipAtomicXor-procs-all	proc		100
 nimgrp	hipatomiccas	hippo.html#hipAtomicCAS-procs-all	proc		80
+nimgrp	shfldown	hippo.html#shflDown-procs-all	proc		249
 nimgrp	hipatomicsub	hippo.html#hipAtomicSub-procs-all	proc		72
 nimgrp	hipatomicadd	hippo.html#hipAtomicAdd-procs-all	proc		68
 nimgrp	hippoatomicxor	hippo.html#hippoAtomicXor-templates-all	template		434
 nimgrp	hippoexp	hippo.html#hippoExp-templates-all	template		865
+nimgrp	hipposhfldown	hippo.html#hippoShflDown-templates-all	template		955
 nimgrp	hippoatomicexch	hippo.html#hippoAtomicExch-templates-all	template		290
 nimgrp	hippoatomicand	hippo.html#hippoAtomicAnd-templates-all	template		386
 nimgrp	hippomemcpy	hippo.html#hippoMemcpy-templates-all	template		120
