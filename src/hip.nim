@@ -253,9 +253,9 @@ proc shflDown*(val: cint, delta: cint): cint {.header: "hip/hip_runtime.h",
     importcpp: "__shfl_down(@)".}
   ## Warp shuffle down for int32.
 
-const WarpSize* {.intdefine.} = 64
-  ## AMD wavefront size. Defaults to 64 (GCN/CDNA).
-  ## Set -d:WarpSize=32 for RDNA 3+ GPUs (gfx1100+) which use wave32 by default.
+const WarpSize* {.intdefine.} = 32
+  ## AMD wavefront size. Defaults to 32 (RDNA 3+).
+  ## Set -d:WarpSize=64 for GCN/CDNA GPUs (e.g. MI250, MI300) which use wave64.
 
 # Double-precision floating-point math functions
 proc exp*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "exp(@)".}
