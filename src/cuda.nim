@@ -222,6 +222,12 @@ proc shflDown*(val: cfloat, delta: cint): cfloat {.header: "cuda_runtime.h",
 proc shflDown*(val: cint, delta: cint): cint {.header: "cuda_runtime.h",
     importcpp: "__shfl_down_sync(0xFFFFFFFF, @)".}
   ## Warp shuffle down for int32.
+proc shfl*(val: cfloat, srcLane: cint): cfloat {.header: "cuda_runtime.h",
+    importcpp: "__shfl_sync(0xFFFFFFFF, @)".}
+  ## Warp shuffle: read float32 from srcLane (broadcast).
+proc shfl*(val: cint, srcLane: cint): cint {.header: "cuda_runtime.h",
+    importcpp: "__shfl_sync(0xFFFFFFFF, @)".}
+  ## Warp shuffle: read int32 from srcLane (broadcast).
 
 const WarpSize* = 32
   ## NVIDIA warp size.

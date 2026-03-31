@@ -353,6 +353,10 @@ proc shflDown*(val: cfloat, delta: cint): cfloat = val
   ## Warp shuffle down stub; returns val unchanged.
 proc shflDown*(val: cint, delta: cint): cint = val
   ## Warp shuffle down stub; returns val unchanged.
+proc shfl*(val: cfloat, srcLane: cint): cfloat = val
+  ## Warp shuffle stub; returns val unchanged.
+proc shfl*(val: cint, srcLane: cint): cint = val
+  ## Warp shuffle stub; returns val unchanged.
 
 const WarpSize* = 1
   ## SIMPLE backend has no real warps.

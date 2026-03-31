@@ -961,6 +961,14 @@ template hippoShflDown*(val: cint, delta: int): cint =
   ## Warp shuffle down for int32.
   shflDown(val, delta.cint)
 
+template hippoShfl*(val: cfloat, srcLane: int): cfloat =
+  ## Warp shuffle: read float32 from srcLane (broadcast).
+  shfl(val, srcLane.cint)
+
+template hippoShfl*(val: cint, srcLane: int): cint =
+  ## Warp shuffle: read int32 from srcLane (broadcast).
+  shfl(val, srcLane.cint)
+
 const HippoWarpSize* = WarpSize
   ## Warp/wavefront size for the current backend.
 

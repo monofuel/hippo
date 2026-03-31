@@ -252,6 +252,12 @@ proc shflDown*(val: cfloat, delta: cint): cfloat {.header: "hip/hip_runtime.h",
 proc shflDown*(val: cint, delta: cint): cint {.header: "hip/hip_runtime.h",
     importcpp: "__shfl_down(@)".}
   ## Warp shuffle down for int32.
+proc shfl*(val: cfloat, srcLane: cint): cfloat {.header: "hip/hip_runtime.h",
+    importcpp: "__shfl(@)".}
+  ## Warp shuffle: read float32 from srcLane (broadcast).
+proc shfl*(val: cint, srcLane: cint): cint {.header: "hip/hip_runtime.h",
+    importcpp: "__shfl(@)".}
+  ## Warp shuffle: read int32 from srcLane (broadcast).
 
 const WarpSize* {.intdefine.} = 32
   ## AMD wavefront size. Defaults to 32 (RDNA 3+).
