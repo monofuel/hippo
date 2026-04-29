@@ -273,7 +273,7 @@ proc wmmaF32_16x16x16_f16_w32*(a, b: WmmaHalf16, c: WmmaFloat8): WmmaFloat8
   {.importc: "__builtin_amdgcn_wmma_f32_16x16x16_f16_w32", nodecl.}
 
 proc wmmaSetF16*(v: var WmmaHalf16, idx: cint, val: cushort)
-  {.importcpp: "#[#] = *(const _Float16*)&#", nodecl.}
+  {.importcpp: "#[#] = ({unsigned short _t = #; *(_Float16*)&_t;})", nodecl.}
 
 proc wmmaGetF32*(v: WmmaFloat8, idx: cint): cfloat
   {.importcpp: "#[#]", nodecl.}
