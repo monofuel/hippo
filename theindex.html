@@ -16,13 +16,16 @@
 <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAB3RJTUUH4QQQEwksSS9ZWwAAAk1JREFUWMPtll2ITVEUx39nn/O7Y5qR8f05wtCUUr6ZIS++8pEnkZInPImneaCQ5METNdOkeFBKUhMPRIkHKfEuUZSUlGlKPN2TrgfncpvmnntnmlEyq1Z7t89/rf9a6+y99oZxGZf/XeIq61EdtgKXgdXA0xrYAvBjOIF1AI9zvjcC74BSpndrJPkBWDScTF8Aa4E3wDlgHbASaANmVqlcCnwHvgDvgVfAJ+AikAAvgfVZwLnSVZHZaOuKoQi3ZOMi4NkYkpe1p4J7A8BpYAD49hfIy/oqG0+hLomiKP2L5L+1ubn5115S+3OAn4EnwBlgMzCjyt6ZAnQCJ4A7wOs88iRJHvw50HoujuPBoCKwHWiosy8MdfZnAdcHk8dxXFJ3VQbQlCTJvRBCGdRbD4M6uc5glpY3eAihpN5S5w12diSEcCCEcKUO4ljdr15T76ur1FDDLIQQ3qv71EdDOe3Kxj3leRXyk+pxdWnFWod6Wt2bY3de3aSuUHcPBVimHs7mK9WrmeOF6lR1o9qnzskh2ar2qm1qizpfXaPeVGdlmGN5pb09qMxz1Xb1kLqgzn1RyH7JUXW52lr5e/Kqi9qpto7V1atuUzfnARrV7jEib1T76gG2qxdGmXyiekkt1GswPTtek0aBfJp6YySGBfWg2tPQ0FAYgf1stUfdmdcjarbYJEniKIq6gY/Aw+zWHAC+p2labGpqiorFYgGYCEzN7oQdQClN07O1/EfDyGgC0ALMBdYAi4FyK+4H3gLPsxfR1zRNi+NP7nH5J+QntnXe5B5mpfQAAAAASUVORK5CYII=">
 
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="nimdoc.out.css?v=2.2.8">
+<link rel="stylesheet" type="text/css" href="nimdoc.out.css?v=2.2.10">
 
 <!-- JS -->
-<script type="text/javascript" src="dochack.js?v=2.2.8"></script>
+<script type="text/javascript" src="dochack.js?v=2.2.10"></script>
 </head>
 <body>
   <div class="document" id="documentId">
+    <input type="checkbox" id="nav-toggle" hidden>
+    <label for="nav-toggle" id="nav-burger">&#9776;</label>
+    <label for="nav-toggle" id="nav-overlay"></label>
     <div class="container">
       <h1 class="title">Index</h1>
       Modules: <a href="hippo.html">hippo</a>.<br/><p /><h2>API symbols</h2>
@@ -582,6 +585,34 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: const HippoWarpSize" href="hippo.html#HippoWarpSize">hippo: const HippoWarpSize</a></li>
           </ul></dd>
+<dt><a name="hippoWmmaF32_16x16x16_f16" href="#hippoWmmaF32_16x16x16_f16"><span>hippoWmmaF32_16x16x16_f16:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoWmmaF32_16x16x16_f16(a, b: HippoWmmaHalf16; c: HippoWmmaFloat8): HippoWmmaFloat8" href="hippo.html#hippoWmmaF32_16x16x16_f16.t%2CWmmaHalf16%2CWmmaHalf16%2CWmmaFloat8">hippo: template hippoWmmaF32_16x16x16_f16(a, b: HippoWmmaHalf16; c: HippoWmmaFloat8): HippoWmmaFloat8</a></li>
+          </ul></dd>
+<dt><a name="HippoWmmaFloat8" href="#HippoWmmaFloat8"><span>HippoWmmaFloat8:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: type HippoWmmaFloat8" href="hippo.html#HippoWmmaFloat8">hippo: type HippoWmmaFloat8</a></li>
+          </ul></dd>
+<dt><a name="hippoWmmaGetF32" href="#hippoWmmaGetF32"><span>hippoWmmaGetF32:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoWmmaGetF32(v: HippoWmmaFloat8; idx: int): cfloat" href="hippo.html#hippoWmmaGetF32.t%2CWmmaFloat8%2Cint">hippo: template hippoWmmaGetF32(v: HippoWmmaFloat8; idx: int): cfloat</a></li>
+          </ul></dd>
+<dt><a name="HippoWmmaHalf16" href="#HippoWmmaHalf16"><span>HippoWmmaHalf16:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: type HippoWmmaHalf16" href="hippo.html#HippoWmmaHalf16">hippo: type HippoWmmaHalf16</a></li>
+          </ul></dd>
+<dt><a name="hippoWmmaSetF16" href="#hippoWmmaSetF16"><span>hippoWmmaSetF16:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoWmmaSetF16(v: var HippoWmmaHalf16; idx: int; val: uint16)" href="hippo.html#hippoWmmaSetF16.t%2CWmmaHalf16%2Cint%2Cuint16">hippo: template hippoWmmaSetF16(v: var HippoWmmaHalf16; idx: int; val: uint16)</a></li>
+          </ul></dd>
+<dt><a name="hippoWmmaSetF32" href="#hippoWmmaSetF32"><span>hippoWmmaSetF32:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoWmmaSetF32(v: var HippoWmmaFloat8; idx: int; val: cfloat)" href="hippo.html#hippoWmmaSetF32.t%2CWmmaFloat8%2Cint%2Ccfloat">hippo: template hippoWmmaSetF32(v: var HippoWmmaFloat8; idx: int; val: cfloat)</a></li>
+          </ul></dd>
+<dt><a name="hippoWmmaZeroF32" href="#hippoWmmaZeroF32"><span>hippoWmmaZeroF32:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoWmmaZeroF32(): HippoWmmaFloat8" href="hippo.html#hippoWmmaZeroF32.t">hippo: template hippoWmmaZeroF32(): HippoWmmaFloat8</a></li>
+          </ul></dd>
 <dt><a name="hipStreamCreate" href="#hipStreamCreate"><span>hipStreamCreate:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipStreamCreate(stream: ptr hipStream_t): hipError_t" href="hippo.html#hipStreamCreate%2Cptr.hipStream_t">hippo: proc hipStreamCreate(stream: ptr hipStream_t): hipError_t</a></li>
@@ -700,11 +731,39 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: const WarpSize" href="hippo.html#WarpSize">hippo: const WarpSize</a></li>
           </ul></dd>
+<dt><a name="wmmaF32_16x16x16_f16_w32" href="#wmmaF32_16x16x16_f16_w32"><span>wmmaF32_16x16x16_f16_w32:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc wmmaF32_16x16x16_f16_w32(a, b: WmmaHalf16; c: WmmaFloat8): WmmaFloat8" href="hippo.html#wmmaF32_16x16x16_f16_w32%2CWmmaHalf16%2CWmmaHalf16%2CWmmaFloat8">hippo: proc wmmaF32_16x16x16_f16_w32(a, b: WmmaHalf16; c: WmmaFloat8): WmmaFloat8</a></li>
+          </ul></dd>
+<dt><a name="WmmaFloat8" href="#WmmaFloat8"><span>WmmaFloat8:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: object WmmaFloat8" href="hippo.html#WmmaFloat8">hippo: object WmmaFloat8</a></li>
+          </ul></dd>
+<dt><a name="wmmaGetF32" href="#wmmaGetF32"><span>wmmaGetF32:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc wmmaGetF32(v: WmmaFloat8; idx: cint): cfloat" href="hippo.html#wmmaGetF32%2CWmmaFloat8%2Ccint">hippo: proc wmmaGetF32(v: WmmaFloat8; idx: cint): cfloat</a></li>
+          </ul></dd>
+<dt><a name="WmmaHalf16" href="#WmmaHalf16"><span>WmmaHalf16:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: object WmmaHalf16" href="hippo.html#WmmaHalf16">hippo: object WmmaHalf16</a></li>
+          </ul></dd>
+<dt><a name="wmmaSetF16" href="#wmmaSetF16"><span>wmmaSetF16:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc wmmaSetF16(v: var WmmaHalf16; idx: cint; val: cushort)" href="hippo.html#wmmaSetF16%2CWmmaHalf16%2Ccint%2Ccushort">hippo: proc wmmaSetF16(v: var WmmaHalf16; idx: cint; val: cushort)</a></li>
+          </ul></dd>
+<dt><a name="wmmaSetF32" href="#wmmaSetF32"><span>wmmaSetF32:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc wmmaSetF32(v: var WmmaFloat8; idx: cint; val: cfloat)" href="hippo.html#wmmaSetF32%2CWmmaFloat8%2Ccint%2Ccfloat">hippo: proc wmmaSetF32(v: var WmmaFloat8; idx: cint; val: cfloat)</a></li>
+          </ul></dd>
+<dt><a name="wmmaZeroF32" href="#wmmaZeroF32"><span>wmmaZeroF32:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc wmmaZeroF32(): WmmaFloat8" href="hippo.html#wmmaZeroF32">hippo: proc wmmaZeroF32(): WmmaFloat8</a></li>
+          </ul></dd>
 </dl>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-03-31 23:02:15 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-04-29 05:00:17 UTC</small>
       </div>
     </div>
   </div>
