@@ -64,6 +64,9 @@ const HipPlatform = if HippoPlatform.len > 0: HippoPlatform else: getHipPlatform
 if HippoRuntime == "HIP":
   echo &"DEBUG: Using HIP Platform: {HipPlatform}"
 
+const hippoSrcPath = currentSourcePath().parentDir()
+{.passC: "-I" & hippoSrcPath.}
+
 when HippoRuntime == "HIP_CPU":
   # Intel TBB is required for HIP-CPU
   when defined(linux):
@@ -981,3 +984,25 @@ template hippoFloatToHalf*(f: cfloat): uint16 =
   ## Convert float32 to IEEE 754 half-precision (uint16).
   ## Uses hardware intrinsic on HIP/CUDA, software fallback on SIMPLE.
   floatToHalf(f)
+
+# WMMA (Wave Matrix Multiply-Accumulate) for RDNA3+ wave32 GPUs.
+# These are only available on HIP with RDNA3+ targets (gfx11xx).
+when HippoRuntime == "HIP":
+  type
+    HippoWmmaHalf16* = WmmaHalf16
+    HippoWmmaFloat8* = WmmaFloat8
+
+  template hippoWmmaF32_16x16x16_f16*(a, b: HippoWmmaHalf16, c: HippoWmmaFloat8): HippoWmmaFloat8 =
+    wmmaF32_16x16x16_f16_w32(a, b, c)
+
+  template hippoWmmaSetF16*(v: var HippoWmmaHalf16, idx: int, val: uint16) =
+    wmmaSetF16(v, idx.cint, val.cushort)
+
+  template hippoWmmaGetF32*(v: HippoWmmaFloat8, idx: int): cfloat =
+    wmmaGetF32(v, idx.cint)
+
+  template hippoWmmaSetF32*(v: var HippoWmmaFloat8, idx: int, val: cfloat) =
+    wmmaSetF32(v, idx.cint, val)
+
+  template hippoWmmaZeroF32*(): HippoWmmaFloat8 =
+    wmmaZeroF32()

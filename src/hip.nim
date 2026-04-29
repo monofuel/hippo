@@ -263,6 +263,27 @@ const WarpSize* {.intdefine.} = 32
   ## AMD wavefront size. Defaults to 32 (RDNA 3+).
   ## Set -d:WarpSize=64 for GCN/CDNA GPUs (e.g. MI250, MI300) which use wave64.
 
+# WMMA (Wave Matrix Multiply-Accumulate) intrinsics for RDNA3+ (gfx11xx)
+# Vector types for WMMA fragments — defined in hippo_wmma.h as clang ext_vector_type
+type
+  WmmaHalf16* {.importc: "wmma_half16", header: "hippo_wmma.h", bycopy.} = object
+  WmmaFloat8* {.importc: "wmma_float8", header: "hippo_wmma.h", bycopy.} = object
+
+proc wmmaF32_16x16x16_f16_w32*(a, b: WmmaHalf16, c: WmmaFloat8): WmmaFloat8
+  {.importc: "__builtin_amdgcn_wmma_f32_16x16x16_f16_w32", nodecl.}
+
+proc wmmaSetF16*(v: var WmmaHalf16, idx: cint, val: cushort)
+  {.importcpp: "#[#] = *(const _Float16*)&#", nodecl.}
+
+proc wmmaGetF32*(v: WmmaFloat8, idx: cint): cfloat
+  {.importcpp: "#[#]", nodecl.}
+
+proc wmmaSetF32*(v: var WmmaFloat8, idx: cint, val: cfloat)
+  {.importcpp: "#[#] = #", nodecl.}
+
+proc wmmaZeroF32*(): WmmaFloat8
+  {.importcpp: "(wmma_float8){0,0,0,0,0,0,0,0}", nodecl.}
+
 # Double-precision floating-point math functions
 proc exp*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "exp(@)".}
 proc log*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "log(@)".}
