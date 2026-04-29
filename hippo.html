@@ -2221,8 +2221,8 @@
 <div id="wmmaSetF16-procs-all">
   <div id="wmmaSetF16,WmmaHalf16,cint,cushort">
   <dt><pre><span class="Keyword">proc</span> <a href="#wmmaSetF16%2CWmmaHalf16%2Ccint%2Ccushort"><span class="Identifier">wmmaSetF16</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="#WmmaHalf16"><span class="Identifier">WmmaHalf16</span></a><span class="Other">;</span> <span class="Identifier">idx</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">cushort</span><span class="Other">)</span> {.
-    <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;#[#] = *(const _Float16*)&amp;#&quot;</span><span class="Other">,</span> <span class="Identifier">nodecl</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+    <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;#[#] = ({unsigned short _t = #; *(_Float16*)&amp;_t;})&quot;</span><span class="Other">,</span> <span class="Identifier">nodecl</span><span class="Other">,</span>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -3200,7 +3200,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-04-29 05:00:17 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-04-29 05:19:08 UTC</small>
       </div>
     </div>
   </div>
