@@ -149,7 +149,8 @@ proc hipStreamEndCapture*(stream: hipStream_t;
     pGraph: ptr hipGraph_t): hipError_t {.
   header: "hip/hip_runtime.h", importcpp: "hipStreamEndCapture(@)".}
 proc hipGraphInstantiate*(pGraphExec: ptr hipGraphExec_t;
-    graph: hipGraph_t; flags: uint64 = 0): hipError_t {.
+    graph: hipGraph_t; errNode: pointer = nil;
+    errLog: pointer = nil; logSize: csize_t = 0): hipError_t {.
   header: "hip/hip_runtime.h", importcpp: "hipGraphInstantiate(@)".}
 proc hipGraphLaunch*(graphExec: hipGraphExec_t;
     stream: hipStream_t): hipError_t {.
