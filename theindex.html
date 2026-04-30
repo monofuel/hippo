@@ -234,8 +234,10 @@
 <dt><a name="hipGraphInstantiate" href="#hipGraphInstantiate"><span>hipGraphInstantiate:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipGraphInstantiate(pGraphExec: ptr hipGraphExec_t; graph: hipGraph_t;
-                    flags: uint64 = 0): hipError_t" href="hippo.html#hipGraphInstantiate%2Cptr.hipGraphExec_t%2ChipGraph_t%2Cuint64">hippo: proc hipGraphInstantiate(pGraphExec: ptr hipGraphExec_t; graph: hipGraph_t;
-                    flags: uint64 = 0): hipError_t</a></li>
+                    errNode: pointer = nil; errLog: pointer = nil;
+                    logSize: csize_t = 0): hipError_t" href="hippo.html#hipGraphInstantiate%2Cptr.hipGraphExec_t%2ChipGraph_t%2Cpointer%2Cpointer%2Ccsize_t">hippo: proc hipGraphInstantiate(pGraphExec: ptr hipGraphExec_t; graph: hipGraph_t;
+                    errNode: pointer = nil; errLog: pointer = nil;
+                    logSize: csize_t = 0): hipError_t</a></li>
           </ul></dd>
 <dt><a name="hipGraphLaunch" href="#hipGraphLaunch"><span>hipGraphLaunch:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -859,7 +861,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-04-30 22:53:35 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-04-30 22:56:52 UTC</small>
       </div>
     </div>
   </div>
