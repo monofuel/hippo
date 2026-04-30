@@ -62,6 +62,19 @@ proc hipLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim
     importcpp: "hipLaunchKernel(@)", header: "hip/hip_runtime.h".}
 proc hipDeviceSynchronize*(): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipDeviceSynchronize(@)".}
 proc hipSyncthreads*() {.importcpp: "__syncthreads()", header: "hip/hip_runtime.h".}
+
+# Cooperative Launch
+proc hipLaunchCooperativeKernel*(function_address: pointer; gridDim: Dim3;
+                                blockDim: Dim3; kernelParams: ptr pointer;
+                                sharedMemBytes: csize_t;
+                                stream: hipStream_t): hipError_t {.
+    importcpp: "hipLaunchCooperativeKernel(@)", header: "hip/hip_runtime.h".}
+
+proc hipOccupancyMaxActiveBlocksPerMultiprocessor*(numBlocks: ptr cint;
+    f: pointer; blockSize: cint;
+    dynSharedMemPerBlk: csize_t): hipError_t {.
+    importcpp: "hipOccupancyMaxActiveBlocksPerMultiprocessor(@)",
+    header: "hip/hip_runtime.h".}
 proc hippoSyncthreads*() {.importcpp: "__syncthreads()", header: "hip/hip_runtime.h".}
 
 # Atomics

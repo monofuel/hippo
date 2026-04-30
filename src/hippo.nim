@@ -704,8 +704,56 @@ template hippoLaunchKernel*(
     raise newException(Exception, &"Unknown runtime: {HippoRuntime}")
 
   handleError(result)
-  
 
+# Cooperative Launch
+template hippoLaunchCooperative*(
+  kernel: untyped,
+  gridDim: Dim3 = newDim3(1,1,1),
+  blockDim: Dim3 = newDim3(1,1,1),
+  sharedMemBytes: uint32 = 0,
+  stream: HippoStream = nil,
+  args: untyped,
+) =
+  ## Launch a kernel using cooperative launch API, enabling grid-wide sync.
+  ## The kernel can call hippoGridSync() for grid-level barriers.
+  when HippoRuntime == "HIP" and HipPlatform == "amd":
+    var kernelArgs = args
+    handleError(hipLaunchCooperativeKernel(
+      cast[pointer](kernel), gridDim, blockDim,
+      cast[ptr pointer](addr kernelArgs[0]),
+      sharedMemBytes.csize_t, stream))
+  elif HippoRuntime == "SIMPLE":
+    simpleLaunchKernel(kernel, gridDim, blockDim, args)
+  else:
+    {.error: "hippoLaunchCooperative not yet implemented for " & HippoRuntime & "/" & HipPlatform.}
+
+when HippoRuntime == "HIP":
+  proc hippoGridSyncImpl() {.importcpp: """
+    do {
+      cooperative_groups::grid_group __hippo_grid = cooperative_groups::this_grid();
+      __hippo_grid.sync();
+    } while(0)""", header: "hip/hip_cooperative_groups.h", nodecl.}
+
+template hippoGridSync*() =
+  ## Grid-wide barrier. All blocks must reach this point before any proceed.
+  ## Only valid inside a kernel launched with hippoLaunchCooperative.
+  when HippoRuntime == "HIP":
+    hippoGridSyncImpl()
+  elif HippoRuntime == "SIMPLE":
+    hippoSyncthreads()
+  else:
+    {.error: "hippoGridSync not yet implemented for " & HippoRuntime.}
+
+proc hippoMaxActiveBlocksPerSM*(kernel: pointer; blockSize: int;
+                                sharedMem: int = 0): int =
+  ## Query how many blocks of the given kernel can run concurrently per SM/CU.
+  when HippoRuntime == "HIP":
+    var blocks: cint
+    handleError(hipOccupancyMaxActiveBlocksPerMultiprocessor(
+      addr blocks, kernel, cint(blockSize), csize_t(sharedMem)))
+    result = int(blocks)
+  else:
+    result = 1
 
 # -------------------
 # Macros
