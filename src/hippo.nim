@@ -231,6 +231,60 @@ template hippoStreamWaitEvent*(stream: HippoStream; event: pointer; flags: uint3
   else:
     handleError(hipStreamWaitEvent(stream, event, flags))
 
+# HIP Graph Capture
+template hippoStreamBeginCapture*(stream: HippoStream;
+    mode: hipStreamCaptureMode = hipStreamCaptureModeGlobal) =
+  when HippoRuntime == "CUDA":
+    {.error: "Graph capture not yet implemented for CUDA backend".}
+  elif HippoRuntime == "SIMPLE":
+    discard
+  else:
+    handleError(hipStreamBeginCapture(stream, mode))
+
+template hippoStreamEndCapture*(stream: HippoStream): hipGraph_t =
+  var graph: hipGraph_t
+  when HippoRuntime == "CUDA":
+    {.error: "Graph capture not yet implemented for CUDA backend".}
+  elif HippoRuntime == "SIMPLE":
+    graph = nil
+  else:
+    handleError(hipStreamEndCapture(stream, addr graph))
+  graph
+
+template hippoGraphInstantiate*(graph: hipGraph_t): hipGraphExec_t =
+  var exec: hipGraphExec_t
+  when HippoRuntime == "CUDA":
+    {.error: "Graph instantiate not yet implemented for CUDA backend".}
+  elif HippoRuntime == "SIMPLE":
+    exec = nil
+  else:
+    handleError(hipGraphInstantiate(addr exec, graph))
+  exec
+
+template hippoGraphLaunch*(exec: hipGraphExec_t; stream: HippoStream) =
+  when HippoRuntime == "CUDA":
+    {.error: "Graph launch not yet implemented for CUDA backend".}
+  elif HippoRuntime == "SIMPLE":
+    discard
+  else:
+    handleError(hipGraphLaunch(exec, stream))
+
+template hippoGraphDestroy*(graph: hipGraph_t) =
+  when HippoRuntime == "CUDA":
+    {.error: "Graph destroy not yet implemented for CUDA backend".}
+  elif HippoRuntime == "SIMPLE":
+    discard
+  else:
+    handleError(hipGraphDestroy(graph))
+
+template hippoGraphExecDestroy*(exec: hipGraphExec_t) =
+  when HippoRuntime == "CUDA":
+    {.error: "Graph exec destroy not yet implemented for CUDA backend".}
+  elif HippoRuntime == "SIMPLE":
+    discard
+  else:
+    handleError(hipGraphExecDestroy(exec))
+
 # Async Memory Operations
 template hippoMemcpyAsync*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind, stream: HippoStream) =
   ## Asynchronous memory copy on a stream

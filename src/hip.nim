@@ -132,6 +132,33 @@ proc hipStreamDestroy*(stream: hipStream_t): hipError_t {.
 proc hipStreamSynchronize*(stream: hipStream_t): hipError_t {.
   header: "hip/hip_runtime.h", importcpp: "hipStreamSynchronize(@)".}
 
+# HIP Graph API
+type
+  hipGraph_t* {.importcpp: "hipGraph_t", header: "hip/hip_runtime.h".} = pointer
+  hipGraphExec_t* {.importcpp: "hipGraphExec_t", header: "hip/hip_runtime.h".} = pointer
+  hipStreamCaptureMode* {.size: sizeof(cint), header: "hip/hip_runtime.h",
+      importcpp: "hipStreamCaptureMode".} = enum
+    hipStreamCaptureModeGlobal = 0
+    hipStreamCaptureModeThreadLocal = 1
+    hipStreamCaptureModeRelaxed = 2
+
+proc hipStreamBeginCapture*(stream: hipStream_t;
+    mode: hipStreamCaptureMode): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipStreamBeginCapture(@)".}
+proc hipStreamEndCapture*(stream: hipStream_t;
+    pGraph: ptr hipGraph_t): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipStreamEndCapture(@)".}
+proc hipGraphInstantiate*(pGraphExec: ptr hipGraphExec_t;
+    graph: hipGraph_t; flags: uint64 = 0): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipGraphInstantiate(@)".}
+proc hipGraphLaunch*(graphExec: hipGraphExec_t;
+    stream: hipStream_t): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipGraphLaunch(@)".}
+proc hipGraphDestroy*(graph: hipGraph_t): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipGraphDestroy(@)".}
+proc hipGraphExecDestroy*(graphExec: hipGraphExec_t): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipGraphExecDestroy(@)".}
+
 # Async Memory Operations
 proc hipMemcpyAsync*(dst: pointer, src: pointer, sizeBytes: csize_t,
                      kind: hipMemcpyKind, stream: hipStream_t): hipError_t {.
