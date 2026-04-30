@@ -219,6 +219,32 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipGetLastError(): hipError_t" href="hippo.html#hipGetLastError">hippo: proc hipGetLastError(): hipError_t</a></li>
           </ul></dd>
+<dt><a name="hipGraphDestroy" href="#hipGraphDestroy"><span>hipGraphDestroy:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipGraphDestroy(graph: hipGraph_t): hipError_t" href="hippo.html#hipGraphDestroy%2ChipGraph_t">hippo: proc hipGraphDestroy(graph: hipGraph_t): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipGraphExecDestroy" href="#hipGraphExecDestroy"><span>hipGraphExecDestroy:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipGraphExecDestroy(graphExec: hipGraphExec_t): hipError_t" href="hippo.html#hipGraphExecDestroy%2ChipGraphExec_t">hippo: proc hipGraphExecDestroy(graphExec: hipGraphExec_t): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipGraphExec_t" href="#hipGraphExec_t"><span>hipGraphExec_t:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: type hipGraphExec_t" href="hippo.html#hipGraphExec_t">hippo: type hipGraphExec_t</a></li>
+          </ul></dd>
+<dt><a name="hipGraphInstantiate" href="#hipGraphInstantiate"><span>hipGraphInstantiate:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipGraphInstantiate(pGraphExec: ptr hipGraphExec_t; graph: hipGraph_t;
+                    flags: uint64 = 0): hipError_t" href="hippo.html#hipGraphInstantiate%2Cptr.hipGraphExec_t%2ChipGraph_t%2Cuint64">hippo: proc hipGraphInstantiate(pGraphExec: ptr hipGraphExec_t; graph: hipGraph_t;
+                    flags: uint64 = 0): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipGraphLaunch" href="#hipGraphLaunch"><span>hipGraphLaunch:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipGraphLaunch(graphExec: hipGraphExec_t; stream: hipStream_t): hipError_t" href="hippo.html#hipGraphLaunch%2ChipGraphExec_t%2ChipStream_t">hippo: proc hipGraphLaunch(graphExec: hipGraphExec_t; stream: hipStream_t): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipGraph_t" href="#hipGraph_t"><span>hipGraph_t:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: type hipGraph_t" href="hippo.html#hipGraph_t">hippo: type hipGraph_t</a></li>
+          </ul></dd>
 <dt><a name="hipHostAlloc" href="#hipHostAlloc"><span>hipHostAlloc:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipHostAlloc(p: ptr pointer; size: csize_t; flags: uint32_t): hipError_t" href="hippo.html#hipHostAlloc%2Cptr.pointer%2Ccsize_t%2Cuint32_t">hippo: proc hipHostAlloc(p: ptr pointer; size: csize_t; flags: uint32_t): hipError_t</a></li>
@@ -439,6 +465,22 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: macro hippoGlobal(fn: untyped): untyped" href="hippo.html#hippoGlobal.m%2Cuntyped">hippo: macro hippoGlobal(fn: untyped): untyped</a></li>
           </ul></dd>
+<dt><a name="hippoGraphDestroy" href="#hippoGraphDestroy"><span>hippoGraphDestroy:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoGraphDestroy(graph: hipGraph_t)" href="hippo.html#hippoGraphDestroy.t%2ChipGraph_t">hippo: template hippoGraphDestroy(graph: hipGraph_t)</a></li>
+          </ul></dd>
+<dt><a name="hippoGraphExecDestroy" href="#hippoGraphExecDestroy"><span>hippoGraphExecDestroy:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoGraphExecDestroy(exec: hipGraphExec_t)" href="hippo.html#hippoGraphExecDestroy.t%2ChipGraphExec_t">hippo: template hippoGraphExecDestroy(exec: hipGraphExec_t)</a></li>
+          </ul></dd>
+<dt><a name="hippoGraphInstantiate" href="#hippoGraphInstantiate"><span>hippoGraphInstantiate:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoGraphInstantiate(graph: hipGraph_t): hipGraphExec_t" href="hippo.html#hippoGraphInstantiate.t%2ChipGraph_t">hippo: template hippoGraphInstantiate(graph: hipGraph_t): hipGraphExec_t</a></li>
+          </ul></dd>
+<dt><a name="hippoGraphLaunch" href="#hippoGraphLaunch"><span>hippoGraphLaunch:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoGraphLaunch(exec: hipGraphExec_t; stream: HippoStream)" href="hippo.html#hippoGraphLaunch.t%2ChipGraphExec_t%2CHippoStream">hippo: template hippoGraphLaunch(exec: hipGraphExec_t; stream: HippoStream)</a></li>
+          </ul></dd>
 <dt><a name="hippoGridSync" href="#hippoGridSync"><span>hippoGridSync:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoGridSync()" href="hippo.html#hippoGridSync.t">hippo: template hippoGridSync()</a></li>
@@ -589,6 +631,12 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: type HippoStream" href="hippo.html#HippoStream">hippo: type HippoStream</a></li>
           </ul></dd>
+<dt><a name="hippoStreamBeginCapture" href="#hippoStreamBeginCapture"><span>hippoStreamBeginCapture:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoStreamBeginCapture(stream: HippoStream;
+                        mode: hipStreamCaptureMode = hipStreamCaptureModeGlobal)" href="hippo.html#hippoStreamBeginCapture.t%2CHippoStream%2ChipStreamCaptureMode">hippo: template hippoStreamBeginCapture(stream: HippoStream;
+                        mode: hipStreamCaptureMode = hipStreamCaptureModeGlobal)</a></li>
+          </ul></dd>
 <dt><a name="hippoStreamCreate" href="#hippoStreamCreate"><span>hippoStreamCreate:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoStreamCreate(): HippoStream" href="hippo.html#hippoStreamCreate.t">hippo: template hippoStreamCreate(): HippoStream</a></li>
@@ -596,6 +644,10 @@
 <dt><a name="hippoStreamDestroy" href="#hippoStreamDestroy"><span>hippoStreamDestroy:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoStreamDestroy(stream: HippoStream)" href="hippo.html#hippoStreamDestroy.t%2CHippoStream">hippo: template hippoStreamDestroy(stream: HippoStream)</a></li>
+          </ul></dd>
+<dt><a name="hippoStreamEndCapture" href="#hippoStreamEndCapture"><span>hippoStreamEndCapture:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoStreamEndCapture(stream: HippoStream): hipGraph_t" href="hippo.html#hippoStreamEndCapture.t%2CHippoStream">hippo: template hippoStreamEndCapture(stream: HippoStream): hipGraph_t</a></li>
           </ul></dd>
 <dt><a name="hippoStreamSynchronize" href="#hippoStreamSynchronize"><span>hippoStreamSynchronize:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -645,6 +697,14 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoWmmaZeroF32(): HippoWmmaFloat8" href="hippo.html#hippoWmmaZeroF32.t">hippo: template hippoWmmaZeroF32(): HippoWmmaFloat8</a></li>
           </ul></dd>
+<dt><a name="hipStreamBeginCapture" href="#hipStreamBeginCapture"><span>hipStreamBeginCapture:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipStreamBeginCapture(stream: hipStream_t; mode: hipStreamCaptureMode): hipError_t" href="hippo.html#hipStreamBeginCapture%2ChipStream_t%2ChipStreamCaptureMode">hippo: proc hipStreamBeginCapture(stream: hipStream_t; mode: hipStreamCaptureMode): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipStreamCaptureMode" href="#hipStreamCaptureMode"><span>hipStreamCaptureMode:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: enum hipStreamCaptureMode" href="hippo.html#hipStreamCaptureMode">hippo: enum hipStreamCaptureMode</a></li>
+          </ul></dd>
 <dt><a name="hipStreamCreate" href="#hipStreamCreate"><span>hipStreamCreate:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipStreamCreate(stream: ptr hipStream_t): hipError_t" href="hippo.html#hipStreamCreate%2Cptr.hipStream_t">hippo: proc hipStreamCreate(stream: ptr hipStream_t): hipError_t</a></li>
@@ -652,6 +712,10 @@
 <dt><a name="hipStreamDestroy" href="#hipStreamDestroy"><span>hipStreamDestroy:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipStreamDestroy(stream: hipStream_t): hipError_t" href="hippo.html#hipStreamDestroy%2ChipStream_t">hippo: proc hipStreamDestroy(stream: hipStream_t): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipStreamEndCapture" href="#hipStreamEndCapture"><span>hipStreamEndCapture:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipStreamEndCapture(stream: hipStream_t; pGraph: ptr hipGraph_t): hipError_t" href="hippo.html#hipStreamEndCapture%2ChipStream_t%2Cptr.hipGraph_t">hippo: proc hipStreamEndCapture(stream: hipStream_t; pGraph: ptr hipGraph_t): hipError_t</a></li>
           </ul></dd>
 <dt><a name="hipStreamSynchronize" href="#hipStreamSynchronize"><span>hipStreamSynchronize:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -795,7 +859,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-04-30 20:41:55 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-04-30 22:53:35 UTC</small>
       </div>
     </div>
   </div>
