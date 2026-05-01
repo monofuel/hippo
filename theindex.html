@@ -81,9 +81,17 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc expf(x: cfloat): cfloat" href="hippo.html#expf%2Ccfloat">hippo: proc expf(x: cfloat): cfloat</a></li>
           </ul></dd>
+<dt><a name="fabsf" href="#fabsf"><span>fabsf:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc fabsf(x: cfloat): cfloat" href="hippo.html#fabsf%2Ccfloat">hippo: proc fabsf(x: cfloat): cfloat</a></li>
+          </ul></dd>
 <dt><a name="floatToHalf" href="#floatToHalf"><span>floatToHalf:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc floatToHalf(f: cfloat): uint16" href="hippo.html#floatToHalf%2Ccfloat">hippo: proc floatToHalf(f: cfloat): uint16</a></li>
+          </ul></dd>
+<dt><a name="fmaxf" href="#fmaxf"><span>fmaxf:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc fmaxf(a: cfloat; b: cfloat): cfloat" href="hippo.html#fmaxf%2Ccfloat%2Ccfloat">hippo: proc fmaxf(a: cfloat; b: cfloat): cfloat</a></li>
           </ul></dd>
 <dt><a name="generateForLoopMacro" href="#generateForLoopMacro"><span>generateForLoopMacro:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -451,9 +459,17 @@
           <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoExp(x: cfloat): cfloat" href="hippo.html#hippoExp.t%2Ccfloat">hippo: template hippoExp(x: cfloat): cfloat</a></li>
           </ul></dd>
+<dt><a name="hippoFabsf" href="#hippoFabsf"><span>hippoFabsf:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoFabsf(x: cfloat): cfloat" href="hippo.html#hippoFabsf.t%2Ccfloat">hippo: template hippoFabsf(x: cfloat): cfloat</a></li>
+          </ul></dd>
 <dt><a name="hippoFloatToHalf" href="#hippoFloatToHalf"><span>hippoFloatToHalf:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoFloatToHalf(f: cfloat): uint16" href="hippo.html#hippoFloatToHalf.t%2Ccfloat">hippo: template hippoFloatToHalf(f: cfloat): uint16</a></li>
+          </ul></dd>
+<dt><a name="hippoFmaxf" href="#hippoFmaxf"><span>hippoFmaxf:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoFmaxf(a: cfloat; b: cfloat): cfloat" href="hippo.html#hippoFmaxf.t%2Ccfloat%2Ccfloat">hippo: template hippoFmaxf(a: cfloat; b: cfloat): cfloat</a></li>
           </ul></dd>
 <dt><a name="hippoFree" href="#hippoFree"><span>hippoFree:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -608,6 +624,10 @@
           data-doc-search-tag="hippo: template hippoPow(base: cdouble; exp: cdouble): cdouble" href="hippo.html#hippoPow.t%2Ccdouble%2Ccdouble">hippo: template hippoPow(base: cdouble; exp: cdouble): cdouble</a></li>
           <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoPow(base: cfloat; exp: cfloat): cfloat" href="hippo.html#hippoPow.t%2Ccfloat%2Ccfloat">hippo: template hippoPow(base: cfloat; exp: cfloat): cfloat</a></li>
+          </ul></dd>
+<dt><a name="hippoRoundf" href="#hippoRoundf"><span>hippoRoundf:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoRoundf(x: cfloat): cfloat" href="hippo.html#hippoRoundf.t%2Ccfloat">hippo: template hippoRoundf(x: cfloat): cfloat</a></li>
           </ul></dd>
 <dt><a name="HippoRuntime" href="#HippoRuntime"><span>HippoRuntime:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -781,6 +801,10 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc powf(base: cfloat; exp: cfloat): cfloat" href="hippo.html#powf%2Ccfloat%2Ccfloat">hippo: proc powf(base: cfloat; exp: cfloat): cfloat</a></li>
           </ul></dd>
+<dt><a name="roundf" href="#roundf"><span>roundf:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc roundf(x: cfloat): cfloat" href="hippo.html#roundf%2Ccfloat">hippo: proc roundf(x: cfloat): cfloat</a></li>
+          </ul></dd>
 <dt><a name="shfl" href="#shfl"><span>shfl:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc shfl(val: cfloat; srcLane: cint): cfloat" href="hippo.html#shfl%2Ccfloat%2Ccint">hippo: proc shfl(val: cfloat; srcLane: cint): cfloat</a></li>
@@ -885,7 +909,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-01 03:31:39 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-01 03:40:56 UTC</small>
       </div>
     </div>
   </div>
