@@ -1057,6 +1057,24 @@ template hippoPow*(base: cdouble, exp: cdouble): cdouble =
   else: # HIP, HIP_CPU
     pow(base, exp)
 
+template hippoFabsf*(x: cfloat): cfloat =
+  when HippoRuntime == "SIMPLE":
+    cfloat(abs(float(x)))
+  else:
+    fabsf(x)
+
+template hippoFmaxf*(a: cfloat, b: cfloat): cfloat =
+  when HippoRuntime == "SIMPLE":
+    cfloat(max(float(a), float(b)))
+  else:
+    fmaxf(a, b)
+
+template hippoRoundf*(x: cfloat): cfloat =
+  when HippoRuntime == "SIMPLE":
+    cfloat(math.round(float(x)))
+  else:
+    roundf(x)
+
 template hippoShflDown*(val: cfloat, delta: int): cfloat =
   ## Warp shuffle down for float32. Returns the value from the lane
   ## `delta` positions below the calling lane within the same warp.

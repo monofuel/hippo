@@ -277,6 +277,9 @@ proc sinf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "sinf(@)
 proc cosf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "cosf(@)".}
 proc sqrtf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "sqrtf(@)".}
 proc powf*(base: cfloat, exp: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "powf(@)".}
+proc fabsf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "fabsf(@)".}
+proc fmaxf*(a: cfloat, b: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "fmaxf(@)".}
+proc roundf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "roundf(@)".}
 
 # Half-precision (float16) conversion intrinsics
 proc halfToFloat*(h: uint16): cfloat {.header: "hip/hip_fp16.h",
@@ -344,9 +347,12 @@ proc vsubss4*(a, b: cint): cint
   })""", nodecl.}
 
 # Integer dot product: dp4a — 4×int8 dot product accumulated into int32
-# __builtin_amdgcn_sdot4: signed int8×4 dot product (RDNA2+)
-proc amdgcnSdot4*(a, b: cint, c: cint): cint
-  {.importc: "__builtin_amdgcn_sdot4", nodecl.}
+# v_dot4_i32_i8: signed int8×4 dot product with accumulate (RDNA3+)
+proc amdgcnSdot4*(a, b: cint, c: cint): cint {.importcpp: """[&]{
+    int result;
+    asm volatile("v_dot4_i32_i8 %0, %1, %2, %3" : "=v"(result) : "v"(#1), "v"(#2), "v"(#3));
+    return result;
+  }()""", nodecl.}
 
 # Double-precision floating-point math functions
 proc exp*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "exp(@)".}
