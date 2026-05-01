@@ -222,7 +222,7 @@ template hippoStreamSynchronize*(stream: HippoStream) =
   else:
     handleError(hipStreamSynchronize(stream))
 
-template hippoStreamWaitEvent*(stream: HippoStream; event: pointer; flags: uint32 = 0'u32) =
+template hippoStreamWaitEvent*(stream: HippoStream; event: HippoEvent; flags: uint32 = 0'u32) =
   ## Block stream work until an event is recorded and completed.
   when HippoRuntime == "CUDA":
     handleError(cudaStreamWaitEvent(stream, event, flags))
