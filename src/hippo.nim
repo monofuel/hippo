@@ -231,58 +231,29 @@ template hippoStreamWaitEvent*(stream: HippoStream; event: pointer; flags: uint3
   else:
     handleError(hipStreamWaitEvent(stream, cast[hipEvent_t](event), flags))
 
-# HIP Graph Capture
-template hippoStreamBeginCapture*(stream: HippoStream;
-    mode: hipStreamCaptureMode = hipStreamCaptureModeGlobal) =
-  when HippoRuntime == "CUDA":
-    {.error: "Graph capture not yet implemented for CUDA backend".}
-  elif HippoRuntime == "SIMPLE":
-    discard
-  else:
+# HIP Graph Capture (HIP-only: types hipGraph_t, hipGraphExec_t, hipStreamCaptureMode are not in CUDA/SIMPLE)
+when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+  template hippoStreamBeginCapture*(stream: HippoStream;
+      mode: hipStreamCaptureMode = hipStreamCaptureModeGlobal) =
     handleError(hipStreamBeginCapture(stream, mode))
 
-template hippoStreamEndCapture*(stream: HippoStream): hipGraph_t =
-  var graph: hipGraph_t
-  when HippoRuntime == "CUDA":
-    {.error: "Graph capture not yet implemented for CUDA backend".}
-  elif HippoRuntime == "SIMPLE":
-    graph = nil
-  else:
+  template hippoStreamEndCapture*(stream: HippoStream): hipGraph_t =
+    var graph: hipGraph_t
     handleError(hipStreamEndCapture(stream, addr graph))
-  graph
+    graph
 
-template hippoGraphInstantiate*(graph: hipGraph_t): hipGraphExec_t =
-  var exec: hipGraphExec_t
-  when HippoRuntime == "CUDA":
-    {.error: "Graph instantiate not yet implemented for CUDA backend".}
-  elif HippoRuntime == "SIMPLE":
-    exec = nil
-  else:
+  template hippoGraphInstantiate*(graph: hipGraph_t): hipGraphExec_t =
+    var exec: hipGraphExec_t
     handleError(hipGraphInstantiate(addr exec, graph))
-  exec
+    exec
 
-template hippoGraphLaunch*(exec: hipGraphExec_t; stream: HippoStream) =
-  when HippoRuntime == "CUDA":
-    {.error: "Graph launch not yet implemented for CUDA backend".}
-  elif HippoRuntime == "SIMPLE":
-    discard
-  else:
+  template hippoGraphLaunch*(exec: hipGraphExec_t; stream: HippoStream) =
     handleError(hipGraphLaunch(exec, stream))
 
-template hippoGraphDestroy*(graph: hipGraph_t) =
-  when HippoRuntime == "CUDA":
-    {.error: "Graph destroy not yet implemented for CUDA backend".}
-  elif HippoRuntime == "SIMPLE":
-    discard
-  else:
+  template hippoGraphDestroy*(graph: hipGraph_t) =
     handleError(hipGraphDestroy(graph))
 
-template hippoGraphExecDestroy*(exec: hipGraphExec_t) =
-  when HippoRuntime == "CUDA":
-    {.error: "Graph exec destroy not yet implemented for CUDA backend".}
-  elif HippoRuntime == "SIMPLE":
-    discard
-  else:
+  template hippoGraphExecDestroy*(exec: hipGraphExec_t) =
     handleError(hipGraphExecDestroy(exec))
 
 # Async Memory Operations
