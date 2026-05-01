@@ -119,13 +119,14 @@ nim	wmmaSetF16	hippo.html#wmmaSetF16,WmmaHalf16,cint,cushort	proc wmmaSetF16(v: 
 nim	wmmaGetF32	hippo.html#wmmaGetF32,WmmaFloat8,cint	proc wmmaGetF32(v: WmmaFloat8; idx: cint): cfloat		323
 nim	wmmaSetF32	hippo.html#wmmaSetF32,WmmaFloat8,cint,cfloat	proc wmmaSetF32(v: var WmmaFloat8; idx: cint; val: cfloat)		326
 nim	wmmaZeroF32	hippo.html#wmmaZeroF32	proc wmmaZeroF32(): WmmaFloat8		329
-nim	amdgcnSdot4	hippo.html#amdgcnSdot4,cint,cint,cint	proc amdgcnSdot4(a, b: cint; c: cint): cint		334
-nim	exp	hippo.html#exp,cdouble	proc exp(x: cdouble): cdouble		338
-nim	log	hippo.html#log,cdouble	proc log(x: cdouble): cdouble		339
-nim	sin	hippo.html#sin,cdouble	proc sin(x: cdouble): cdouble		340
-nim	cos	hippo.html#cos,cdouble	proc cos(x: cdouble): cdouble		341
-nim	sqrt	hippo.html#sqrt,cdouble	proc sqrt(x: cdouble): cdouble		342
-nim	pow	hippo.html#pow,cdouble,cdouble	proc pow(base: cdouble; exp: cdouble): cdouble		343
+nim	vsubss4	hippo.html#vsubss4,cint,cint	proc vsubss4(a, b: cint): cint		333
+nim	amdgcnSdot4	hippo.html#amdgcnSdot4,cint,cint,cint	proc amdgcnSdot4(a, b: cint; c: cint): cint		348
+nim	exp	hippo.html#exp,cdouble	proc exp(x: cdouble): cdouble		352
+nim	log	hippo.html#log,cdouble	proc log(x: cdouble): cdouble		353
+nim	sin	hippo.html#sin,cdouble	proc sin(x: cdouble): cdouble		354
+nim	cos	hippo.html#cos,cdouble	proc cos(x: cdouble): cdouble		355
+nim	sqrt	hippo.html#sqrt,cdouble	proc sqrt(x: cdouble): cdouble		356
+nim	pow	hippo.html#pow,cdouble,cdouble	proc pow(base: cdouble; exp: cdouble): cdouble		357
 nim	hippoMalloc	hippo.html#hippoMalloc.t,int	template hippoMalloc(size: int): GpuRef		110
 nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,pointer,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)		123
 nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,GpuRef,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: GpuRef; size: int; kind: HippoMemcpyKind)		134
@@ -205,14 +206,15 @@ nim	HippoWarpSize	hippo.html#HippoWarpSize	const HippoWarpSize		1077
 nim	hippoHalfToFloat	hippo.html#hippoHalfToFloat.t,uint16	template hippoHalfToFloat(h: uint16): cfloat		1080
 nim	hippoFloatToHalf	hippo.html#hippoFloatToHalf.t,cfloat	template hippoFloatToHalf(f: cfloat): uint16		1085
 nim	hippoLoadU32	hippo.html#hippoLoadU32.t,ptr.uint8	template hippoLoadU32(p: ptr uint8): uint32		1090
-nim	hippoSdot4	hippo.html#hippoSdot4.t,cint,cint,cint	template hippoSdot4(a, b: cint; c: cint): cint		1095
-nim	HippoWmmaHalf16	hippo.html#HippoWmmaHalf16	type HippoWmmaHalf16		1112
-nim	HippoWmmaFloat8	hippo.html#HippoWmmaFloat8	type HippoWmmaFloat8		1113
-nim	hippoWmmaF32_16x16x16_f16	hippo.html#hippoWmmaF32_16x16x16_f16.t,WmmaHalf16,WmmaHalf16,WmmaFloat8	template hippoWmmaF32_16x16x16_f16(a, b: HippoWmmaHalf16; c: HippoWmmaFloat8): HippoWmmaFloat8		1115
-nim	hippoWmmaSetF16	hippo.html#hippoWmmaSetF16.t,WmmaHalf16,int,uint16	template hippoWmmaSetF16(v: var HippoWmmaHalf16; idx: int; val: uint16)		1118
-nim	hippoWmmaGetF32	hippo.html#hippoWmmaGetF32.t,WmmaFloat8,int	template hippoWmmaGetF32(v: HippoWmmaFloat8; idx: int): cfloat		1121
-nim	hippoWmmaSetF32	hippo.html#hippoWmmaSetF32.t,WmmaFloat8,int,cfloat	template hippoWmmaSetF32(v: var HippoWmmaFloat8; idx: int; val: cfloat)		1124
-nim	hippoWmmaZeroF32	hippo.html#hippoWmmaZeroF32.t	template hippoWmmaZeroF32(): HippoWmmaFloat8		1127
+nim	hippoVsubss4	hippo.html#hippoVsubss4.t,cint,cint	template hippoVsubss4(a, b: cint): cint		1095
+nim	hippoSdot4	hippo.html#hippoSdot4.t,cint,cint,cint	template hippoSdot4(a, b: cint; c: cint): cint		1112
+nim	HippoWmmaHalf16	hippo.html#HippoWmmaHalf16	type HippoWmmaHalf16		1129
+nim	HippoWmmaFloat8	hippo.html#HippoWmmaFloat8	type HippoWmmaFloat8		1130
+nim	hippoWmmaF32_16x16x16_f16	hippo.html#hippoWmmaF32_16x16x16_f16.t,WmmaHalf16,WmmaHalf16,WmmaFloat8	template hippoWmmaF32_16x16x16_f16(a, b: HippoWmmaHalf16; c: HippoWmmaFloat8): HippoWmmaFloat8		1132
+nim	hippoWmmaSetF16	hippo.html#hippoWmmaSetF16.t,WmmaHalf16,int,uint16	template hippoWmmaSetF16(v: var HippoWmmaHalf16; idx: int; val: uint16)		1135
+nim	hippoWmmaGetF32	hippo.html#hippoWmmaGetF32.t,WmmaFloat8,int	template hippoWmmaGetF32(v: HippoWmmaFloat8; idx: int): cfloat		1138
+nim	hippoWmmaSetF32	hippo.html#hippoWmmaSetF32.t,WmmaFloat8,int,cfloat	template hippoWmmaSetF32(v: var HippoWmmaFloat8; idx: int; val: cfloat)		1141
+nim	hippoWmmaZeroF32	hippo.html#hippoWmmaZeroF32.t	template hippoWmmaZeroF32(): HippoWmmaFloat8		1144
 nimgrp	hiplaunchkernel	hippo.html#hipLaunchKernel-procs-all	proc		57
 nimgrp	hipatomicexch	hippo.html#hipAtomicExch-procs-all	proc		89
 nimgrp	hipatomicmin	hippo.html#hipAtomicMin-procs-all	proc		97
