@@ -1405,7 +1405,7 @@
   <div id="amdgcnSdot4,cint,cint,cint">
   <dt><pre><span class="Keyword">proc</span> <a href="#amdgcnSdot4%2Ccint%2Ccint%2Ccint"><span class="Identifier">amdgcnSdot4</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">c</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;&quot;&quot;[&amp;]{
     int result;
-    asm volatile(&quot;v_dot4_i32_i8 %0, %1, %2, %3&quot; : &quot;=v&quot;(result) : &quot;v&quot;(#1), &quot;v&quot;(#2), &quot;v&quot;(#3));
+    asm volatile(&quot;v_dot4_i32_i8 %0, %1, %2, %3&quot; : &quot;=v&quot;(result) : &quot;v&quot;(#), &quot;v&quot;(#), &quot;v&quot;(#));
     return result;
   }()&quot;&quot;&quot;</span><span class="Other">,</span>
     <span class="Identifier">nodecl</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
@@ -3799,7 +3799,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-01 03:40:56 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-01 03:41:56 UTC</small>
       </div>
     </div>
   </div>
