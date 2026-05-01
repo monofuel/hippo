@@ -124,12 +124,12 @@ nim	wmmaSetF32	hippo.html#wmmaSetF32,WmmaFloat8,cint,cfloat	proc wmmaSetF32(v: v
 nim	wmmaZeroF32	hippo.html#wmmaZeroF32	proc wmmaZeroF32(): WmmaFloat8		332
 nim	vsubss4	hippo.html#vsubss4,cint,cint	proc vsubss4(a, b: cint): cint		336
 nim	amdgcnSdot4	hippo.html#amdgcnSdot4,cint,cint,cint	proc amdgcnSdot4(a, b: cint; c: cint): cint		351
-nim	exp	hippo.html#exp,cdouble	proc exp(x: cdouble): cdouble		358
-nim	log	hippo.html#log,cdouble	proc log(x: cdouble): cdouble		359
-nim	sin	hippo.html#sin,cdouble	proc sin(x: cdouble): cdouble		360
-nim	cos	hippo.html#cos,cdouble	proc cos(x: cdouble): cdouble		361
-nim	sqrt	hippo.html#sqrt,cdouble	proc sqrt(x: cdouble): cdouble		362
-nim	pow	hippo.html#pow,cdouble,cdouble	proc pow(base: cdouble; exp: cdouble): cdouble		363
+nim	exp	hippo.html#exp,cdouble	proc exp(x: cdouble): cdouble		355
+nim	log	hippo.html#log,cdouble	proc log(x: cdouble): cdouble		356
+nim	sin	hippo.html#sin,cdouble	proc sin(x: cdouble): cdouble		357
+nim	cos	hippo.html#cos,cdouble	proc cos(x: cdouble): cdouble		358
+nim	sqrt	hippo.html#sqrt,cdouble	proc sqrt(x: cdouble): cdouble		359
+nim	pow	hippo.html#pow,cdouble,cdouble	proc pow(base: cdouble; exp: cdouble): cdouble		360
 nim	hippoMalloc	hippo.html#hippoMalloc.t,int	template hippoMalloc(size: int): GpuRef		110
 nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,pointer,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)		123
 nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,GpuRef,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: GpuRef; size: int; kind: HippoMemcpyKind)		134
