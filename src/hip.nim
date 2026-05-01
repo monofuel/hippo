@@ -346,13 +346,10 @@ proc vsubss4*(a, b: cint): cint
     result;
   })""", nodecl.}
 
-# Integer dot product: dp4a — 4×int8 dot product accumulated into int32
-# v_dot4_i32_i8: signed int8×4 dot product with accumulate (RDNA3+)
-proc amdgcnSdot4*(a, b: cint, c: cint): cint {.importcpp: """[&]{
-    int result;
-    asm volatile("v_dot4_i32_i8 %0, %1, %2, %3" : "=v"(result) : "v"(#), "v"(#), "v"(#));
-    return result;
-  }()""", nodecl.}
+# Integer dot product: dp4a — signed int8×4 dot product accumulated into int32
+# Uses __builtin_amdgcn_sudot4 on RDNA3+ (gfx11xx/gfx12xx) with both operands signed.
+proc amdgcnSdot4*(a, b: cint, c: cint): cint
+  {.importcpp: "__builtin_amdgcn_sudot4(true, #, true, #, #, false)", nodecl.}
 
 # Double-precision floating-point math functions
 proc exp*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "exp(@)".}
