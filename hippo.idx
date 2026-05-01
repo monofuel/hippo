@@ -136,7 +136,7 @@ nim	hippoSynchronize	hippo.html#hippoSynchronize.t	template hippoSynchronize()		
 nim	hippoStreamCreate	hippo.html#hippoStreamCreate.t	template hippoStreamCreate(): HippoStream		196
 nim	hippoStreamDestroy	hippo.html#hippoStreamDestroy.t,HippoStream	template hippoStreamDestroy(stream: HippoStream)		207
 nim	hippoStreamSynchronize	hippo.html#hippoStreamSynchronize.t,HippoStream	template hippoStreamSynchronize(stream: HippoStream)		216
-nim	hippoStreamWaitEvent	hippo.html#hippoStreamWaitEvent.t,HippoStream,HippoEvent,uint32	template hippoStreamWaitEvent(stream: HippoStream; event: HippoEvent;\n                     flags: uint32 = 0'u32)		225
+nim	hippoStreamWaitEvent	hippo.html#hippoStreamWaitEvent.t,HippoStream,pointer,uint32	template hippoStreamWaitEvent(stream: HippoStream; event: pointer; flags: uint32 = 0'u32)		225
 nim	hippoStreamBeginCapture	hippo.html#hippoStreamBeginCapture.t,HippoStream,hipStreamCaptureMode	template hippoStreamBeginCapture(stream: HippoStream;\n                        mode: hipStreamCaptureMode = hipStreamCaptureModeGlobal)		235
 nim	hippoStreamEndCapture	hippo.html#hippoStreamEndCapture.t,HippoStream	template hippoStreamEndCapture(stream: HippoStream): hipGraph_t		244
 nim	hippoGraphInstantiate	hippo.html#hippoGraphInstantiate.t,hipGraph_t	template hippoGraphInstantiate(graph: hipGraph_t): hipGraphExec_t		254
