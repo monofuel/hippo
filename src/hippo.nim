@@ -1092,6 +1092,23 @@ template hippoLoadU32*(p: ptr uint8): uint32 =
   ## Avoids strict aliasing violations that break cast[ptr uint32] on HIP/CUDA.
   loadU32(p)
 
+template hippoVsubss4*(a, b: cint): cint =
+  ## Packed int8×4 saturated subtract: result[i] = clamp(a[i] - b[i], -128, 127)
+  when HippoRuntime == "CUDA":
+    {.error: "vsubss4 not yet implemented for CUDA".}
+  elif HippoRuntime == "SIMPLE":
+    block:
+      var result: cint
+      let ap = cast[ptr UncheckedArray[int8]](unsafeAddr a)
+      let bp = cast[ptr UncheckedArray[int8]](unsafeAddr b)
+      let rp = cast[ptr UncheckedArray[int8]](addr result)
+      for i in 0..3:
+        let v = int(ap[i]) - int(bp[i])
+        rp[i] = int8(max(-128, min(127, v)))
+      result
+  else:
+    vsubss4(a, b)
+
 template hippoSdot4*(a, b: cint, c: cint): cint =
   ## 4×int8 dot product: treats a and b as 4 packed signed int8, accumulates into c.
   when HippoRuntime == "CUDA":

@@ -329,6 +329,20 @@ proc wmmaSetF32*(v: var WmmaFloat8, idx: cint, val: cfloat)
 proc wmmaZeroF32*(): WmmaFloat8
   {.importcpp: "(wmma_float8){0,0,0,0,0,0,0,0}", nodecl.}
 
+# Packed int8×4 saturated subtract (RDNA: __vsubss4 / CUDA: __vsubss4)
+proc vsubss4*(a, b: cint): cint
+  {.importcpp: """({
+    int result;
+    auto ap = (const signed char*)&(#);
+    auto bp = (const signed char*)&(#);
+    auto rp = (signed char*)&result;
+    for (int i = 0; i < 4; i++) {
+      int v = (int)ap[i] - (int)bp[i];
+      rp[i] = v < -128 ? -128 : (v > 127 ? 127 : v);
+    }
+    result;
+  })""", nodecl.}
+
 # Integer dot product: dp4a — 4×int8 dot product accumulated into int32
 # __builtin_amdgcn_sdot4: signed int8×4 dot product (RDNA2+)
 proc amdgcnSdot4*(a, b: cint, c: cint): cint
