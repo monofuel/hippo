@@ -286,6 +286,10 @@ proc floatToHalf*(f: cfloat): uint16 {.header: "hip/hip_fp16.h",
     importcpp: "__half_raw(__float2half(#)).x".}
   ## Convert float32 to IEEE 754 half-precision (uint16) using HIP hardware intrinsic.
 
+proc loadU32*(p: ptr uint8): uint32 {.header: "hip/hip_runtime.h",
+    importcpp: "[&]{ unsigned int v; __builtin_memcpy(&v, #, 4); return v; }()".}
+  ## Safe uint32 load from a byte pointer (avoids strict aliasing violations).
+
 # Warp shuffle intrinsics
 proc shflDown*(val: cfloat, delta: cint): cfloat {.header: "hip/hip_runtime.h",
     importcpp: "__shfl_down(@)".}

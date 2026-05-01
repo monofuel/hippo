@@ -392,6 +392,10 @@ proc floatToHalf*(f: cfloat): uint16 =
     return s or 0x7C00'u16  # ±infinity
   s or uint16(e shl 10) or uint16(m shr 13)
 
+proc loadU32*(p: ptr uint8): uint32 =
+  ## Safe uint32 load from a byte pointer.
+  copyMem(addr result, p, 4)
+
 # Math functions matching HIP/CUDA interface
 # Single-precision floating-point math functions
 template sinf*(x: cfloat): cfloat =

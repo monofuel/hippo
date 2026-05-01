@@ -1087,6 +1087,11 @@ template hippoFloatToHalf*(f: cfloat): uint16 =
   ## Uses hardware intrinsic on HIP/CUDA, software fallback on SIMPLE.
   floatToHalf(f)
 
+template hippoLoadU32*(p: ptr uint8): uint32 =
+  ## Safe uint32 load from a byte pointer using __builtin_memcpy.
+  ## Avoids strict aliasing violations that break cast[ptr uint32] on HIP/CUDA.
+  loadU32(p)
+
 # WMMA (Wave Matrix Multiply-Accumulate) for RDNA3+ wave32 GPUs.
 # These are only available on HIP with RDNA3+ targets (gfx11xx).
 when HippoRuntime == "HIP":
