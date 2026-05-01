@@ -350,7 +350,7 @@ proc vsubss4*(a, b: cint): cint
 # v_dot4_i32_i8: signed int8×4 dot product with accumulate (RDNA3+)
 proc amdgcnSdot4*(a, b: cint, c: cint): cint {.importcpp: """[&]{
     int result;
-    asm volatile("v_dot4_i32_i8 %0, %1, %2, %3" : "=v"(result) : "v"(#1), "v"(#2), "v"(#3));
+    asm volatile("v_dot4_i32_i8 %0, %1, %2, %3" : "=v"(result) : "v"(#), "v"(#), "v"(#));
     return result;
   }()""", nodecl.}
 
