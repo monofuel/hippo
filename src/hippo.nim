@@ -1092,6 +1092,19 @@ template hippoLoadU32*(p: ptr uint8): uint32 =
   ## Avoids strict aliasing violations that break cast[ptr uint32] on HIP/CUDA.
   loadU32(p)
 
+template hippoSdot4*(a, b: cint, c: cint): cint =
+  ## 4×int8 dot product: treats a and b as 4 packed signed int8, accumulates into c.
+  when HippoRuntime == "CUDA":
+    {.error: "dp4a not yet implemented for CUDA".}
+  elif HippoRuntime == "SIMPLE":
+    block:
+      let ap = cast[ptr UncheckedArray[int8]](unsafeAddr a)
+      let bp = cast[ptr UncheckedArray[int8]](unsafeAddr b)
+      c + cint(ap[0]) * cint(bp[0]) + cint(ap[1]) * cint(bp[1]) +
+          cint(ap[2]) * cint(bp[2]) + cint(ap[3]) * cint(bp[3])
+  else:
+    amdgcnSdot4(a, b, c)
+
 # WMMA (Wave Matrix Multiply-Accumulate) for RDNA3+ wave32 GPUs.
 # These are only available on HIP with RDNA3+ targets (gfx11xx).
 when HippoRuntime == "HIP":

@@ -329,6 +329,11 @@ proc wmmaSetF32*(v: var WmmaFloat8, idx: cint, val: cfloat)
 proc wmmaZeroF32*(): WmmaFloat8
   {.importcpp: "(wmma_float8){0,0,0,0,0,0,0,0}", nodecl.}
 
+# Integer dot product: dp4a — 4×int8 dot product accumulated into int32
+# __builtin_amdgcn_sdot4: signed int8×4 dot product (RDNA2+)
+proc amdgcnSdot4*(a, b: cint, c: cint): cint
+  {.importc: "__builtin_amdgcn_sdot4", nodecl.}
+
 # Double-precision floating-point math functions
 proc exp*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "exp(@)".}
 proc log*(x: cdouble): cdouble {.header: "hip/hip_runtime.h", importcpp: "log(@)".}
