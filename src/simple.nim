@@ -76,6 +76,17 @@ proc simpleMalloc(p: ptr pointer, size: int) =
 proc simpleMemcpy(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind) =
   copyMem(dst, src, size)
 
+proc simpleMemset(dst: pointer, value: cint, size: int) =
+  ## SIMPLE device memory is host memory, so a plain host fill is enough.
+  ## Zeroing takes the fast `zeroMem` path, any other byte fills in a loop.
+  let fill = byte(value and 0xFF)
+  if fill == 0:
+    zeroMem(dst, size)
+  else:
+    let bytes = cast[ptr UncheckedArray[byte]](dst)
+    for i in 0 ..< size:
+      bytes[i] = fill
+
 proc simpleFree(p: pointer) =
   deallocShared(p)
 
@@ -357,6 +368,18 @@ proc shfl*(val: cfloat, srcLane: cint): cfloat = val
   ## Warp shuffle stub; returns val unchanged.
 proc shfl*(val: cint, srcLane: cint): cint = val
   ## Warp shuffle stub; returns val unchanged.
+proc shflDown*(val: cuint, delta: cint): cuint = val
+  ## Warp shuffle down stub; returns val unchanged.
+proc shflDown*(val: cfloat, delta: cint, width: cint): cfloat = val
+  ## Warp shuffle down stub with width; returns val unchanged.
+proc shflDown*(val: cint, delta: cint, width: cint): cint = val
+  ## Warp shuffle down stub with width; returns val unchanged.
+proc shflDown*(val: cuint, delta: cint, width: cint): cuint = val
+  ## Warp shuffle down stub with width; returns val unchanged.
+proc shflXor*(val: cfloat, laneMask: cint): cfloat = val
+  ## Warp shuffle xor stub; returns val unchanged.
+proc shflXor*(val: cint, laneMask: cint): cint = val
+  ## Warp shuffle xor stub; returns val unchanged.
 
 const WarpSize* = 1
   ## SIMPLE backend has no real warps.

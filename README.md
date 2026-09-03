@@ -44,6 +44,56 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
   c[] = a + b
 ```
 
+## Device utilities
+
+These all work on HIP, CUDA and (unless noted) the SIMPLE backend.
+
+Memory:
+
+- `hippoMemset(dst, value, size)` and `hippoMemsetAsync(dst, value, size, stream)`
+  - both take either a raw `pointer` or a `GpuRef` from `hippoMalloc`
+  - SIMPLE fills host memory directly
+
+Atomics:
+
+- `hippoAtomicAdd(address: ptr float32, val: float32): float32`
+  - native float32 atomic add; SIMPLE raises, like the existing integer atomics
+
+Device math (cfloat wrappers, SIMPLE falls back to `std/math`):
+
+- `hippoExpf`, `hippoTanhf`, `hippoCoshf`, `hippoRsqrtf`, `hippoFminf`, `hippoFmaf`
+
+Warp shuffles and reductions:
+
+- `hippoShflDown(val: cuint, delta)` plus `width`-taking overloads for `cfloat`, `cint` and `cuint`
+- `hippoShflXor(val: cfloat | cint, laneMask)`
+- `warpReduceSum(v: cfloat): cfloat` and `warpReduceMax(v: cfloat): cfloat`
+  - shuffle ladders over `HippoWarpSize`; the result is valid in lane 0
+- `blockReduceSum(v: cfloat, shared: ptr cfloat): cfloat`
+  - `shared` is a caller-provided `{.hippoShared.}` array of `blockDim.x div HippoWarpSize` floats
+  - the result is valid in thread 0; SIMPLE returns `v` unchanged
+
+Dynamic shared memory:
+
+- `hippoDynamicShared(T)` returns the kernel dynamic shared block as a `ptr UncheckedArray[T]`
+  - sized by the `sharedMemBytes` argument to `hippoLaunchKernel`
+  - not supported on SIMPLE
+
+Random numbers:
+
+- `hippoRandUint32(pos, seed: uint32): uint32 {.hippoHostDevice.}`
+  - SquirrelNoise5; bit-identical on host and device
+
+Device properties:
+
+- `hippoDeviceInfo(): tuple[cuCount, ldsBytes, warpSize: int]`
+  - SIMPLE reports `(1, 0, 1)`
+
+Pragmas for shared device helpers:
+
+- `{.hippoDeviceInline.}` and `{.hippoHostDeviceInline.}` emit `static inline` device
+  functions so library helpers link without relocatable device code
+
 ## Notes
 
 - work in progress!

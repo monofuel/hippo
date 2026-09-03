@@ -100,6 +100,8 @@ proc cudaAtomicXor*(address: ptr int32; val: int32): int32 {.
   header: "cuda_runtime.h", importcpp: "atomicXor(@)".}
 proc cudaAtomicXor*(address: ptr uint32; val: uint32): uint32 {.
   header: "cuda_runtime.h", importcpp: "atomicXor(@)".}
+proc cudaAtomicAdd*(address: ptr float32; val: float32): float32 {.
+  header: "cuda_runtime.h", importcpp: "atomicAdd(@)".}
 
 proc cudaLaunchKernelGGL*(
   function_address: proc;
@@ -122,6 +124,11 @@ proc cudaStreamSynchronize*(stream: cudaStream_t): cudaError_t {.
 proc cudaMemcpyAsync*(dst: pointer; src: pointer; size: csize_t;
                       kind: cudaMemcpyKind; stream: cudaStream_t): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaMemcpyAsync(@)".}
+proc cudaMemset*(dst: pointer; value: cint; sizeBytes: csize_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaMemset(@)".}
+proc cudaMemsetAsync*(dst: pointer; value: cint; sizeBytes: csize_t;
+                      stream: cudaStream_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaMemsetAsync(@)".}
 
 # Page-locked Host Memory
 proc cudaHostAlloc*(p: ptr pointer; size: csize_t;
@@ -157,8 +164,12 @@ proc cudaStreamWaitEvent*(stream: cudaStream_t; event: cudaEvent_t;
   header: "cuda_runtime.h", importcpp: "cudaStreamWaitEvent(@)".}
 
 # Device Properties
-type cudaDeviceProp* {.importcpp: "cudaDeviceProp", header: "cuda_runtime.h".} = object
+type cudaDeviceProp* {.importcpp: "cudaDeviceProp", header: "cuda_runtime.h",
+    incompleteStruct.} = object
   deviceOverlap*: cint
+  multiProcessorCount*: cint
+  sharedMemPerBlock*: csize_t
+  warpSize*: cint
 proc cudaGetDevice*(device: ptr cint): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaGetDevice(@)".}
 proc cudaGetDeviceProperties*(prop: ptr cudaDeviceProp; device: cint): cudaError_t {.
@@ -206,6 +217,14 @@ proc sinf*(x: cfloat): cfloat {.header: "cuda_runtime.h", importcpp: "sinf(@)".}
 proc cosf*(x: cfloat): cfloat {.header: "cuda_runtime.h", importcpp: "cosf(@)".}
 proc sqrtf*(x: cfloat): cfloat {.header: "cuda_runtime.h", importcpp: "sqrtf(@)".}
 proc powf*(base: cfloat, exp: cfloat): cfloat {.header: "cuda_runtime.h", importcpp: "powf(@)".}
+proc fabsf*(x: cfloat): cfloat {.header: "cuda_runtime.h", importcpp: "fabsf(@)".}
+proc fmaxf*(a: cfloat, b: cfloat): cfloat {.header: "cuda_runtime.h", importcpp: "fmaxf(@)".}
+proc roundf*(x: cfloat): cfloat {.header: "cuda_runtime.h", importcpp: "roundf(@)".}
+proc tanhf*(x: cfloat): cfloat {.header: "cuda_runtime.h", importcpp: "tanhf(@)".}
+proc coshf*(x: cfloat): cfloat {.header: "cuda_runtime.h", importcpp: "coshf(@)".}
+proc rsqrtf*(x: cfloat): cfloat {.header: "cuda_runtime.h", importcpp: "rsqrtf(@)".}
+proc fminf*(a: cfloat, b: cfloat): cfloat {.header: "cuda_runtime.h", importcpp: "fminf(@)".}
+proc fmaf*(a: cfloat, b: cfloat, c: cfloat): cfloat {.header: "cuda_runtime.h", importcpp: "fmaf(@)".}
 
 # Half-precision (float16) conversion intrinsics
 proc halfToFloat*(h: uint16): cfloat {.header: "cuda_fp16.h",
@@ -232,6 +251,28 @@ proc shfl*(val: cfloat, srcLane: cint): cfloat {.header: "cuda_runtime.h",
 proc shfl*(val: cint, srcLane: cint): cint {.header: "cuda_runtime.h",
     importcpp: "__shfl_sync(0xFFFFFFFF, @)".}
   ## Warp shuffle: read int32 from srcLane (broadcast).
+proc shflDown*(val: cuint, delta: cint): cuint {.header: "cuda_runtime.h",
+    importcpp: "__shfl_down_sync(0xFFFFFFFF, @)".}
+  ## Warp shuffle down for uint32.
+proc shflDown*(val: cfloat, delta: cint, width: cint): cfloat {.header: "cuda_runtime.h",
+    importcpp: "__shfl_down_sync(0xFFFFFFFF, @)".}
+  ## Warp shuffle down for float32 within a sub-warp of `width` lanes.
+proc shflDown*(val: cint, delta: cint, width: cint): cint {.header: "cuda_runtime.h",
+    importcpp: "__shfl_down_sync(0xFFFFFFFF, @)".}
+  ## Warp shuffle down for int32 within a sub-warp of `width` lanes.
+proc shflDown*(val: cuint, delta: cint, width: cint): cuint {.header: "cuda_runtime.h",
+    importcpp: "__shfl_down_sync(0xFFFFFFFF, @)".}
+  ## Warp shuffle down for uint32 within a sub-warp of `width` lanes.
+proc shflXor*(val: cfloat, laneMask: cint): cfloat {.header: "cuda_runtime.h",
+    importcpp: "__shfl_xor_sync(0xFFFFFFFF, @)".}
+  ## Warp shuffle xor for float32: read the lane whose id is `lane xor laneMask`.
+proc shflXor*(val: cint, laneMask: cint): cint {.header: "cuda_runtime.h",
+    importcpp: "__shfl_xor_sync(0xFFFFFFFF, @)".}
+  ## Warp shuffle xor for int32: read the lane whose id is `lane xor laneMask`.
+
+proc dynamicSharedPtr*(): pointer {.header: "cuda_runtime.h",
+    importcpp: "({ extern __shared__ __align__(16) char __hippo_dyn_smem[]; (void*)__hippo_dyn_smem; })", nodecl.}
+  ## Base pointer of the kernel dynamic shared memory block (`extern __shared__`).
 
 const WarpSize* = 32
   ## NVIDIA warp size.

@@ -266,6 +266,42 @@ template hippoMemcpyAsync*(dst: pointer, src: pointer, size: int, kind: HippoMem
   else:
     handleError(hipMemcpyAsync(dst, src, size.csize_t, kind, stream))
 
+template hippoMemset*(dst: pointer, value: cint, size: int) =
+  ## Fill `size` bytes of device memory at `dst` with the byte `value`.
+  when HippoRuntime == "CUDA":
+    handleError(cudaMemset(dst, value, size.csize_t))
+  elif HippoRuntime == "SIMPLE":
+    simpleMemset(dst, value, size)
+  else:
+    handleError(hipMemset(dst, value, size.csize_t))
+
+template hippoMemset*(dst: GpuRef, value: cint, size: int) =
+  ## Fill `size` bytes of the device allocation `dst` with the byte `value`.
+  when HippoRuntime == "CUDA":
+    handleError(cudaMemset(dst.p, value, size.csize_t))
+  elif HippoRuntime == "SIMPLE":
+    simpleMemset(dst.p, value, size)
+  else:
+    handleError(hipMemset(dst.p, value, size.csize_t))
+
+template hippoMemsetAsync*(dst: pointer, value: cint, size: int, stream: HippoStream) =
+  ## Asynchronously fill `size` bytes of device memory at `dst` on a stream.
+  when HippoRuntime == "CUDA":
+    handleError(cudaMemsetAsync(dst, value, size.csize_t, stream))
+  elif HippoRuntime == "SIMPLE":
+    simpleMemset(dst, value, size)
+  else:
+    handleError(hipMemsetAsync(dst, value, size.csize_t, stream))
+
+template hippoMemsetAsync*(dst: GpuRef, value: cint, size: int, stream: HippoStream) =
+  ## Asynchronously fill `size` bytes of the device allocation `dst` on a stream.
+  when HippoRuntime == "CUDA":
+    handleError(cudaMemsetAsync(dst.p, value, size.csize_t, stream))
+  elif HippoRuntime == "SIMPLE":
+    simpleMemset(dst.p, value, size)
+  else:
+    handleError(hipMemsetAsync(dst.p, value, size.csize_t, stream))
+
 # Atomics
 template hippoAtomicAdd*(address: ptr[int32]; val: int32): int32 =
   ## Atomically add and return the previous value.
@@ -281,6 +317,18 @@ template hippoAtomicAdd*(address: ptr[int32]; val: int32): int32 =
 
 template hippoAtomicAdd*(address: ptr[uint32]; val: uint32): uint32 =
   ## Atomically add and return the previous value.
+  when HippoRuntime == "CUDA":
+    cudaAtomicAdd(address, val)
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipAtomicAdd(address, val)
+  else:
+    (block:
+      raise newException(Exception, "Atomics are not implemented for SIMPLE backend.")
+      default(type(val))
+    )
+
+template hippoAtomicAdd*(address: ptr[float32]; val: float32): float32 =
+  ## Atomically add a float32 and return the previous value.
   when HippoRuntime == "CUDA":
     cudaAtomicAdd(address, val)
   elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
@@ -629,6 +677,17 @@ template hippoGetDeviceProperties*(prop: var HippoDeviceProp, device: cint) =
   else:
     handleError(hipGetDeviceProperties(addr prop, device))
 
+proc hippoDeviceInfo*(): tuple[cuCount, ldsBytes, warpSize: int] =
+  ## Query the current device for its compute unit count, shared memory bytes per
+  ## block and warp size. The SIMPLE backend reports (1, 0, 1).
+  when HippoRuntime == "SIMPLE":
+    result = (1, 0, 1)
+  else:
+    var prop: HippoDeviceProp
+    let device = hippoGetDevice()
+    hippoGetDeviceProperties(prop, device)
+    result = (int(prop.multiProcessorCount), int(prop.sharedMemPerBlock), int(prop.warpSize))
+
 proc `=destroy`*(mem: var GpuMemory) =
   ## Automatically free device memory when the object goes out of scope
   if mem.p != nil:
@@ -855,6 +914,24 @@ macro hippoDevice*(fn: untyped): untyped =
     {.pop.}
 
 
+macro hippoDeviceInline*(fn: untyped): untyped =
+  ## Declare a `__device__` function that is emitted into every translation unit
+  ## that calls it. Device symbols do not link across translation units without
+  ## relocatable device code, so library device helpers must be inline.
+  when HippoRuntime != "SIMPLE":
+    let globalPragma: NimNode = quote:
+      {. inline, exportc, codegenDecl: "__device__ static inline $# $#$#".}
+
+    fn.addPragma(globalPragma[0])
+    fn.addPragma(globalPragma[1])
+    fn.addPragma(globalPragma[2])
+  else:
+    fn.addPragma(ident("inline"))
+  quote do:
+    {.push stackTrace: off, checks: off.}
+    `fn`
+    {.pop.}
+
 macro hippoHost*(fn: untyped): untyped =
   ## Explicitly declare a function as a `__host__` function (cpu side).
   ## All functions default to `host` functions, so this is not required.
@@ -879,6 +956,23 @@ macro hippoHostDevice*(fn: untyped): untyped =
 
     fn.addPragma(globalPragma[0])
     fn.addPragma(globalPragma[1])
+  quote do:
+    {.push stackTrace: off, checks: off.}
+    `fn`
+    {.pop.}
+
+macro hippoHostDeviceInline*(fn: untyped): untyped =
+  ## Declare a `__device__ __host__` function that is emitted into every
+  ## translation unit that calls it, so it links from both host and device code.
+  when HippoRuntime != "SIMPLE":
+    let globalPragma: NimNode = quote:
+      {. inline, exportc, codegenDecl: "__device__ __host__ static inline $# $#$#".}
+
+    fn.addPragma(globalPragma[0])
+    fn.addPragma(globalPragma[1])
+    fn.addPragma(globalPragma[2])
+  else:
+    fn.addPragma(ident("inline"))
   quote do:
     {.push stackTrace: off, checks: off.}
     `fn`
@@ -1046,6 +1140,49 @@ template hippoRoundf*(x: cfloat): cfloat =
   else:
     roundf(x)
 
+template hippoExpf*(x: cfloat): cfloat =
+  ## Exponential function (e^x) for single-precision float.
+  ## cfloat-only alias for `hippoExp` that avoids the f32/f64 overload ambiguity.
+  when HippoRuntime == "SIMPLE":
+    cfloat(math.exp(float(x)))
+  else:
+    expf(x)
+
+template hippoTanhf*(x: cfloat): cfloat =
+  ## Hyperbolic tangent for single-precision float.
+  when HippoRuntime == "SIMPLE":
+    cfloat(math.tanh(float(x)))
+  else:
+    tanhf(x)
+
+template hippoCoshf*(x: cfloat): cfloat =
+  ## Hyperbolic cosine for single-precision float.
+  when HippoRuntime == "SIMPLE":
+    cfloat(math.cosh(float(x)))
+  else:
+    coshf(x)
+
+template hippoRsqrtf*(x: cfloat): cfloat =
+  ## Reciprocal square root (1/sqrt(x)) for single-precision float.
+  when HippoRuntime == "SIMPLE":
+    cfloat(1.0 / math.sqrt(float(x)))
+  else:
+    rsqrtf(x)
+
+template hippoFminf*(a: cfloat, b: cfloat): cfloat =
+  ## Minimum of two single-precision floats.
+  when HippoRuntime == "SIMPLE":
+    cfloat(min(float(a), float(b)))
+  else:
+    fminf(a, b)
+
+template hippoFmaf*(a: cfloat, b: cfloat, c: cfloat): cfloat =
+  ## Fused multiply-add (a * b + c) for single-precision float.
+  when HippoRuntime == "SIMPLE":
+    cfloat(float(a) * float(b) + float(c))
+  else:
+    fmaf(a, b, c)
+
 template hippoShflDown*(val: cfloat, delta: int): cfloat =
   ## Warp shuffle down for float32. Returns the value from the lane
   ## `delta` positions below the calling lane within the same warp.
@@ -1063,8 +1200,116 @@ template hippoShfl*(val: cint, srcLane: int): cint =
   ## Warp shuffle: read int32 from srcLane (broadcast).
   shfl(val, srcLane.cint)
 
+template hippoShflDown*(val: cuint, delta: int): cuint =
+  ## Warp shuffle down for uint32.
+  shflDown(val, delta.cint)
+
+template hippoShflDown*(val: cfloat, delta: int, width: int): cfloat =
+  ## Warp shuffle down for float32 within a sub-warp of `width` lanes.
+  shflDown(val, delta.cint, width.cint)
+
+template hippoShflDown*(val: cint, delta: int, width: int): cint =
+  ## Warp shuffle down for int32 within a sub-warp of `width` lanes.
+  shflDown(val, delta.cint, width.cint)
+
+template hippoShflDown*(val: cuint, delta: int, width: int): cuint =
+  ## Warp shuffle down for uint32 within a sub-warp of `width` lanes.
+  shflDown(val, delta.cint, width.cint)
+
+template hippoShflXor*(val: cfloat, laneMask: int): cfloat =
+  ## Warp shuffle xor for float32: read the lane whose id is `lane xor laneMask`.
+  shflXor(val, laneMask.cint)
+
+template hippoShflXor*(val: cint, laneMask: int): cint =
+  ## Warp shuffle xor for int32: read the lane whose id is `lane xor laneMask`.
+  shflXor(val, laneMask.cint)
+
 const HippoWarpSize* = WarpSize
   ## Warp/wavefront size for the current backend.
+
+template hippoDynamicShared*(T: typedesc): ptr UncheckedArray[T] =
+  ## Access the kernel dynamic shared memory block as an `UncheckedArray[T]`.
+  ## The size is the `sharedMemBytes` argument given to `hippoLaunchKernel`.
+  when HippoRuntime == "SIMPLE":
+    {.error: "hippoDynamicShared is not supported on the SIMPLE backend.".}
+  else:
+    cast[ptr UncheckedArray[T]](dynamicSharedPtr())
+
+proc warpReduceSum*(v: cfloat): cfloat {.hippoDeviceInline, used.} =
+  ## Sum `v` across every lane of the warp with a shuffle-down ladder.
+  ## The total is valid in lane 0; other lanes hold partial sums.
+  result = v
+  when HippoWarpSize == 64:
+    result = result + hippoShflDown(result, 32)
+  when HippoWarpSize >= 32:
+    result = result + hippoShflDown(result, 16)
+    result = result + hippoShflDown(result, 8)
+    result = result + hippoShflDown(result, 4)
+    result = result + hippoShflDown(result, 2)
+    result = result + hippoShflDown(result, 1)
+
+proc warpReduceMax*(v: cfloat): cfloat {.hippoDeviceInline, used.} =
+  ## Reduce `v` to its maximum across every lane of the warp.
+  ## The maximum is valid in lane 0; other lanes hold partial maxima.
+  result = v
+  when HippoWarpSize == 64:
+    result = hippoFmaxf(result, hippoShflDown(result, 32))
+  when HippoWarpSize >= 32:
+    result = hippoFmaxf(result, hippoShflDown(result, 16))
+    result = hippoFmaxf(result, hippoShflDown(result, 8))
+    result = hippoFmaxf(result, hippoShflDown(result, 4))
+    result = hippoFmaxf(result, hippoShflDown(result, 2))
+    result = hippoFmaxf(result, hippoShflDown(result, 1))
+
+when HippoRuntime == "SIMPLE":
+  proc blockReduceSum*(v: cfloat, shared: ptr cfloat): cfloat {.used.} =
+    ## Block-wide sum is not supported on the SIMPLE backend, because it needs a
+    ## block barrier inside a device proc. This stub returns `v` unchanged.
+    discard shared
+    result = v
+else:
+  proc blockReduceSum*(v: cfloat, shared: ptr cfloat): cfloat {.hippoDeviceInline, used.} =
+    ## Sum `v` across every thread of the block.
+    ## `shared` must point at a caller-provided `{.hippoShared.}` array of at least
+    ## (blockDim.x div HippoWarpSize) floats.
+    ## The total is valid in thread 0 only; other threads hold partial sums.
+    let
+      warpSums = cast[ptr UncheckedArray[cfloat]](shared)
+      lane = int(threadIdx.x) mod HippoWarpSize
+      warpId = int(threadIdx.x) div HippoWarpSize
+      warpCount = (int(blockDim.x) + HippoWarpSize - 1) div HippoWarpSize
+    var total = warpReduceSum(v)
+    if lane == 0:
+      warpSums[warpId] = total
+    hippoSyncthreads()
+    if warpId == 0:
+      total = if lane < warpCount: warpSums[lane] else: 0.0'f32
+      total = warpReduceSum(total)
+    result = total
+
+const
+  Sq5BitNoise1 = 0xd2a80a3f'u32
+  Sq5BitNoise2 = 0xa884f197'u32
+  Sq5BitNoise3 = 0x6C736F4B'u32
+  Sq5BitNoise4 = 0xB79F3ABB'u32
+  Sq5BitNoise5 = 0x1b56c4f5'u32
+
+proc hippoRandUint32*(pos: uint32, seed: uint32): uint32 {.hippoHostDeviceInline.} =
+  ## Hash `pos` and `seed` into a pseudorandom uint32 with SquirrelNoise5.
+  ## Callable from both host and device code, and stable across backends.
+  var mangled = pos
+  mangled = mangled * Sq5BitNoise1
+  mangled = mangled + seed
+  mangled = mangled xor (mangled shr 9)
+  mangled = mangled + Sq5BitNoise2
+  mangled = mangled xor (mangled shr 11)
+  mangled = mangled * Sq5BitNoise3
+  mangled = mangled xor (mangled shr 13)
+  mangled = mangled + Sq5BitNoise4
+  mangled = mangled xor (mangled shr 15)
+  mangled = mangled * Sq5BitNoise5
+  mangled = mangled xor (mangled shr 17)
+  result = mangled
 
 template hippoHalfToFloat*(h: uint16): cfloat =
   ## Convert IEEE 754 half-precision (uint16) to float32.

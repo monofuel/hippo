@@ -114,6 +114,8 @@ proc hipAtomicXor*(address: ptr int32; val: int32): int32 {.
   header: "hip/hip_runtime.h", importcpp: "atomicXor(@)".}
 proc hipAtomicXor*(address: ptr uint32; val: uint32): uint32 {.
   header: "hip/hip_runtime.h", importcpp: "atomicXor(@)".}
+proc hipAtomicAdd*(address: ptr float32; val: float32): float32 {.
+  header: "hip/hip_runtime.h", importcpp: "atomicAdd(@)".}
 
 proc hipLaunchKernelGGL*(
   function_address: proc;
@@ -164,6 +166,11 @@ proc hipGraphExecDestroy*(graphExec: hipGraphExec_t): hipError_t {.
 proc hipMemcpyAsync*(dst: pointer, src: pointer, sizeBytes: csize_t,
                      kind: hipMemcpyKind, stream: hipStream_t): hipError_t {.
   header: "hip/hip_runtime.h", importcpp: "hipMemcpyAsync(@)".}
+proc hipMemset*(dst: pointer, value: cint, sizeBytes: csize_t): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipMemset(@)".}
+proc hipMemsetAsync*(dst: pointer, value: cint, sizeBytes: csize_t,
+                     stream: hipStream_t): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipMemsetAsync(@)".}
 
 # Page-locked Host Memory
 when defined(HIP_CPU_RUNTIME):
@@ -230,8 +237,12 @@ else:
     header: "hip/hip_runtime.h", importcpp: "hipStreamWaitEvent(@)".}
 
 # Device Properties
-type hipDeviceProp_t* {.importcpp: "hipDeviceProp_t", header: "hip/hip_runtime.h".} = object
+type hipDeviceProp_t* {.importcpp: "hipDeviceProp_t", header: "hip/hip_runtime.h",
+    incompleteStruct.} = object
   deviceOverlap*: cint
+  multiProcessorCount*: cint
+  sharedMemPerBlock*: csize_t
+  warpSize*: cint
 proc hipGetDevice*(device: ptr cint): hipError_t {.
   header: "hip/hip_runtime.h", importcpp: "hipGetDevice(@)".}
 proc hipGetDeviceProperties*(prop: ptr hipDeviceProp_t; device: cint): hipError_t {.
@@ -280,6 +291,16 @@ proc powf*(base: cfloat, exp: cfloat): cfloat {.header: "hip/hip_runtime.h", imp
 proc fabsf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "fabsf(@)".}
 proc fmaxf*(a: cfloat, b: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "fmaxf(@)".}
 proc roundf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "roundf(@)".}
+proc tanhf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "tanhf(@)".}
+proc coshf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "coshf(@)".}
+proc fminf*(a: cfloat, b: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "fminf(@)".}
+proc fmaf*(a: cfloat, b: cfloat, c: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "fmaf(@)".}
+when defined(HIP_CPU_RUNTIME):
+  proc rsqrtf*(x: cfloat): cfloat {.header: "cmath", importcpp: "(1.0f / std::sqrt(#))".}
+    ## HIP-CPU has no rsqrtf intrinsic, so fall back to 1/sqrt.
+else:
+  proc rsqrtf*(x: cfloat): cfloat {.header: "hip/hip_runtime.h", importcpp: "rsqrtf(@)".}
+    ## Fast reciprocal square root for single-precision float.
 
 # Half-precision (float16) conversion intrinsics
 proc halfToFloat*(h: uint16): cfloat {.header: "hip/hip_fp16.h",
@@ -306,6 +327,33 @@ proc shfl*(val: cfloat, srcLane: cint): cfloat {.header: "hip/hip_runtime.h",
 proc shfl*(val: cint, srcLane: cint): cint {.header: "hip/hip_runtime.h",
     importcpp: "__shfl(@)".}
   ## Warp shuffle: read int32 from srcLane (broadcast).
+proc shflDown*(val: cuint, delta: cint): cuint {.header: "hip/hip_runtime.h",
+    importcpp: "__shfl_down(@)".}
+  ## Warp shuffle down for uint32.
+proc shflDown*(val: cfloat, delta: cint, width: cint): cfloat {.header: "hip/hip_runtime.h",
+    importcpp: "__shfl_down(@)".}
+  ## Warp shuffle down for float32 within a sub-warp of `width` lanes.
+proc shflDown*(val: cint, delta: cint, width: cint): cint {.header: "hip/hip_runtime.h",
+    importcpp: "__shfl_down(@)".}
+  ## Warp shuffle down for int32 within a sub-warp of `width` lanes.
+proc shflDown*(val: cuint, delta: cint, width: cint): cuint {.header: "hip/hip_runtime.h",
+    importcpp: "__shfl_down(@)".}
+  ## Warp shuffle down for uint32 within a sub-warp of `width` lanes.
+proc shflXor*(val: cfloat, laneMask: cint): cfloat {.header: "hip/hip_runtime.h",
+    importcpp: "__shfl_xor(@)".}
+  ## Warp shuffle xor for float32: read the lane whose id is `lane xor laneMask`.
+proc shflXor*(val: cint, laneMask: cint): cint {.header: "hip/hip_runtime.h",
+    importcpp: "__shfl_xor(@)".}
+  ## Warp shuffle xor for int32: read the lane whose id is `lane xor laneMask`.
+
+when defined(HIP_CPU_RUNTIME):
+  proc dynamicSharedPtr*(): pointer {.header: "hip/hip_runtime.h",
+      importcpp: "({ HIP_DYNAMIC_SHARED(char, __hippo_dyn_smem); (void*)__hippo_dyn_smem; })", nodecl.}
+    ## Base pointer of the dynamic shared memory block for the current HIP-CPU tile.
+else:
+  proc dynamicSharedPtr*(): pointer {.header: "hip/hip_runtime.h",
+      importcpp: "({ extern __shared__ __align__(16) char __hippo_dyn_smem[]; (void*)__hippo_dyn_smem; })", nodecl.}
+    ## Base pointer of the kernel dynamic shared memory block (`extern __shared__`).
 
 const WarpSize* {.intdefine.} = 32
   ## AMD wavefront size. Defaults to 32 (RDNA 3+).

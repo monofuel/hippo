@@ -39,6 +39,7 @@ nix develop .#all      # Everything combined, useful to run HIP targetting NVIDI
 - when using hip, hip platform detection ("amd" or "nvidia") may not work as expected if it cannot find a compiler, or if both compilers are present. You can set `HIP_PLATFORM` on the environment to force one or the other at compile time.
 
 - the HIP-CPU backend requires libtbb to be installed, this can be picky on certain distros.
+- on NixOS, `hipcc` may not find the ROCm device bitcode and fails with `cannot find ROCm device library`. pass `--passC:"--rocm-device-lib-path=<rocm-device-libs>/amdgcn/bitcode"` or enter `nix develop .#amd`.
 - the GPU compilers (hipcc, nvcc) can sometimes give lots of warnings about the cpp code that Nim produces, but this is mostly OK.
 - all Hippo backends require you to compile with `nim cpp`. the only exception is the SIMPLE backend, which can compile with either `nim c` or `nim cpp`. it can even work with threads disabled, in which case it will fall back to single thread execution.
 
