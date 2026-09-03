@@ -45,8 +45,8 @@ proc newDim3*(x: uint32_t = 1; y: uint32_t = 1; z: uint32_t = 1): Dim3 =
   result.y = y
   result.z = z
 
-proc hipMalloc*(`ptr`: ptr pointer; size: cint): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipMalloc(@)".}
-proc hipMemcpy*(dst: pointer; src: pointer; size: cint; kind: hipMemcpyKind): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipMemcpy(@)".}
+proc hipMalloc*(`ptr`: ptr pointer; size: csize_t): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipMalloc(@)".}
+proc hipMemcpy*(dst: pointer; src: pointer; size: csize_t; kind: hipMemcpyKind): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipMemcpy(@)".}
 proc hipMemcpyToSymbol*(symbol: pointer; src: pointer; sizeBytes: csize_t;
                         offset: csize_t = 0;
                         kind: hipMemcpyKind = hipMemcpyHostToDevice): hipError_t {.

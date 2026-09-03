@@ -113,11 +113,11 @@ template hippoMalloc*(size: int): GpuRef =
   ## It will automatically free the memory when it goes out of scope.
   var g = GpuRef()
   when HippoRuntime == "CUDA":
-    handleError(cudaMalloc(addr g.p, size.cint))
+    handleError(cudaMalloc(addr g.p, size.csize_t))
   elif HippoRuntime == "SIMPLE":
     simpleMalloc(addr g.p, size)
   else:
-    handleError(hipMalloc(addr g.p, size.cint))
+    handleError(hipMalloc(addr g.p, size.csize_t))
   g
 
 template hippoMemcpy*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKind) =
@@ -125,41 +125,41 @@ template hippoMemcpy*(dst: pointer, src: pointer, size: int, kind: HippoMemcpyKi
   ## hippoMemcpy is broken out as 4 separate templates to make it easier to work with GpuRef objects
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
-    handleError(cudaMemcpy(dst, src, size.cint, kind))
+    handleError(cudaMemcpy(dst, src, size.csize_t, kind))
   elif HippoRuntime == "SIMPLE":
     simpleMemcpy(dst, src, size, kind)
   else:
-    handleError(hipMemcpy(dst, src, size.cint, kind))
+    handleError(hipMemcpy(dst, src, size.csize_t, kind))
 
 template hippoMemcpy*(dst: pointer, src: GpuRef, size: int, kind: HippoMemcpyKind) =
   ## host -> device memory copy
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
-    handleError(cudaMemcpy(dst, src.p, size.cint, kind))
+    handleError(cudaMemcpy(dst, src.p, size.csize_t, kind))
   elif HippoRuntime == "SIMPLE":
     simpleMemcpy(dst, src.p, size, kind)
   else:
-    handleError(hipMemcpy(dst, src.p, size.cint, kind))
+    handleError(hipMemcpy(dst, src.p, size.csize_t, kind))
 
 template hippoMemcpy*(dst: GpuRef, src: pointer, size: int, kind: HippoMemcpyKind) =
   ## device -> host memory copy
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
-    handleError(cudaMemcpy(dst.p, src, size.cint, kind))
+    handleError(cudaMemcpy(dst.p, src, size.csize_t, kind))
   elif HippoRuntime == "SIMPLE":
     simpleMemcpy(dst.p, src, size, kind)
   else:
-    handleError(hipMemcpy(dst.p, src, size.cint, kind))
+    handleError(hipMemcpy(dst.p, src, size.csize_t, kind))
 
 template hippoMemcpy*(dst: GpuRef, src: GpuRef, size: int, kind: HippoMemcpyKind) =
   ## device -> device memory copy
   ## Copy memory from `src` to `dst`. direction of device and host is determined by `kind`.
   when HippoRuntime == "CUDA":
-    handleError(cudaMemcpy(dst.p, src.p, size.cint, kind))
+    handleError(cudaMemcpy(dst.p, src.p, size.csize_t, kind))
   elif HippoRuntime == "SIMPLE":
     simpleMemcpy(dst.p, src.p, size, kind)
   else:
-    handleError(hipMemcpy(dst.p, src.p, size.cint, kind))
+    handleError(hipMemcpy(dst.p, src.p, size.csize_t, kind))
 
 template hippoMemcpyToSymbol*(symbol: untyped, src: pointer, size: int,
                               offset: int = 0,
