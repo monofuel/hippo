@@ -381,11 +381,11 @@
 
 </ul>
 <ul class="simple nested-toc-section">hipMalloc
-  <li><a class="reference" href="#hipMalloc%2Cptr.pointer%2Ccint" title="hipMalloc(ptr: ptr pointer; size: cint): hipError_t">hipMalloc(ptr: ptr pointer; size: cint): hipError_t</a></li>
+  <li><a class="reference" href="#hipMalloc%2Cptr.pointer%2Ccsize_t" title="hipMalloc(ptr: ptr pointer; size: csize_t): hipError_t">hipMalloc(ptr: ptr pointer; size: csize_t): hipError_t</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">hipMemcpy
-  <li><a class="reference" href="#hipMemcpy%2Cpointer%2Cpointer%2Ccint%2ChipMemcpyKind" title="hipMemcpy(dst: pointer; src: pointer; size: cint; kind: hipMemcpyKind): hipError_t">hipMemcpy(dst: pointer; src: pointer; size: cint; kind: hipMemcpyKind): hipError_t</a></li>
+  <li><a class="reference" href="#hipMemcpy%2Cpointer%2Cpointer%2Ccsize_t%2ChipMemcpyKind" title="hipMemcpy(dst: pointer; src: pointer; size: csize_t; kind: hipMemcpyKind): hipError_t">hipMemcpy(dst: pointer; src: pointer; size: csize_t; kind: hipMemcpyKind): hipError_t</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">hipMemcpyAsync
@@ -2373,8 +2373,8 @@
 
 </div>
 <div id="hipMalloc-procs-all">
-  <div id="hipMalloc,ptr.pointer,cint">
-  <dt><pre><span class="Keyword">proc</span> <a href="#hipMalloc%2Cptr.pointer%2Ccint"><span class="Identifier">hipMalloc</span></a><span class="Other">(</span><span class="Identifier">ptr</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <a href="#hipError_t"><span class="Identifier">hipError_t</span></a> {.
+  <div id="hipMalloc,ptr.pointer,csize_t">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipMalloc%2Cptr.pointer%2Ccsize_t"><span class="Identifier">hipMalloc</span></a><span class="Other">(</span><span class="Identifier">ptr</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">csize_t</span><span class="Other">)</span><span class="Other">:</span> <a href="#hipError_t"><span class="Identifier">hipError_t</span></a> {.
     <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;hipMalloc(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -2388,8 +2388,8 @@
 
 </div>
 <div id="hipMemcpy-procs-all">
-  <div id="hipMemcpy,pointer,pointer,cint,hipMemcpyKind">
-  <dt><pre><span class="Keyword">proc</span> <a href="#hipMemcpy%2Cpointer%2Cpointer%2Ccint%2ChipMemcpyKind"><span class="Identifier">hipMemcpy</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">kind</span><span class="Other">:</span> <a href="#hipMemcpyKind"><span class="Identifier">hipMemcpyKind</span></a><span class="Other">)</span><span class="Other">:</span> <a href="#hipError_t"><span class="Identifier">hipError_t</span></a> {.
+  <div id="hipMemcpy,pointer,pointer,csize_t,hipMemcpyKind">
+  <dt><pre><span class="Keyword">proc</span> <a href="#hipMemcpy%2Cpointer%2Cpointer%2Ccsize_t%2ChipMemcpyKind"><span class="Identifier">hipMemcpy</span></a><span class="Other">(</span><span class="Identifier">dst</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">src</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">csize_t</span><span class="Other">;</span> <span class="Identifier">kind</span><span class="Other">:</span> <a href="#hipMemcpyKind"><span class="Identifier">hipMemcpyKind</span></a><span class="Other">)</span><span class="Other">:</span> <a href="#hipError_t"><span class="Identifier">hipError_t</span></a> {.
     <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;hip/hip_runtime.h&quot;</span><span class="Other">,</span> <span class="Identifier">importcpp</span><span class="Other">:</span> <span class="StringLit">&quot;hipMemcpy(@)&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -4461,7 +4461,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-09-03 20:06:09 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-09-03 20:50:18 UTC</small>
       </div>
     </div>
   </div>
