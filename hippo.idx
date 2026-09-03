@@ -130,6 +130,8 @@ nim	sin	hippo.html#sin,cdouble	proc sin(x: cdouble): cdouble		357
 nim	cos	hippo.html#cos,cdouble	proc cos(x: cdouble): cdouble		358
 nim	sqrt	hippo.html#sqrt,cdouble	proc sqrt(x: cdouble): cdouble		359
 nim	pow	hippo.html#pow,cdouble,cdouble	proc pow(base: cdouble; exp: cdouble): cdouble		360
+nim	GpuMemory	hippo.html#GpuMemory	object GpuMemory		106
+nim	GpuRef	hippo.html#GpuRef	type GpuRef		108
 nim	hippoMalloc	hippo.html#hippoMalloc.t,int	template hippoMalloc(size: int): GpuRef		110
 nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,pointer,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)		123
 nim	hippoMemcpy	hippo.html#hippoMemcpy.t,pointer,GpuRef,int,hipMemcpyKind	template hippoMemcpy(dst: pointer; src: GpuRef; size: int; kind: HippoMemcpyKind)		134
