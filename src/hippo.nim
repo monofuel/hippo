@@ -103,9 +103,9 @@ else:
 # these hippo* functions need to be nim-friendly and warp around the raw hip and cuda functions.
 
 type
-  GpuMemory = object ## Wrapper around gpu memory for automatic cleanup
+  GpuMemory* = object ## Wrapper around gpu memory for automatic cleanup
     p*: pointer
-  GpuRef = ref GpuMemory
+  GpuRef* = ref GpuMemory
 
 template hippoMalloc*(size: int): GpuRef =
   ## Allocate memory on the GPU and return a GpuRef object.
