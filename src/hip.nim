@@ -62,6 +62,8 @@ proc hipLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim
     importcpp: "hipLaunchKernel(@)", header: "hip/hip_runtime.h".}
 proc hipDeviceSynchronize*(): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipDeviceSynchronize(@)".}
 proc hipSyncthreads*() {.importcpp: "__syncthreads()", header: "hip/hip_runtime.h".}
+proc hipThreadfence*() {.importcpp: "__threadfence()", header: "hip/hip_runtime.h".}
+  ## Order the calling thread's memory accesses at device scope; this is not a barrier.
 
 # Cooperative Launch
 proc hipLaunchCooperativeKernel*(function_address: pointer; gridDim: Dim3;
@@ -177,8 +179,8 @@ when defined(HIP_CPU_RUNTIME):
   # HIP_CPU doesn't implement hipHostAlloc, use hipMalloc as fallback
   proc hipHostAlloc*(p: ptr pointer; size: csize_t;
                      flags: uint32_t): hipError_t =
-    # Note: ignores flags for now, just use regular malloc
-    hipMalloc(p, size.cint)
+    ## Allocate ordinary host memory on HIP-CPU, ignoring the allocation flags.
+    hipMalloc(p, size)
 else:
   # Real HIP runtime has hipHostAlloc
   proc hipHostAlloc*(p: ptr pointer; size: csize_t;

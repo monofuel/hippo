@@ -171,6 +171,24 @@ NVCC_PREPEND_FLAGS="-arch=sm_86" nim cpp -r --cc:nvcc examples/vector_sum_cuda.n
 - `nimble test_amd` to compile with hipcc and run on your AMD GPU
 - `nimble test_cuda` to compile with nvcc and run on your NVIDIA GPU
 
+The focused Appendix A tests cover **A.1.2's lock-based dot product** and
+**A.2.4's lock-based hash table**, including collisions and insertion from multiple
+blocks. They use the memory fences from NVIDIA's
+[book errata](https://developer.nvidia.com/cuda-example-errata-page).
+
+```bash
+# HIP-CPU (also included in nimble test).
+nim cpp -r tests/test_appendix_a_atomics.nim
+# AMD HIP, in an environment with hipcc and the ROCm device libraries.
+HIPPO_APPENDIX_BACKEND=HIP nim cpp -r tests/test_appendix_a_atomics.nim
+```
+
+The repository's `nix develop .#amd` shell supplies the HIP-CPU and AMD HIP
+dependencies (`.#basic` is sufficient for HIP-CPU). If hipcc cannot discover its
+device bitcode, set `HIP_DEVICE_LIB_PATH` to its `amdgcn/bitcode` directory;
+the test configuration supplies the compiler flag. CUDA and SIMPLE coverage
+for Appendix A is deferred.
+
 ## Feature todo list
 
 - [x] support c++ attributes like `__global__`, `__device__`
@@ -193,7 +211,8 @@ NVCC_PREPEND_FLAGS="-arch=sm_86" nim cpp -r --cc:nvcc examples/vector_sum_cuda.n
   - [x] chapter 9 atomics
   - [x] chapter 10 streams
   - [ ] chapter 11 multi-gpu
-  - [ ] Advanced Atomics
+  - [x] Advanced Atomics (Appendix A.1/A.2 tested on AMD HIP and HIP-CPU;
+    CUDA and SIMPLE deferred)
 - [ ] setup CI runners for both nvidia & amd GPUs for testing binaries
 
 ## Stretch goals
