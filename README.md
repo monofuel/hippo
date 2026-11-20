@@ -193,7 +193,8 @@ NVCC_PREPEND_FLAGS="-arch=sm_86" nim cpp -r --cc:nvcc examples/vector_sum_cuda.n
   - [x] chapter 9 atomics
   - [x] chapter 10 streams
   - [ ] chapter 11 multi-gpu
-  - [ ] Advanced Atomics
+  - [x] Advanced Atomics (Appendix A.1/A.2 tested on AMD HIP and HIP-CPU;
+    CUDA and SIMPLE deferred)
 - [ ] setup CI runners for both nvidia & amd GPUs for testing binaries
 
 ## Stretch goals

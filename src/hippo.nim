@@ -303,6 +303,14 @@ template hippoMemsetAsync*(dst: GpuRef, value: cint, size: int, stream: HippoStr
     handleError(hipMemsetAsync(dst.p, value, size.csize_t, stream))
 
 # Atomics
+template hippoThreadfence*() =
+  ## Order device memory accesses before and after the fence across all blocks.
+  ## Supported on HIP and HIP-CPU; it does not make other threads wait.
+  when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+    hipThreadfence()
+  else:
+    {.error: "hippoThreadfence is currently implemented for HIP and HIP_CPU only.".}
+
 template hippoAtomicAdd*(address: ptr[int32]; val: int32): int32 =
   ## Atomically add and return the previous value.
   when HippoRuntime == "CUDA":
