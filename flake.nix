@@ -12,6 +12,9 @@
         inherit system;
         config.allowUnfree = true;
       };
+      guiLibraryPath = pkgs.lib.makeLibraryPath (with pkgs; [
+        libGL mesa xorg.libX11 xorg.libXext xorg.libXcursor
+      ]);
     in
     {
       devShells.${system} = {
@@ -59,7 +62,7 @@
             export HIP_PATH=${pkgs.rocmPackages.hip-common}
             
             # Combined library paths
-            export LD_LIBRARY_PATH=${pkgs.cudatoolkit}/lib:${pkgs.cudaPackages.cuda_cudart}/lib:${pkgs.linuxPackages.nvidia_x11}/lib:${pkgs.rocmPackages.rocm-runtime}/lib:${pkgs.rocmPackages.hip-common}/lib:${pkgs.libGL}/lib:${pkgs.mesa}/lib:$LD_LIBRARY_PATH
+            export LD_LIBRARY_PATH=${pkgs.cudatoolkit}/lib:${pkgs.cudaPackages.cuda_cudart}/lib:${pkgs.linuxPackages.nvidia_x11}/lib:${pkgs.rocmPackages.rocm-runtime}/lib:${pkgs.rocmPackages.hip-common}/lib:${guiLibraryPath}:$LD_LIBRARY_PATH
             
             # Combined compiler flags
             export EXTRA_CFLAGS="-I${pkgs.cudatoolkit}/include -I${pkgs.rocmPackages.hip-common}/include -I${pkgs.rocmPackages.rocm-runtime}/include"
@@ -94,7 +97,7 @@
 
           shellHook = ''
             export CUDA_PATH=${pkgs.cudatoolkit}
-            export LD_LIBRARY_PATH=${pkgs.cudatoolkit}/lib:${pkgs.cudaPackages.cuda_cudart}/lib:${pkgs.linuxPackages.nvidia_x11}/lib:${pkgs.libGL}/lib:${pkgs.mesa}/lib:$LD_LIBRARY_PATH
+            export LD_LIBRARY_PATH=${pkgs.cudatoolkit}/lib:${pkgs.cudaPackages.cuda_cudart}/lib:${pkgs.linuxPackages.nvidia_x11}/lib:${guiLibraryPath}:$LD_LIBRARY_PATH
             export EXTRA_CFLAGS="-I${pkgs.cudatoolkit}/include"
             export EXTRA_LDFLAGS="-L${pkgs.cudatoolkit}/lib -L${pkgs.cudaPackages.cuda_cudart}/lib -L${pkgs.linuxPackages.nvidia_x11}/lib -L${pkgs.libGL}/lib -L${pkgs.mesa}/lib"
             echo "🚀 NVIDIA/CUDA development environment ready"
@@ -129,7 +132,7 @@
             export HIP_PLATFORM=amd
             export ROCM_PATH=${pkgs.rocmPackages.rocm-runtime}
             export HIP_PATH=${pkgs.rocmPackages.hip-common}
-            export LD_LIBRARY_PATH=${pkgs.rocmPackages.rocm-runtime}/lib:${pkgs.rocmPackages.hip-common}/lib:${pkgs.libGL}/lib:${pkgs.mesa}/lib:$LD_LIBRARY_PATH
+            export LD_LIBRARY_PATH=${pkgs.rocmPackages.rocm-runtime}/lib:${pkgs.rocmPackages.hip-common}/lib:${guiLibraryPath}:$LD_LIBRARY_PATH
             export EXTRA_CFLAGS="-I${pkgs.rocmPackages.hip-common}/include -I${pkgs.rocmPackages.rocm-runtime}/include"
             export EXTRA_LDFLAGS="-L${pkgs.rocmPackages.rocm-runtime}/lib -L${pkgs.rocmPackages.hip-common}/lib -L${pkgs.libGL}/lib -L${pkgs.mesa}/lib"
             echo "🔥 AMD/ROCm development environment ready"
@@ -155,10 +158,10 @@
           ];
 
           shellHook = ''
-            export LD_LIBRARY_PATH=${pkgs.libGL}/lib:${pkgs.mesa}/lib:$LD_LIBRARY_PATH
+            export LD_LIBRARY_PATH=${guiLibraryPath}:$LD_LIBRARY_PATH
             echo "⚡ Basic Nim development environment ready (CPU only)"
           '';
         };
       };
     };
-} 
+}
