@@ -46,13 +46,49 @@ proc newDim3*(x: uint32_t = 1; y: uint32_t = 1; z: uint32_t = 1): Dim3 =
   result.z = z
 
 proc hipMalloc*(`ptr`: ptr pointer; size: csize_t): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipMalloc(@)".}
+proc hipMallocPitch*(p: ptr pointer; pitch: ptr csize_t;
+                     widthBytes, height: csize_t): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipMallocPitch(@)".}
+  ## Allocate rows of widthBytes bytes and return their actual pitch in bytes.
 proc hipMemcpy*(dst: pointer; src: pointer; size: csize_t; kind: hipMemcpyKind): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipMemcpy(@)".}
+proc hipMemcpy2D*(dst: pointer; dstPitch: csize_t; src: pointer; srcPitch: csize_t;
+                  widthBytes, height: csize_t; kind: hipMemcpyKind): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipMemcpy2D(@)".}
+  ## Copy height rows, with row widths and both pitches measured in bytes.
 proc hipMemcpyToSymbol*(symbol: pointer; src: pointer; sizeBytes: csize_t;
                         offset: csize_t = 0;
                         kind: hipMemcpyKind = hipMemcpyHostToDevice): hipError_t {.
   header: "hip/hip_runtime.h", importcpp: "hipMemcpyToSymbol(@)".}
 proc hipSymbol*[T](sym: var T): pointer {.header: "hip/hip_runtime.h", importcpp: "HIP_SYMBOL(@)".}
 proc hipFree*(`ptr`: pointer): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipFree(@)".}
+
+when defined(HIP_CPU_RUNTIME):
+  type HippoFloatTexture* {.bycopy.} = object
+    ## Borrowed float32 sampling view; HIP-CPU has no native texture API.
+    data: ptr UncheckedArray[cfloat]
+    width, height, pitchElements: int
+else:
+  type HippoFloatTexture* {.importcpp: "hipTextureObject_t",
+      header: "hip/hip_runtime.h".} = uint64
+    ## Native HIP texture object holding a borrowed view of float32 device memory.
+
+  proc hipCreateFloatTexture1D*(texture: ptr HippoFloatTexture; data: pointer;
+                                count: csize_t): hipError_t {.
+    header: "hippo_texture.h", importcpp: "hippo_detail::create_float_texture_1d(@)".}
+    ## Create a linear float32 texture without copying its backing memory.
+  proc hipCreateFloatTexture2D*(texture: ptr HippoFloatTexture; data: pointer;
+                                width, height, pitchBytes: csize_t): hipError_t {.
+    header: "hippo_texture.h", importcpp: "hippo_detail::create_float_texture_2d(@)".}
+    ## Create an unnormalized, point-sampled float32 texture with clamped edges.
+  proc hipDestroyTextureObject*(texture: HippoFloatTexture): hipError_t {.
+    header: "hip/hip_runtime.h", importcpp: "hipDestroyTextureObject(@)".}
+    ## Destroy the texture object while leaving its backing allocation intact.
+  proc hipTex1DFetch*(texture: HippoFloatTexture; index: cint): cfloat {.
+    header: "hip/hip_runtime.h", importcpp: "tex1Dfetch<float>(@)".}
+    ## Fetch a float32 element at an integer index from a linear texture.
+  proc hipTex2D*(texture: HippoFloatTexture; x, y: cfloat): cfloat {.
+    header: "hip/hip_runtime.h", importcpp: "tex2D<float>(@)".}
+    ## Sample float32 data using the texture object's coordinates and sampler.
 
 proc hipLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;
                      args: ptr pointer): hipError_t {.

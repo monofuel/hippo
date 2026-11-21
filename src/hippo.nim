@@ -1385,3 +1385,80 @@ when HippoRuntime == "HIP":
 
   template hippoWmmaZeroF32*(): HippoWmmaFloat8 =
     wmmaZeroF32()
+
+# Float32 texture views used by Chapter 7's heat simulation.
+when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+  template hippoMallocPitch*(widthBytes, height: int): untyped =
+    ## Allocate pitched rows and return (memory: GpuRef, pitchBytes: int).
+    ## Width is in bytes; free the allocation through the returned GpuRef.
+    block:
+      let
+        rowBytes = widthBytes
+        rows = height
+      if rowBytes <= 0 or rows <= 0:
+        raise newException(ValueError, "Pitched allocation dimensions must be positive.")
+      var
+        memory = GpuRef()
+        pitch: csize_t
+      handleError(hipMallocPitch(addr memory.p, addr pitch, csize_t(rowBytes), csize_t(rows)))
+      (memory: memory, pitchBytes: int(pitch))
+
+  template hippoMemcpy2D*(dst: pointer; dstPitchBytes: int; src: pointer;
+                         srcPitchBytes, widthBytes, height: int; kind: HippoMemcpyKind) =
+    ## Copy logical rows between linear or pitched allocations; sizes are in bytes.
+    handleError(hipMemcpy2D(dst, csize_t(dstPitchBytes), src, csize_t(srcPitchBytes),
+                            csize_t(widthBytes), csize_t(height), kind))
+
+  proc hippoCreateFloatTexture1D*(memory: GpuRef; count: int): HippoFloatTexture =
+    ## Borrow count float32 elements without copying; memory must outlive the texture.
+    ## HIP uses a native texture object; HIP-CPU reads the same backing allocation.
+    if count <= 0:
+      raise newException(ValueError, "Texture element count must be positive.")
+    when HippoRuntime == "HIP_CPU":
+      result = HippoFloatTexture(data: cast[ptr UncheckedArray[cfloat]](memory.p),
+        width: count, height: 1, pitchElements: count)
+    else:
+      handleError(hipCreateFloatTexture1D(addr result, memory.p, csize_t(count)))
+
+  proc hippoCreateFloatTexture2D*(memory: GpuRef; width, height,
+                                pitchBytes: int): HippoFloatTexture =
+    ## Borrow pitched float32 rows with unnormalized coordinates, point sampling,
+    ## and clamped edges. Memory must outlive the texture; its rows are not copied.
+    ## HIP-CPU implements these sampling rules over ordinary host memory.
+    if width <= 0 or height <= 0 or pitchBytes < width * sizeof(cfloat) or
+        pitchBytes mod sizeof(cfloat) != 0:
+      raise newException(ValueError, "Invalid float32 texture dimensions or row pitch.")
+    when HippoRuntime == "HIP_CPU":
+      result = HippoFloatTexture(data: cast[ptr UncheckedArray[cfloat]](memory.p),
+        width: width, height: height, pitchElements: pitchBytes div sizeof(cfloat))
+    else:
+      handleError(hipCreateFloatTexture2D(addr result, memory.p, csize_t(width),
+        csize_t(height), csize_t(pitchBytes)))
+
+  proc hippoDestroyFloatTexture*(texture: HippoFloatTexture) =
+    ## Release a texture view before freeing its backing memory; HIP-CPU is a no-op.
+    when HippoRuntime == "HIP_CPU":
+      discard texture
+    else:
+      handleError(hipDestroyTextureObject(texture))
+
+  proc hippoTex1DFetch*(texture: HippoFloatTexture; index: cint): cfloat {.hippoDeviceInline.} =
+    ## Fetch a float32 element by integer index from a linear texture view.
+    when HippoRuntime == "HIP_CPU":
+      if index < 0 or int(index) >= texture.width:
+        result = 0.0'f32
+      else:
+        result = texture.data[int(index)]
+    else:
+      result = hipTex1DFetch(texture, index)
+
+  proc hippoTex2D*(texture: HippoFloatTexture; x, y: cfloat): cfloat {.hippoDeviceInline.} =
+    ## Point-sample finite, unnormalized coordinates with clamped edges.
+    ## Pixel (x, y) has its center at (x + 0.5, y + 0.5).
+    when HippoRuntime == "HIP_CPU":
+      let
+        column = min(max(int(x), 0), texture.width - 1)
+        row = min(max(int(y), 0), texture.height - 1)
+      result = texture.data[row * texture.pitchElements + column]
+    else:
+      result = hipTex2D(texture, x, y)

@@ -120,6 +120,22 @@ Pragmas for shared device helpers:
   - The HIP Runtime is a C++ library, and so is the CUDA Runtime. As such, we can't do anything about this.
   - You can make separate projects for the C and C++ parts and link them together. (I have not tested this yet, would love examples if you do this!)
 
+## Heat-map demo
+
+[Chapter 7's animated heat map](tests/gui_heatmap.nim) uses Windy, Boxy, Pixie and
+OpenGL, like the Julia demo. Install these optional GUI dependencies with
+`nimble install windy boxy pixie opengl`, then run from the repository root:
+
+```sh
+nim cpp --skipParentCfg -d:release -r tests/gui_heatmap.nim # HIP-CPU (the tests directory default)
+nim cpp --skipParentCfg --cc:hipcc -d:release -d:useMalloc -d:HippoRuntime:HIP -r tests/gui_heatmap.nim # AMD HIP
+```
+
+Space pauses/resumes, R resets, S saves `heatmap.png`, and Esc closes the window.
+For a bounded run and PNG export, append `--frames=120 --screenshot=heatmap.png`.
+This is a manual demo; the automated test tasks do not launch it.
+On NixOS, use `nix develop .#basic` to supply its system libraries.
+
 ## Motivation
 
 - I want GPU compute (HIP / CUDA) to be a first-class citizen in Nim.
@@ -188,7 +204,7 @@ NVCC_PREPEND_FLAGS="-arch=sm_86" nim cpp -r --cc:nvcc examples/vector_sum_cuda.n
   - [x] chapter 4 vector + julia set
   - [x] chapter 5 shared memory + thread syncing dot product
   - [x] chapter 6 constant memory + events
-  - [ ] chapter 7 texture memory (this API changed in recent cuda, might skip)
+  - [x] chapter 7 texture memory (HIP and HIP-CPU; CUDA deferred)
   - [ ] chapter 8 graphics interoperability with [boxy](https://github.com/treeform/boxy/blob/master/examples/basic_glut.nim)
   - [x] chapter 9 atomics
   - [x] chapter 10 streams
