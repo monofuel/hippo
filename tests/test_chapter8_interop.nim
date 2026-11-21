@@ -1,3 +1,7 @@
+## Chapter 8 buffer/texture handoff checks, discovered by the normal test tasks.
+## Uses an invisible GLX drawable and requires an accessible X11/GLX display.
+## Missing displays skip this test; native HIP also skips software OpenGL contexts.
+
 import
   std/[unittest, math, strutils],
   hippo

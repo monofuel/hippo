@@ -1,3 +1,19 @@
+## Manual Chapter 8 OpenGL interop demo; excluded from automated test tasks.
+## Dependencies: `nimble install windy pixie opengl`.
+## Build and run from the repository root:
+##
+## .. code-block:: sh
+##
+##   nim cpp --skipParentCfg --cc:hipcc -d:release -d:useMalloc -d:HippoRuntime:HIP -r tests/gui_interop.nim
+##   nim cpp --skipParentCfg -d:release -r tests/gui_interop.nim
+##
+## The first command uses native AMD HIP/GL sharing on Linux; the second uses
+## HIP-CPU and a host-mapped GL buffer, labelled in the window title.
+## Normal HIP frames share the GL buffer; explicit PNG captures read it back.
+## On NixOS, `nix develop .#basic` supplies the system GUI libraries.
+## The compiled backend is independent of the Nix shell's name.
+## Use --help for view selection, controls, frame limits and PNG output options.
+
 # Keep CPU-only SIMD intrinsics out of HIP device compilation.
 {.define: pixieNoSimd.}
 {.define: zippyNoSimd.}

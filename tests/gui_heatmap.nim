@@ -1,3 +1,17 @@
+## Manual Chapter 7 heat-map demo; excluded from automated test tasks.
+## Dependencies: `nimble install windy boxy pixie opengl`.
+## Build and run from the repository root:
+##
+## .. code-block:: sh
+##
+##   nim cpp --skipParentCfg -d:release -r tests/gui_heatmap.nim
+##   nim cpp --skipParentCfg --cc:hipcc -d:release -d:useMalloc -d:HippoRuntime:HIP -r tests/gui_heatmap.nim
+##
+## The first command uses HIP-CPU; the second uses AMD HIP.
+## On NixOS, `nix develop .#basic` supplies the system GUI libraries.
+## The compiled backend is independent of the Nix shell's name.
+## Use --help for controls, frame limits and PNG output options.
+
 # Keep the GUI dependencies' CPU SIMD intrinsics out of HIP device compilation.
 {.define: pixieNoSimd.}
 {.define: zippyNoSimd.}
