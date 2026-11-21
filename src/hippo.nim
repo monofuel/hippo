@@ -1386,6 +1386,56 @@ when HippoRuntime == "HIP":
   template hippoWmmaZeroF32*(): HippoWmmaFloat8 =
     wmmaZeroF32()
 
+# OpenGL buffer interoperability used by Chapter 8.
+when HippoRuntime == "HIP":
+  const
+    GLDeviceListCurrentFrame = 2'i32
+    GraphicsRegisterWriteDiscard = 2'u32
+
+  proc hippoUseGLDevice*(): cint =
+    ## Select the HIP device associated with the current OpenGL context.
+    ## Call this after making GL current, before creating compute resources.
+    var capacity: cint
+    handleError(hipGetDeviceCount(addr capacity))
+    if capacity <= 0:
+      raise newException(ValueError, "No HIP device is available for OpenGL interop.")
+    var
+      devices = newSeq[cint](int(capacity))
+      count: cuint
+    handleError(hipGLGetDevices(addr count, addr devices[0], cuint(capacity), GLDeviceListCurrentFrame))
+    if count == 0:
+      raise newException(ValueError, "The OpenGL context has no associated HIP device.")
+    result = devices[0]
+    handleError(hipSetDevice(result))
+
+  proc hippoGraphicsGLRegisterBuffer*(buffer: cuint;
+                                     writeDiscard = true): HippoGraphicsResource =
+    ## Register a GL buffer once, keeping its GL context current for interop calls.
+    ## Write-discard requires overwriting the entire buffer on each mapping.
+    let flags = if writeDiscard: GraphicsRegisterWriteDiscard else: 0'u32
+    handleError(hipGraphicsGLRegisterBuffer(addr result, buffer, flags))
+
+  proc hippoGraphicsMap*(resource: HippoGraphicsResource; stream: HippoStream) =
+    ## Map a registered GL buffer for HIP; GL must not access it until unmapped.
+    var handle = resource
+    handleError(hipGraphicsMapResources(1, addr handle, stream))
+
+  proc hippoGraphicsMappedPointer*(resource: HippoGraphicsResource): tuple[
+      data: pointer, sizeBytes: int] =
+    ## Borrow a mapped pointer; never free it or retain it across unmapping.
+    var size: csize_t
+    handleError(hipGraphicsResourceGetMappedPointer(addr result.data, addr size, resource))
+    result.sizeBytes = int(size)
+
+  proc hippoGraphicsUnmap*(resource: HippoGraphicsResource; stream: HippoStream) =
+    ## Return ownership to GL after preceding kernels in the supplied stream.
+    var handle = resource
+    handleError(hipGraphicsUnmapResources(1, addr handle, stream))
+
+  proc hippoGraphicsUnregister*(resource: HippoGraphicsResource) =
+    ## Release HIP's registration while GL is current, before deleting its buffer.
+    handleError(hipGraphicsUnregisterResource(resource))
+
 # Float32 texture views used by Chapter 7's heat simulation.
 when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
   template hippoMallocPitch*(widthBytes, height: int): untyped =
