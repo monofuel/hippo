@@ -1,3 +1,10 @@
+## Minimal Chapter 8 test plumbing, shared with the manual interop demo.
+## The low-level GLX setup and function loading are deliberately verbose: they
+## keep GUI/shader dependencies out of the automated tests. This fixture only
+## needs to prove that compute and OpenGL can exchange the same buffer correctly.
+## For application code, prefer Windy for windows/contexts and Shady for writing
+## shaders in Nim instead of treating this fixture as a general graphics layer.
+
 import
   std/dynlib,
   hippo

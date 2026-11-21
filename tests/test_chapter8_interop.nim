@@ -1,4 +1,9 @@
 ## Chapter 8 buffer/texture handoff checks, discovered by the normal test tasks.
+## These tests and their GLX fixture intentionally use low-level APIs to avoid
+## adding GUI/shader dependencies to the test suite. The goal is to prove interop,
+## rather than build a polished rendering abstraction. For application code, use
+## Windy for windows/contexts and consider Shady for shaders written in Nim.
+## The separate gui_interop.nim demo already uses Windy and Pixie.
 ## Uses an invisible GLX drawable and requires an accessible X11/GLX display.
 ## Missing displays skip this test; native HIP also skips software OpenGL contexts.
 
