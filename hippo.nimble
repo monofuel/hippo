@@ -1,4 +1,4 @@
-version     = "0.11.1"
+version     = "0.12.0"
 author      = "Andrew Brower"
 description = "HIP library for Nim"
 license     = "MIT"
