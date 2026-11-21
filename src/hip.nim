@@ -62,6 +62,42 @@ proc hipMemcpyToSymbol*(symbol: pointer; src: pointer; sizeBytes: csize_t;
 proc hipSymbol*[T](sym: var T): pointer {.header: "hip/hip_runtime.h", importcpp: "HIP_SYMBOL(@)".}
 proc hipFree*(`ptr`: pointer): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipFree(@)".}
 
+when not defined(HIP_CPU_RUNTIME):
+  type
+    HippoGraphicsResource* {.importcpp: "hipGraphicsResource_t",
+      header: "hip/hip_runtime.h".} = pointer
+
+  proc hipGetDeviceCount*(count: ptr cint): hipError_t {.
+    header: "hip/hip_runtime.h", importcpp: "hipGetDeviceCount(@)".}
+    ## Return the number of HIP devices available to this process.
+  proc hipSetDevice*(device: cint): hipError_t {.
+    header: "hip/hip_runtime.h", importcpp: "hipSetDevice(@)".}
+    ## Select the HIP device for subsequent allocations and kernel launches.
+  proc hipGLGetDevices*(count: ptr cuint; devices: ptr cint; capacity: cuint;
+                       deviceList: cint): hipError_t {.
+    header: "hip/hip_gl_interop.h",
+    importcpp: "hipGLGetDevices(#, #, #, static_cast<hipGLDeviceList>(#))".}
+    ## Query HIP devices associated with the current OpenGL context.
+  proc hipGraphicsGLRegisterBuffer*(resource: ptr HippoGraphicsResource;
+      buffer, flags: cuint): hipError_t {.
+    header: "hip/hip_gl_interop.h", importcpp: "hipGraphicsGLRegisterBuffer(@)".}
+    ## Register an OpenGL buffer; its context must be current on the calling thread.
+  proc hipGraphicsMapResources*(count: cint; resources: ptr HippoGraphicsResource;
+      stream: hipStream_t): hipError_t {.
+    header: "hip/hip_runtime.h", importcpp: "hipGraphicsMapResources(@)".}
+    ## Transfer ownership of registered graphics resources from OpenGL to HIP.
+  proc hipGraphicsResourceGetMappedPointer*(data: ptr pointer; size: ptr csize_t;
+      resource: HippoGraphicsResource): hipError_t {.
+    header: "hip/hip_runtime.h", importcpp: "hipGraphicsResourceGetMappedPointer(@)".}
+    ## Borrow the mapped device pointer and byte size until the next unmap.
+  proc hipGraphicsUnmapResources*(count: cint; resources: ptr HippoGraphicsResource;
+      stream: hipStream_t): hipError_t {.
+    header: "hip/hip_runtime.h", importcpp: "hipGraphicsUnmapResources(@)".}
+    ## Return registered graphics resources to OpenGL after preceding stream work.
+  proc hipGraphicsUnregisterResource*(resource: HippoGraphicsResource): hipError_t {.
+    header: "hip/hip_runtime.h", importcpp: "hipGraphicsUnregisterResource(@)".}
+    ## Release the HIP registration before deleting the OpenGL buffer.
+
 when defined(HIP_CPU_RUNTIME):
   type HippoFloatTexture* {.bycopy.} = object
     ## Borrowed float32 sampling view; HIP-CPU has no native texture API.

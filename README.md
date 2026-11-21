@@ -136,6 +136,32 @@ For a bounded run and PNG export, append `--frames=120 --screenshot=heatmap.png`
 This is a manual demo; the automated test tasks do not launch it.
 On NixOS, use `nix develop .#basic` to supply its system libraries.
 
+## Chapter 8 interop demo
+
+[The Windy interoperability demo](tests/gui_interop.nim) implements the book's
+basic pattern, animated ripples and heat diffusion through an OpenGL pixel buffer.
+It uses the same optional GUI dependencies as the heat-map demo above.
+
+```sh
+nim cpp --skipParentCfg --cc:hipcc -d:release -d:useMalloc -d:HippoRuntime:HIP -r tests/gui_interop.nim
+nim cpp --skipParentCfg -d:release -r tests/gui_interop.nim # HIP-CPU
+```
+
+Press 1/2/3 to switch views, Space to pause, R to reset, S to save `interop.png`,
+and Esc to close. Optional `--mode=ripple --frames=120 --screenshot=interop.png`
+arguments select a view and capture a bounded run.
+
+Native HIP selects the GPU associated with the current GL context, then registers,
+maps, fills and unmaps the pixel buffer before OpenGL displays it. Normal frames
+do not copy pixels through the CPU; explicit PNG captures read the framebuffer.
+HIP-CPU uses a host-mapped GL buffer, labelled in the title, rather than native
+GPU sharing. Current coverage targets Linux AMD HIP and HIP-CPU; CUDA is deferred.
+
+The Chapter 8 test runs through the existing test tasks on an invisible GLX
+drawable. It skips when no accessible X11/GLX display is available; native HIP
+also skips software OpenGL contexts. Run it from a graphical session for actual
+interop coverage. On NixOS, `nix develop .#basic` supplies the system GL libraries.
+
 ## Motivation
 
 - I want GPU compute (HIP / CUDA) to be a first-class citizen in Nim.
@@ -205,7 +231,7 @@ NVCC_PREPEND_FLAGS="-arch=sm_86" nim cpp -r --cc:nvcc examples/vector_sum_cuda.n
   - [x] chapter 5 shared memory + thread syncing dot product
   - [x] chapter 6 constant memory + events
   - [x] chapter 7 texture memory (HIP and HIP-CPU; CUDA deferred)
-  - [ ] chapter 8 graphics interoperability with [boxy](https://github.com/treeform/boxy/blob/master/examples/basic_glut.nim)
+  - [x] chapter 8 graphics interoperability (AMD HIP/OpenGL; HIP-CPU host mapping; CUDA deferred)
   - [x] chapter 9 atomics
   - [x] chapter 10 streams
   - [ ] chapter 11 multi-gpu
