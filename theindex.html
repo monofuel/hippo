@@ -16,10 +16,10 @@
 <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAB3RJTUUH4QQQEwksSS9ZWwAAAk1JREFUWMPtll2ITVEUx39nn/O7Y5qR8f05wtCUUr6ZIS++8pEnkZInPImneaCQ5METNdOkeFBKUhMPRIkHKfEuUZSUlGlKPN2TrgfncpvmnntnmlEyq1Z7t89/rf9a6+y99oZxGZf/XeIq61EdtgKXgdXA0xrYAvBjOIF1AI9zvjcC74BSpndrJPkBWDScTF8Aa4E3wDlgHbASaANmVqlcCnwHvgDvgVfAJ+AikAAvgfVZwLnSVZHZaOuKoQi3ZOMi4NkYkpe1p4J7A8BpYAD49hfIy/oqG0+hLomiKP2L5L+1ubn5115S+3OAn4EnwBlgMzCjyt6ZAnQCJ4A7wOs88iRJHvw50HoujuPBoCKwHWiosy8MdfZnAdcHk8dxXFJ3VQbQlCTJvRBCGdRbD4M6uc5glpY3eAihpN5S5w12diSEcCCEcKUO4ljdr15T76ur1FDDLIQQ3qv71EdDOe3Kxj3leRXyk+pxdWnFWod6Wt2bY3de3aSuUHcPBVimHs7mK9WrmeOF6lR1o9qnzskh2ar2qm1qizpfXaPeVGdlmGN5pb09qMxz1Xb1kLqgzn1RyH7JUXW52lr5e/Kqi9qpto7V1atuUzfnARrV7jEib1T76gG2qxdGmXyiekkt1GswPTtek0aBfJp6YySGBfWg2tPQ0FAYgf1stUfdmdcjarbYJEniKIq6gY/Aw+zWHAC+p2labGpqiorFYgGYCEzN7oQdQClN07O1/EfDyGgC0ALMBdYAi4FyK+4H3gLPsxfR1zRNi+NP7nH5J+QntnXe5B5mpfQAAAAASUVORK5CYII=">
 
 <!-- CSS -->
-<link rel="stylesheet" type="text/css" href="nimdoc.out.css?v=2.3.1">
+<link rel="stylesheet" type="text/css" href="nimdoc.out.css?v=2.4.3">
 
 <!-- JS -->
-<script type="text/javascript" src="dochack.js?v=2.3.1"></script>
+<script type="text/javascript" src="dochack.js?v=2.4.3"></script>
 </head>
 <body>
   <div class="document" id="documentId">
@@ -197,6 +197,22 @@
           <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipAtomicXor(address: ptr uint32; val: uint32): uint32" href="hippo.html#hipAtomicXor%2Cptr.uint32%2Cuint32">hippo: proc hipAtomicXor(address: ptr uint32; val: uint32): uint32</a></li>
           </ul></dd>
+<dt><a name="hipCreateFloatTexture1D" href="#hipCreateFloatTexture1D"><span>hipCreateFloatTexture1D:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipCreateFloatTexture1D(texture: ptr HippoFloatTexture; data: pointer;
+                        count: csize_t): hipError_t" href="hippo.html#hipCreateFloatTexture1D%2Cptr.HippoFloatTexture%2Cpointer%2Ccsize_t">hippo: proc hipCreateFloatTexture1D(texture: ptr HippoFloatTexture; data: pointer;
+                        count: csize_t): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipCreateFloatTexture2D" href="#hipCreateFloatTexture2D"><span>hipCreateFloatTexture2D:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipCreateFloatTexture2D(texture: ptr HippoFloatTexture; data: pointer;
+                        width, height, pitchBytes: csize_t): hipError_t" href="hippo.html#hipCreateFloatTexture2D%2Cptr.HippoFloatTexture%2Cpointer%2Ccsize_t%2Ccsize_t%2Ccsize_t">hippo: proc hipCreateFloatTexture2D(texture: ptr HippoFloatTexture; data: pointer;
+                        width, height, pitchBytes: csize_t): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipDestroyTextureObject" href="#hipDestroyTextureObject"><span>hipDestroyTextureObject:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipDestroyTextureObject(texture: HippoFloatTexture): hipError_t" href="hippo.html#hipDestroyTextureObject%2CHippoFloatTexture">hippo: proc hipDestroyTextureObject(texture: HippoFloatTexture): hipError_t</a></li>
+          </ul></dd>
 <dt><a name="hipDeviceProp_t" href="#hipDeviceProp_t"><span>hipDeviceProp_t:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: object hipDeviceProp_t" href="hippo.html#hipDeviceProp_t">hippo: object hipDeviceProp_t</a></li>
@@ -249,6 +265,10 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipGetDevice(device: ptr cint): hipError_t" href="hippo.html#hipGetDevice%2Cptr.cint">hippo: proc hipGetDevice(device: ptr cint): hipError_t</a></li>
           </ul></dd>
+<dt><a name="hipGetDeviceCount" href="#hipGetDeviceCount"><span>hipGetDeviceCount:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipGetDeviceCount(count: ptr cint): hipError_t" href="hippo.html#hipGetDeviceCount%2Cptr.cint">hippo: proc hipGetDeviceCount(count: ptr cint): hipError_t</a></li>
+          </ul></dd>
 <dt><a name="hipGetDeviceProperties" href="#hipGetDeviceProperties"><span>hipGetDeviceProperties:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipGetDeviceProperties(prop: ptr hipDeviceProp_t; device: cint): hipError_t" href="hippo.html#hipGetDeviceProperties%2Cptr.hipDeviceProp_t%2Ccint">hippo: proc hipGetDeviceProperties(prop: ptr hipDeviceProp_t; device: cint): hipError_t</a></li>
@@ -261,6 +281,12 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipGetLastError(): hipError_t" href="hippo.html#hipGetLastError">hippo: proc hipGetLastError(): hipError_t</a></li>
           </ul></dd>
+<dt><a name="hipGLGetDevices" href="#hipGLGetDevices"><span>hipGLGetDevices:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipGLGetDevices(count: ptr cuint; devices: ptr cint; capacity: cuint;
+                deviceList: cint): hipError_t" href="hippo.html#hipGLGetDevices%2Cptr.cuint%2Cptr.cint%2Ccuint%2Ccint">hippo: proc hipGLGetDevices(count: ptr cuint; devices: ptr cint; capacity: cuint;
+                deviceList: cint): hipError_t</a></li>
+          </ul></dd>
 <dt><a name="hipGraphDestroy" href="#hipGraphDestroy"><span>hipGraphDestroy:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipGraphDestroy(graph: hipGraph_t): hipError_t" href="hippo.html#hipGraphDestroy%2ChipGraph_t">hippo: proc hipGraphDestroy(graph: hipGraph_t): hipError_t</a></li>
@@ -272,6 +298,34 @@
 <dt><a name="hipGraphExec_t" href="#hipGraphExec_t"><span>hipGraphExec_t:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: type hipGraphExec_t" href="hippo.html#hipGraphExec_t">hippo: type hipGraphExec_t</a></li>
+          </ul></dd>
+<dt><a name="hipGraphicsGLRegisterBuffer" href="#hipGraphicsGLRegisterBuffer"><span>hipGraphicsGLRegisterBuffer:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipGraphicsGLRegisterBuffer(resource: ptr HippoGraphicsResource;
+                            buffer, flags: cuint): hipError_t" href="hippo.html#hipGraphicsGLRegisterBuffer%2Cptr.HippoGraphicsResource%2Ccuint%2Ccuint">hippo: proc hipGraphicsGLRegisterBuffer(resource: ptr HippoGraphicsResource;
+                            buffer, flags: cuint): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipGraphicsMapResources" href="#hipGraphicsMapResources"><span>hipGraphicsMapResources:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipGraphicsMapResources(count: cint; resources: ptr HippoGraphicsResource;
+                        stream: hipStream_t): hipError_t" href="hippo.html#hipGraphicsMapResources%2Ccint%2Cptr.HippoGraphicsResource%2ChipStream_t">hippo: proc hipGraphicsMapResources(count: cint; resources: ptr HippoGraphicsResource;
+                        stream: hipStream_t): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipGraphicsResourceGetMappedPointer" href="#hipGraphicsResourceGetMappedPointer"><span>hipGraphicsResourceGetMappedPointer:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipGraphicsResourceGetMappedPointer(data: ptr pointer; size: ptr csize_t;
+                                    resource: HippoGraphicsResource): hipError_t" href="hippo.html#hipGraphicsResourceGetMappedPointer%2Cptr.pointer%2Cptr.csize_t%2CHippoGraphicsResource">hippo: proc hipGraphicsResourceGetMappedPointer(data: ptr pointer; size: ptr csize_t;
+                                    resource: HippoGraphicsResource): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipGraphicsUnmapResources" href="#hipGraphicsUnmapResources"><span>hipGraphicsUnmapResources:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipGraphicsUnmapResources(count: cint; resources: ptr HippoGraphicsResource;
+                          stream: hipStream_t): hipError_t" href="hippo.html#hipGraphicsUnmapResources%2Ccint%2Cptr.HippoGraphicsResource%2ChipStream_t">hippo: proc hipGraphicsUnmapResources(count: cint; resources: ptr HippoGraphicsResource;
+                          stream: hipStream_t): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipGraphicsUnregisterResource" href="#hipGraphicsUnregisterResource"><span>hipGraphicsUnregisterResource:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipGraphicsUnregisterResource(resource: HippoGraphicsResource): hipError_t" href="hippo.html#hipGraphicsUnregisterResource%2CHippoGraphicsResource">hippo: proc hipGraphicsUnregisterResource(resource: HippoGraphicsResource): hipError_t</a></li>
           </ul></dd>
 <dt><a name="hipGraphInstantiate" href="#hipGraphInstantiate"><span>hipGraphInstantiate:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -296,6 +350,10 @@
 <dt><a name="hipHostFree" href="#hipHostFree"><span>hipHostFree:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipHostFree(p: pointer): hipError_t" href="hippo.html#hipHostFree%2Cpointer">hippo: proc hipHostFree(p: pointer): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipHostGetDevicePointer" href="#hipHostGetDevicePointer"><span>hipHostGetDevicePointer:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipHostGetDevicePointer(device: ptr pointer; host: pointer; flags: cuint): hipError_t" href="hippo.html#hipHostGetDevicePointer%2Cptr.pointer%2Cpointer%2Ccuint">hippo: proc hipHostGetDevicePointer(device: ptr pointer; host: pointer; flags: cuint): hipError_t</a></li>
           </ul></dd>
 <dt><a name="hipLaunchCooperativeKernel" href="#hipLaunchCooperativeKernel"><span>hipLaunchCooperativeKernel:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -325,9 +383,19 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipMalloc(ptr: ptr pointer; size: csize_t): hipError_t" href="hippo.html#hipMalloc%2Cptr.pointer%2Ccsize_t">hippo: proc hipMalloc(ptr: ptr pointer; size: csize_t): hipError_t</a></li>
           </ul></dd>
+<dt><a name="hipMallocPitch" href="#hipMallocPitch"><span>hipMallocPitch:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipMallocPitch(p: ptr pointer; pitch: ptr csize_t; widthBytes, height: csize_t): hipError_t" href="hippo.html#hipMallocPitch%2Cptr.pointer%2Cptr.csize_t%2Ccsize_t%2Ccsize_t">hippo: proc hipMallocPitch(p: ptr pointer; pitch: ptr csize_t; widthBytes, height: csize_t): hipError_t</a></li>
+          </ul></dd>
 <dt><a name="hipMemcpy" href="#hipMemcpy"><span>hipMemcpy:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipMemcpy(dst: pointer; src: pointer; size: csize_t; kind: hipMemcpyKind): hipError_t" href="hippo.html#hipMemcpy%2Cpointer%2Cpointer%2Ccsize_t%2ChipMemcpyKind">hippo: proc hipMemcpy(dst: pointer; src: pointer; size: csize_t; kind: hipMemcpyKind): hipError_t</a></li>
+          </ul></dd>
+<dt><a name="hipMemcpy2D" href="#hipMemcpy2D"><span>hipMemcpy2D:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipMemcpy2D(dst: pointer; dstPitch: csize_t; src: pointer; srcPitch: csize_t;
+            widthBytes, height: csize_t; kind: hipMemcpyKind): hipError_t" href="hippo.html#hipMemcpy2D%2Cpointer%2Ccsize_t%2Cpointer%2Ccsize_t%2Ccsize_t%2Ccsize_t%2ChipMemcpyKind">hippo: proc hipMemcpy2D(dst: pointer; dstPitch: csize_t; src: pointer; srcPitch: csize_t;
+            widthBytes, height: csize_t; kind: hipMemcpyKind): hipError_t</a></li>
           </ul></dd>
 <dt><a name="hipMemcpyAsync" href="#hipMemcpyAsync"><span>hipMemcpyAsync:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -435,6 +503,18 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoCoshf(x: cfloat): cfloat" href="hippo.html#hippoCoshf.t%2Ccfloat">hippo: template hippoCoshf(x: cfloat): cfloat</a></li>
           </ul></dd>
+<dt><a name="hippoCreateFloatTexture1D" href="#hippoCreateFloatTexture1D"><span>hippoCreateFloatTexture1D:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hippoCreateFloatTexture1D(memory: GpuRef; count: int): HippoFloatTexture" href="hippo.html#hippoCreateFloatTexture1D%2CGpuRef%2Cint">hippo: proc hippoCreateFloatTexture1D(memory: GpuRef; count: int): HippoFloatTexture</a></li>
+          </ul></dd>
+<dt><a name="hippoCreateFloatTexture2D" href="#hippoCreateFloatTexture2D"><span>hippoCreateFloatTexture2D:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hippoCreateFloatTexture2D(memory: GpuRef; width, height, pitchBytes: int): HippoFloatTexture" href="hippo.html#hippoCreateFloatTexture2D%2CGpuRef%2Cint%2Cint%2Cint">hippo: proc hippoCreateFloatTexture2D(memory: GpuRef; width, height, pitchBytes: int): HippoFloatTexture</a></li>
+          </ul></dd>
+<dt><a name="hippoDestroyFloatTexture" href="#hippoDestroyFloatTexture"><span>hippoDestroyFloatTexture:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hippoDestroyFloatTexture(texture: HippoFloatTexture)" href="hippo.html#hippoDestroyFloatTexture%2CHippoFloatTexture">hippo: proc hippoDestroyFloatTexture(texture: HippoFloatTexture)</a></li>
+          </ul></dd>
 <dt><a name="hippoDevice" href="#hippoDevice"><span>hippoDevice:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: macro hippoDevice(fn: untyped): untyped" href="hippo.html#hippoDevice.m%2Cuntyped">hippo: macro hippoDevice(fn: untyped): untyped</a></li>
@@ -525,6 +605,10 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoFabsf(x: cfloat): cfloat" href="hippo.html#hippoFabsf.t%2Ccfloat">hippo: template hippoFabsf(x: cfloat): cfloat</a></li>
           </ul></dd>
+<dt><a name="HippoFloatTexture" href="#HippoFloatTexture"><span>HippoFloatTexture:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: type HippoFloatTexture" href="hippo.html#HippoFloatTexture">hippo: type HippoFloatTexture</a></li>
+          </ul></dd>
 <dt><a name="hippoFloatToHalf" href="#hippoFloatToHalf"><span>hippoFloatToHalf:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoFloatToHalf(f: cfloat): uint16" href="hippo.html#hippoFloatToHalf.t%2Ccfloat">hippo: template hippoFloatToHalf(f: cfloat): uint16</a></li>
@@ -549,6 +633,10 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoGetDevice(): cint" href="hippo.html#hippoGetDevice.t">hippo: template hippoGetDevice(): cint</a></li>
           </ul></dd>
+<dt><a name="hippoGetDeviceCount" href="#hippoGetDeviceCount"><span>hippoGetDeviceCount:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hippoGetDeviceCount(): cint" href="hippo.html#hippoGetDeviceCount">hippo: proc hippoGetDeviceCount(): cint</a></li>
+          </ul></dd>
 <dt><a name="hippoGetDeviceProperties" href="#hippoGetDeviceProperties"><span>hippoGetDeviceProperties:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoGetDeviceProperties(prop: var HippoDeviceProp; device: cint)" href="hippo.html#hippoGetDeviceProperties.t%2ChipDeviceProp_t%2Ccint">hippo: template hippoGetDeviceProperties(prop: var HippoDeviceProp; device: cint)</a></li>
@@ -564,6 +652,32 @@
 <dt><a name="hippoGraphExecDestroy" href="#hippoGraphExecDestroy"><span>hippoGraphExecDestroy:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoGraphExecDestroy(exec: hipGraphExec_t)" href="hippo.html#hippoGraphExecDestroy.t%2ChipGraphExec_t">hippo: template hippoGraphExecDestroy(exec: hipGraphExec_t)</a></li>
+          </ul></dd>
+<dt><a name="hippoGraphicsGLRegisterBuffer" href="#hippoGraphicsGLRegisterBuffer"><span>hippoGraphicsGLRegisterBuffer:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hippoGraphicsGLRegisterBuffer(buffer: cuint; writeDiscard = true): HippoGraphicsResource" href="hippo.html#hippoGraphicsGLRegisterBuffer%2Ccuint">hippo: proc hippoGraphicsGLRegisterBuffer(buffer: cuint; writeDiscard = true): HippoGraphicsResource</a></li>
+          </ul></dd>
+<dt><a name="hippoGraphicsMap" href="#hippoGraphicsMap"><span>hippoGraphicsMap:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hippoGraphicsMap(resource: HippoGraphicsResource; stream: HippoStream)" href="hippo.html#hippoGraphicsMap%2CHippoGraphicsResource%2CHippoStream">hippo: proc hippoGraphicsMap(resource: HippoGraphicsResource; stream: HippoStream)</a></li>
+          </ul></dd>
+<dt><a name="hippoGraphicsMappedPointer" href="#hippoGraphicsMappedPointer"><span>hippoGraphicsMappedPointer:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hippoGraphicsMappedPointer(resource: HippoGraphicsResource): tuple[
+    data: pointer, sizeBytes: int]" href="hippo.html#hippoGraphicsMappedPointer%2CHippoGraphicsResource">hippo: proc hippoGraphicsMappedPointer(resource: HippoGraphicsResource): tuple[
+    data: pointer, sizeBytes: int]</a></li>
+          </ul></dd>
+<dt><a name="HippoGraphicsResource" href="#HippoGraphicsResource"><span>HippoGraphicsResource:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: type HippoGraphicsResource" href="hippo.html#HippoGraphicsResource">hippo: type HippoGraphicsResource</a></li>
+          </ul></dd>
+<dt><a name="hippoGraphicsUnmap" href="#hippoGraphicsUnmap"><span>hippoGraphicsUnmap:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hippoGraphicsUnmap(resource: HippoGraphicsResource; stream: HippoStream)" href="hippo.html#hippoGraphicsUnmap%2CHippoGraphicsResource%2CHippoStream">hippo: proc hippoGraphicsUnmap(resource: HippoGraphicsResource; stream: HippoStream)</a></li>
+          </ul></dd>
+<dt><a name="hippoGraphicsUnregister" href="#hippoGraphicsUnregister"><span>hippoGraphicsUnregister:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hippoGraphicsUnregister(resource: HippoGraphicsResource)" href="hippo.html#hippoGraphicsUnregister%2CHippoGraphicsResource">hippo: proc hippoGraphicsUnregister(resource: HippoGraphicsResource)</a></li>
           </ul></dd>
 <dt><a name="hippoGraphInstantiate" href="#hippoGraphInstantiate"><span>hippoGraphInstantiate:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -587,7 +701,23 @@
           </ul></dd>
 <dt><a name="hippoHostAlloc" href="#hippoHostAlloc"><span>hippoHostAlloc:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="hippo: template hippoHostAlloc(size: int): pointer" href="hippo.html#hippoHostAlloc.t%2Cint">hippo: template hippoHostAlloc(size: int): pointer</a></li>
+          data-doc-search-tag="hippo: template hippoHostAlloc(size: int; flags: uint32 = HippoHostAllocDefault): pointer" href="hippo.html#hippoHostAlloc.t%2Cint%2Cuint32">hippo: template hippoHostAlloc(size: int; flags: uint32 = HippoHostAllocDefault): pointer</a></li>
+          </ul></dd>
+<dt><a name="HippoHostAllocDefault" href="#HippoHostAllocDefault"><span>HippoHostAllocDefault:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: const HippoHostAllocDefault" href="hippo.html#HippoHostAllocDefault">hippo: const HippoHostAllocDefault</a></li>
+          </ul></dd>
+<dt><a name="HippoHostAllocMapped" href="#HippoHostAllocMapped"><span>HippoHostAllocMapped:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: const HippoHostAllocMapped" href="hippo.html#HippoHostAllocMapped">hippo: const HippoHostAllocMapped</a></li>
+          </ul></dd>
+<dt><a name="HippoHostAllocPortable" href="#HippoHostAllocPortable"><span>HippoHostAllocPortable:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: const HippoHostAllocPortable" href="hippo.html#HippoHostAllocPortable">hippo: const HippoHostAllocPortable</a></li>
+          </ul></dd>
+<dt><a name="HippoHostAllocWriteCombined" href="#HippoHostAllocWriteCombined"><span>HippoHostAllocWriteCombined:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: const HippoHostAllocWriteCombined" href="hippo.html#HippoHostAllocWriteCombined">hippo: const HippoHostAllocWriteCombined</a></li>
           </ul></dd>
 <dt><a name="hippoHostDevice" href="#hippoHostDevice"><span>hippoHostDevice:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -600,6 +730,10 @@
 <dt><a name="hippoHostFree" href="#hippoHostFree"><span>hippoHostFree:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoHostFree(p: pointer)" href="hippo.html#hippoHostFree.t%2Cpointer">hippo: template hippoHostFree(p: pointer)</a></li>
+          </ul></dd>
+<dt><a name="hippoHostGetDevicePointer" href="#hippoHostGetDevicePointer"><span>hippoHostGetDevicePointer:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hippoHostGetDevicePointer(host: pointer): pointer" href="hippo.html#hippoHostGetDevicePointer%2Cpointer">hippo: proc hippoHostGetDevicePointer(host: pointer): pointer</a></li>
           </ul></dd>
 <dt><a name="hippoLaunchCooperative" href="#hippoLaunchCooperative"><span>hippoLaunchCooperative:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -639,6 +773,10 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoMalloc(size: int): GpuRef" href="hippo.html#hippoMalloc.t%2Cint">hippo: template hippoMalloc(size: int): GpuRef</a></li>
           </ul></dd>
+<dt><a name="hippoMallocPitch" href="#hippoMallocPitch"><span>hippoMallocPitch:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoMallocPitch(widthBytes, height: int): untyped" href="hippo.html#hippoMallocPitch.t%2Cint%2Cint">hippo: template hippoMallocPitch(widthBytes, height: int): untyped</a></li>
+          </ul></dd>
 <dt><a name="hippoMaxActiveBlocksPerSM" href="#hippoMaxActiveBlocksPerSM"><span>hippoMaxActiveBlocksPerSM:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hippoMaxActiveBlocksPerSM(kernel: pointer; blockSize: int; sharedMem: int = 0): int" href="hippo.html#hippoMaxActiveBlocksPerSM%2Cpointer%2Cint%2Cint">hippo: proc hippoMaxActiveBlocksPerSM(kernel: pointer; blockSize: int; sharedMem: int = 0): int</a></li>
@@ -652,6 +790,12 @@
           data-doc-search-tag="hippo: template hippoMemcpy(dst: pointer; src: GpuRef; size: int; kind: HippoMemcpyKind)" href="hippo.html#hippoMemcpy.t%2Cpointer%2CGpuRef%2Cint%2ChipMemcpyKind">hippo: template hippoMemcpy(dst: pointer; src: GpuRef; size: int; kind: HippoMemcpyKind)</a></li>
           <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)" href="hippo.html#hippoMemcpy.t%2Cpointer%2Cpointer%2Cint%2ChipMemcpyKind">hippo: template hippoMemcpy(dst: pointer; src: pointer; size: int; kind: HippoMemcpyKind)</a></li>
+          </ul></dd>
+<dt><a name="hippoMemcpy2D" href="#hippoMemcpy2D"><span>hippoMemcpy2D:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoMemcpy2D(dst: pointer; dstPitchBytes: int; src: pointer;
+              srcPitchBytes, widthBytes, height: int; kind: HippoMemcpyKind)" href="hippo.html#hippoMemcpy2D.t%2Cpointer%2Cint%2Cpointer%2Cint%2Cint%2Cint%2ChipMemcpyKind">hippo: template hippoMemcpy2D(dst: pointer; dstPitchBytes: int; src: pointer;
+              srcPitchBytes, widthBytes, height: int; kind: HippoMemcpyKind)</a></li>
           </ul></dd>
 <dt><a name="hippoMemcpyAsync" href="#hippoMemcpyAsync"><span>hippoMemcpyAsync:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -730,6 +874,10 @@
 <dt><a name="hippoSdot4" href="#hippoSdot4"><span>hippoSdot4:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoSdot4(a, b: cint; c: cint): cint" href="hippo.html#hippoSdot4.t%2Ccint%2Ccint%2Ccint">hippo: template hippoSdot4(a, b: cint; c: cint): cint</a></li>
+          </ul></dd>
+<dt><a name="hippoSetDevice" href="#hippoSetDevice"><span>hippoSetDevice:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hippoSetDevice(device: cint)" href="hippo.html#hippoSetDevice%2Ccint">hippo: proc hippoSetDevice(device: cint)</a></li>
           </ul></dd>
 <dt><a name="hippoShared" href="#hippoShared"><span>hippoShared:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -811,6 +959,22 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoTanhf(x: cfloat): cfloat" href="hippo.html#hippoTanhf.t%2Ccfloat">hippo: template hippoTanhf(x: cfloat): cfloat</a></li>
           </ul></dd>
+<dt><a name="hippoTex1DFetch" href="#hippoTex1DFetch"><span>hippoTex1DFetch:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hippoTex1DFetch(texture: HippoFloatTexture; index: cint): cfloat" href="hippo.html#hippoTex1DFetch%2CHippoFloatTexture%2Ccint">hippo: proc hippoTex1DFetch(texture: HippoFloatTexture; index: cint): cfloat</a></li>
+          </ul></dd>
+<dt><a name="hippoTex2D" href="#hippoTex2D"><span>hippoTex2D:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hippoTex2D(texture: HippoFloatTexture; x, y: cfloat): cfloat" href="hippo.html#hippoTex2D%2CHippoFloatTexture%2Ccfloat%2Ccfloat">hippo: proc hippoTex2D(texture: HippoFloatTexture; x, y: cfloat): cfloat</a></li>
+          </ul></dd>
+<dt><a name="hippoThreadfence" href="#hippoThreadfence"><span>hippoThreadfence:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: template hippoThreadfence()" href="hippo.html#hippoThreadfence.t">hippo: template hippoThreadfence()</a></li>
+          </ul></dd>
+<dt><a name="hippoUseGLDevice" href="#hippoUseGLDevice"><span>hippoUseGLDevice:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hippoUseGLDevice(): cint" href="hippo.html#hippoUseGLDevice">hippo: proc hippoUseGLDevice(): cint</a></li>
+          </ul></dd>
 <dt><a name="hippoVsubss4" href="#hippoVsubss4"><span>hippoVsubss4:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoVsubss4(a, b: cint): cint" href="hippo.html#hippoVsubss4.t%2Ccint%2Ccint">hippo: template hippoVsubss4(a, b: cint): cint</a></li>
@@ -846,6 +1010,10 @@
 <dt><a name="hippoWmmaZeroF32" href="#hippoWmmaZeroF32"><span>hippoWmmaZeroF32:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: template hippoWmmaZeroF32(): HippoWmmaFloat8" href="hippo.html#hippoWmmaZeroF32.t">hippo: template hippoWmmaZeroF32(): HippoWmmaFloat8</a></li>
+          </ul></dd>
+<dt><a name="hipSetDevice" href="#hipSetDevice"><span>hipSetDevice:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipSetDevice(device: cint): hipError_t" href="hippo.html#hipSetDevice%2Ccint">hippo: proc hipSetDevice(device: cint): hipError_t</a></li>
           </ul></dd>
 <dt><a name="hipStreamBeginCapture" href="#hipStreamBeginCapture"><span>hipStreamBeginCapture:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -888,6 +1056,18 @@
 <dt><a name="hipSyncthreads" href="#hipSyncthreads"><span>hipSyncthreads:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipSyncthreads()" href="hippo.html#hipSyncthreads">hippo: proc hipSyncthreads()</a></li>
+          </ul></dd>
+<dt><a name="hipTex1DFetch" href="#hipTex1DFetch"><span>hipTex1DFetch:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipTex1DFetch(texture: HippoFloatTexture; index: cint): cfloat" href="hippo.html#hipTex1DFetch%2CHippoFloatTexture%2Ccint">hippo: proc hipTex1DFetch(texture: HippoFloatTexture; index: cint): cfloat</a></li>
+          </ul></dd>
+<dt><a name="hipTex2D" href="#hipTex2D"><span>hipTex2D:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipTex2D(texture: HippoFloatTexture; x, y: cfloat): cfloat" href="hippo.html#hipTex2D%2CHippoFloatTexture%2Ccfloat%2Ccfloat">hippo: proc hipTex2D(texture: HippoFloatTexture; x, y: cfloat): cfloat</a></li>
+          </ul></dd>
+<dt><a name="hipThreadfence" href="#hipThreadfence"><span>hipThreadfence:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: proc hipThreadfence()" href="hippo.html#hipThreadfence">hippo: proc hipThreadfence()</a></li>
           </ul></dd>
 <dt><a name="loadU32" href="#loadU32"><span>loadU32:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -1051,7 +1231,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-09-03 20:50:53 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-11-22 19:50:15 UTC</small>
       </div>
     </div>
   </div>
