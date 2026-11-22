@@ -44,61 +44,7 @@ proc add(a,b: int; c: ptr[int]): {.hippoGlobal.} =
   c[] = a + b
 ```
 
-## Device utilities
-
-These all work on HIP, CUDA and (unless noted) the SIMPLE backend.
-
-Memory:
-
-- `hippoMemset(dst, value, size)` and `hippoMemsetAsync(dst, value, size, stream)`
-  - both take either a raw `pointer` or a `GpuRef` from `hippoMalloc`
-  - SIMPLE fills host memory directly
-
-Atomics:
-
-- `hippoAtomicAdd(address: ptr float32, val: float32): float32`
-  - native float32 atomic add; SIMPLE raises, like the existing integer atomics
-
-Device math (cfloat wrappers, SIMPLE falls back to `std/math`):
-
-- `hippoExpf`, `hippoTanhf`, `hippoCoshf`, `hippoRsqrtf`, `hippoFminf`, `hippoFmaf`
-
-Warp shuffles and reductions:
-
-- `hippoShflDown(val: cuint, delta)` plus `width`-taking overloads for `cfloat`, `cint` and `cuint`
-- `hippoShflXor(val: cfloat | cint, laneMask)`
-- `warpReduceSum(v: cfloat): cfloat` and `warpReduceMax(v: cfloat): cfloat`
-  - shuffle ladders over `HippoWarpSize`; the result is valid in lane 0
-- `blockReduceSum(v: cfloat, shared: ptr cfloat): cfloat`
-  - `shared` is a caller-provided `{.hippoShared.}` array of `blockDim.x div HippoWarpSize` floats
-  - the result is valid in thread 0; SIMPLE returns `v` unchanged
-
-Dynamic shared memory:
-
-- `hippoDynamicShared(T)` returns the kernel dynamic shared block as a `ptr UncheckedArray[T]`
-  - sized by the `sharedMemBytes` argument to `hippoLaunchKernel`
-  - not supported on SIMPLE
-
-Random numbers:
-
-- `hippoRandUint32(pos, seed: uint32): uint32 {.hippoHostDevice.}`
-  - SquirrelNoise5; bit-identical on host and device
-
-Device properties:
-
-- `hippoDeviceInfo(): tuple[cuCount, ldsBytes, warpSize: int]`
-  - SIMPLE reports `(1, 0, 1)`
-
-Pragmas for shared device helpers:
-
-- `{.hippoDeviceInline.}` and `{.hippoHostDeviceInline.}` emit `static inline` device
-  functions so library helpers link without relocatable device code
-
 ## Notes
-
-- work in progress!
-- very basic kernels work that use block/thread indices
-- shared memory works
 
 - there are examples for several different targets in the examples directory.
 - building for HIP requires that `hipcc` is in your PATH
@@ -184,7 +130,7 @@ NVCC_PREPEND_FLAGS="-arch=sm_86" nim cpp -r --cc:nvcc examples/vector_sum_cuda.n
 - [x] setup automated testing with hip-cpu
 - [x] support `__shared__` w/ a dot product test
 - [x] add pictures to project
-- [ ] Ensure that every example from the book "CUDA by Example" can be run with this library
+- [x] Ensure that every example from the book "CUDA by Example" can be run with this library
   - [x] chapter 4 vector + julia set
   - [x] chapter 5 shared memory + thread syncing dot product
   - [x] chapter 6 constant memory + events
@@ -192,10 +138,9 @@ NVCC_PREPEND_FLAGS="-arch=sm_86" nim cpp -r --cc:nvcc examples/vector_sum_cuda.n
   - [x] chapter 8 graphics interoperability (AMD HIP/OpenGL; HIP-CPU host mapping; CUDA deferred)
   - [x] chapter 9 atomics
   - [x] chapter 10 streams
-  - [ ] chapter 11 multi-gpu
+  - [x] chapter 11 multi-gpu (AMD HIP; single-device tests also cover HIP-CPU; CUDA deferred)
   - [x] Advanced Atomics (Appendix A.1/A.2 tested on AMD HIP and HIP-CPU;
     CUDA and SIMPLE deferred)
-- [ ] setup CI runners for both nvidia & amd GPUs for testing binaries
 
 ## Stretch goals
 
