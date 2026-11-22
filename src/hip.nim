@@ -62,17 +62,18 @@ proc hipMemcpyToSymbol*(symbol: pointer; src: pointer; sizeBytes: csize_t;
 proc hipSymbol*[T](sym: var T): pointer {.header: "hip/hip_runtime.h", importcpp: "HIP_SYMBOL(@)".}
 proc hipFree*(`ptr`: pointer): hipError_t {.header: "hip/hip_runtime.h",importcpp: "hipFree(@)".}
 
+proc hipGetDeviceCount*(count: ptr cint): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipGetDeviceCount(@)".}
+  ## Return the available device count; HIP-CPU exposes one CPU device.
+proc hipSetDevice*(device: cint): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipSetDevice(@)".}
+  ## Select the current host thread's device for subsequent runtime operations.
+
 when not defined(HIP_CPU_RUNTIME):
   type
     HippoGraphicsResource* {.importcpp: "hipGraphicsResource_t",
       header: "hip/hip_runtime.h".} = pointer
 
-  proc hipGetDeviceCount*(count: ptr cint): hipError_t {.
-    header: "hip/hip_runtime.h", importcpp: "hipGetDeviceCount(@)".}
-    ## Return the number of HIP devices available to this process.
-  proc hipSetDevice*(device: cint): hipError_t {.
-    header: "hip/hip_runtime.h", importcpp: "hipSetDevice(@)".}
-    ## Select the HIP device for subsequent allocations and kernel launches.
   proc hipGLGetDevices*(count: ptr cuint; devices: ptr cint; capacity: cuint;
                        deviceList: cint): hipError_t {.
     header: "hip/hip_gl_interop.h",
@@ -248,11 +249,12 @@ proc hipMemsetAsync*(dst: pointer, value: cint, sizeBytes: csize_t,
 
 # Page-locked Host Memory
 when defined(HIP_CPU_RUNTIME):
-  # HIP_CPU doesn't implement hipHostAlloc, use hipMalloc as fallback
+  # HIP-CPU calls this API hipHostMalloc and accepts flags as an enum.
   proc hipHostAlloc*(p: ptr pointer; size: csize_t;
-                     flags: uint32_t): hipError_t =
-    ## Allocate ordinary host memory on HIP-CPU, ignoring the allocation flags.
-    hipMalloc(p, size)
+                     flags: uint32_t): hipError_t {.
+    header: "hip/hip_runtime.h",
+    importcpp: "hipHostMalloc(#, #, static_cast<hipHostMallocKind>(#))".}
+    ## HIP-CPU allocates ordinary host memory; allocation flags have no physical effect.
 else:
   # Real HIP runtime has hipHostAlloc
   proc hipHostAlloc*(p: ptr pointer; size: csize_t;
@@ -261,6 +263,10 @@ else:
 
 proc hipHostFree*(p: pointer): hipError_t {.
   header: "hip/hip_runtime.h", importcpp: "hipHostFree(@)".}
+proc hipHostGetDevicePointer*(device: ptr pointer; host: pointer;
+                              flags: cuint): hipError_t {.
+  header: "hip/hip_runtime.h", importcpp: "hipHostGetDevicePointer(@)".}
+  ## Obtain the current device's borrowed alias of an allocation of mapped host memory.
 
 # Events for Timing
 type hipEvent_t* {.importcpp: "hipEvent_t", header: "hip/hip_runtime.h".} = pointer
@@ -313,10 +319,13 @@ else:
 # Device Properties
 type hipDeviceProp_t* {.importcpp: "hipDeviceProp_t", header: "hip/hip_runtime.h",
     incompleteStruct.} = object
+  name*: array[256, char]
   deviceOverlap*: cint
   multiProcessorCount*: cint
   sharedMemPerBlock*: csize_t
   warpSize*: cint
+  canMapHostMemory*: cint
+  integrated*: cint
 proc hipGetDevice*(device: ptr cint): hipError_t {.
   header: "hip/hip_runtime.h", importcpp: "hipGetDevice(@)".}
 proc hipGetDeviceProperties*(prop: ptr hipDeviceProp_t; device: cint): hipError_t {.

@@ -540,17 +540,31 @@ template hippoAtomicXor*(address: ptr[uint32]; val: uint32): uint32 =
     )
 
 # Page-locked Host Memory
-template hippoHostAlloc*(size: int): pointer =
-  ## Allocate page-locked host memory
+const
+  HippoHostAllocDefault* = 0'u32
+  HippoHostAllocPortable* = 1'u32
+  HippoHostAllocMapped* = 2'u32
+  HippoHostAllocWriteCombined* = 4'u32
+
+template hippoHostAlloc*(size: int; flags: uint32 = HippoHostAllocDefault): pointer =
+  ## Allocate host memory, optionally portable across devices or mapped for kernels.
+  ## Free with hippoHostFree after all device users finish. HIP-CPU and SIMPLE use
+  ## ordinary host memory; they do not emulate physical pinning or write combining.
   var hostPtr: pointer
   when HippoRuntime == "CUDA":
-    handleError(cudaHostAlloc(addr hostPtr, size.csize_t, 0.uint32))
+    handleError(cudaHostAlloc(addr hostPtr, size.csize_t, flags))
   elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
-    handleError(hipHostAlloc(addr hostPtr, size.csize_t, 0.uint32))
+    handleError(hipHostAlloc(addr hostPtr, size.csize_t, flags))
   else:
     # For SIMPLE, use regular alloc
     hostPtr = alloc(size)
   hostPtr
+
+when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+  proc hippoHostGetDevicePointer*(host: pointer): pointer =
+    ## Borrow the current device's alias of mapped host memory, without copying it.
+    ## The host allocation must outlive all kernel accesses; do not free this alias.
+    handleError(hipHostGetDevicePointer(addr result, host, 0))
 
 template hippoHostFree*(p: pointer) =
   ## Free page-locked host memory.
@@ -657,6 +671,16 @@ template hippoEventElapsedTime*(start: HippoEvent, stop: HippoEvent): float32 =
   ms.float32
 
 # Device Properties
+when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+  proc hippoGetDeviceCount*(): cint =
+    ## Enumerate devices; HIP-CPU returns its single CPU device.
+    handleError(hipGetDeviceCount(addr result))
+
+  proc hippoSetDevice*(device: cint) =
+    ## Select a device on the calling host thread, before allocating its resources.
+    ## Keep device-owned allocations and streams on that device until cleaned up.
+    handleError(hipSetDevice(device))
+
 when HippoRuntime == "CUDA":
   type HippoDeviceProp* = cudaDeviceProp
 elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
