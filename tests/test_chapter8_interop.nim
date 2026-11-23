@@ -5,13 +5,14 @@
 ## Windy for windows/contexts and consider Shady for shaders written in Nim.
 ## The separate gui_interop.nim demo already uses Windy and Pixie.
 ## Uses an invisible GLX drawable and requires an accessible X11/GLX display.
-## Missing displays skip this test; native HIP also skips software OpenGL contexts.
+## Missing displays skip this test; GPU backends also skip software GL contexts.
+## CUDA/OpenGL sharing is unsupported under WSL; validate it on a native GPU host.
 
 import
   std/[unittest, math, strutils],
   hippo
 
-when defined(linux) and (HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU"):
+when defined(linux) and (HippoRuntime in ["HIP", "HIP_CPU", "CUDA"]):
   import ./[gl_interop, chapter8_pixels]
 
   const
@@ -124,16 +125,20 @@ when defined(linux) and (HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU"):
         checkpoint getCurrentExceptionMsg()
       defer: context.close()
       var canRun = context != nil
-      when HippoRuntime == "HIP":
+      when HippoRuntime == "CUDA" or (HippoRuntime == "HIP" and HipPlatform == "nvidia"):
+        if "microsoft" in readFile("/proc/sys/kernel/osrelease").toLowerAscii():
+          checkpoint "NVIDIA CUDA/OpenGL sharing is unsupported under WSL; native GPU validation is required."
+          canRun = false
+      when HippoRuntime in ["HIP", "CUDA"]:
         if canRun:
           let renderer = ($context.api.getString(Renderer)).toLowerAscii()
           if "llvmpipe" in renderer or "softpipe" in renderer or "software" in renderer:
-            checkpoint "Native HIP sharing requires hardware OpenGL, not " & renderer
+            checkpoint "Native GPU sharing requires hardware OpenGL, not " & renderer
             canRun = false
       if not canRun:
         skip()
       else:
-        when HippoRuntime == "HIP":
+        when HippoRuntime in ["HIP", "CUDA"]:
           discard hippoUseGLDevice()
         let stream = hippoStreamCreate()
         defer: hippoStreamDestroy(stream)
@@ -142,5 +147,5 @@ when defined(linux) and (HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU"):
         checkReadWrite(context.api, stream)
 else:
   suite "Chapter 8: OpenGL pixel-buffer interoperability":
-    test "Linux HIP and HIP-CPU only; other platforms are deferred":
+    test "Requires Linux with HIP, CUDA or HIP-CPU":
       skip()

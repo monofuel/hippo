@@ -134,13 +134,13 @@ NVCC_PREPEND_FLAGS="-arch=sm_86" nim cpp -r --cc:nvcc examples/vector_sum_cuda.n
   - [x] chapter 4 vector + julia set
   - [x] chapter 5 shared memory + thread syncing dot product
   - [x] chapter 6 constant memory + events
-  - [x] chapter 7 texture memory (HIP and HIP-CPU; CUDA deferred)
-  - [x] chapter 8 graphics interoperability (AMD HIP/OpenGL; HIP-CPU host mapping; CUDA deferred)
+  - [x] chapter 7 texture memory (HIP, HIP-CPU and CUDA)
+  - [x] chapter 8 graphics interoperability (AMD HIP/OpenGL; HIP-CPU host mapping; CUDA native validation deferred)
   - [x] chapter 9 atomics
   - [x] chapter 10 streams
-  - [x] chapter 11 multi-gpu (AMD HIP; single-device tests also cover HIP-CPU; CUDA deferred)
-  - [x] Advanced Atomics (Appendix A.1/A.2 tested on AMD HIP and HIP-CPU;
-    CUDA and SIMPLE deferred)
+  - [x] chapter 11 multi-gpu (AMD HIP; single-device tests also cover HIP-CPU and CUDA; NVIDIA multi-GPU validation deferred)
+  - [x] Advanced Atomics (Appendix A.1/A.2 tested on HIP, HIP-CPU and CUDA;
+    SIMPLE deferred)
 
 ## Stretch goals
 

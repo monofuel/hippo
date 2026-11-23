@@ -398,35 +398,43 @@ proc loadU32*(p: ptr uint8): uint32 {.header: "hip/hip_runtime.h",
   ## Safe uint32 load from a byte pointer (avoids strict aliasing violations).
 
 # Warp shuffle intrinsics
+const
+  HipShuffleDown = if defined(HIP_NVIDIA_RUNTIME):
+    "__shfl_down_sync(0xFFFFFFFF, @)" else: "__shfl_down(@)"
+  HipShuffle = if defined(HIP_NVIDIA_RUNTIME):
+    "__shfl_sync(0xFFFFFFFF, @)" else: "__shfl(@)"
+  HipShuffleXor = if defined(HIP_NVIDIA_RUNTIME):
+    "__shfl_xor_sync(0xFFFFFFFF, @)" else: "__shfl_xor(@)"
+
 proc shflDown*(val: cfloat, delta: cint): cfloat {.header: "hip/hip_runtime.h",
-    importcpp: "__shfl_down(@)".}
+    importcpp: HipShuffleDown.}
   ## Warp shuffle down for float32.
 proc shflDown*(val: cint, delta: cint): cint {.header: "hip/hip_runtime.h",
-    importcpp: "__shfl_down(@)".}
+    importcpp: HipShuffleDown.}
   ## Warp shuffle down for int32.
 proc shfl*(val: cfloat, srcLane: cint): cfloat {.header: "hip/hip_runtime.h",
-    importcpp: "__shfl(@)".}
+    importcpp: HipShuffle.}
   ## Warp shuffle: read float32 from srcLane (broadcast).
 proc shfl*(val: cint, srcLane: cint): cint {.header: "hip/hip_runtime.h",
-    importcpp: "__shfl(@)".}
+    importcpp: HipShuffle.}
   ## Warp shuffle: read int32 from srcLane (broadcast).
 proc shflDown*(val: cuint, delta: cint): cuint {.header: "hip/hip_runtime.h",
-    importcpp: "__shfl_down(@)".}
+    importcpp: HipShuffleDown.}
   ## Warp shuffle down for uint32.
 proc shflDown*(val: cfloat, delta: cint, width: cint): cfloat {.header: "hip/hip_runtime.h",
-    importcpp: "__shfl_down(@)".}
+    importcpp: HipShuffleDown.}
   ## Warp shuffle down for float32 within a sub-warp of `width` lanes.
 proc shflDown*(val: cint, delta: cint, width: cint): cint {.header: "hip/hip_runtime.h",
-    importcpp: "__shfl_down(@)".}
+    importcpp: HipShuffleDown.}
   ## Warp shuffle down for int32 within a sub-warp of `width` lanes.
 proc shflDown*(val: cuint, delta: cint, width: cint): cuint {.header: "hip/hip_runtime.h",
-    importcpp: "__shfl_down(@)".}
+    importcpp: HipShuffleDown.}
   ## Warp shuffle down for uint32 within a sub-warp of `width` lanes.
 proc shflXor*(val: cfloat, laneMask: cint): cfloat {.header: "hip/hip_runtime.h",
-    importcpp: "__shfl_xor(@)".}
+    importcpp: HipShuffleXor.}
   ## Warp shuffle xor for float32: read the lane whose id is `lane xor laneMask`.
 proc shflXor*(val: cint, laneMask: cint): cint {.header: "hip/hip_runtime.h",
-    importcpp: "__shfl_xor(@)".}
+    importcpp: HipShuffleXor.}
   ## Warp shuffle xor for int32: read the lane whose id is `lane xor laneMask`.
 
 when defined(HIP_CPU_RUNTIME):

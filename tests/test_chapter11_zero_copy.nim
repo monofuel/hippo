@@ -7,7 +7,7 @@ import
   std/[unittest, math],
   hippo
 
-when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+when HippoRuntime in ["HIP", "HIP_CPU", "CUDA"]:
   import ./chapter11_dot
 
   const
@@ -123,5 +123,5 @@ when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
         checkSlices()
 else:
   suite "Chapter 11.2: zero-copy host memory":
-    test "HIP and HIP-CPU only; other backends are deferred":
+    test "SIMPLE mapped-memory support is deferred":
       skip()

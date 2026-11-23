@@ -1,7 +1,7 @@
 import hippo
 
-when HippoRuntime != "HIP" and HippoRuntime != "HIP_CPU":
-  {.error: "Chapter 7 heat diffusion currently supports HIP and HIP_CPU.".}
+when HippoRuntime notin ["HIP", "HIP_CPU", "CUDA"]:
+  {.error: "Chapter 7 heat diffusion requires HIP, CUDA or HIP-CPU.".}
 
 const HeatSpeed = 0.25'f32
 

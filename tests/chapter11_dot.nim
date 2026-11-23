@@ -4,8 +4,8 @@
 
 import hippo
 
-when HippoRuntime != "HIP" and HippoRuntime != "HIP_CPU":
-  {.error: "Chapter 11 currently targets HIP and HIP-CPU.".}
+when HippoRuntime notin ["HIP", "HIP_CPU", "CUDA"]:
+  {.error: "Chapter 11 requires HIP, CUDA or HIP-CPU.".}
 
 const
   ThreadsPerBlock* = 64

@@ -1,5 +1,5 @@
 ## Manual Chapter 11.3 and 11.4 checks; deliberately outside the test_*.nim glob.
-## Requires native HIP, host threads and two real GPUs. Missing hardware is an
+## Requires native HIP or CUDA, host threads and two real GPUs. Missing hardware is an
 ## unmet prerequisite, not a successful emulation of multi-GPU behavior.
 ## Run from the repository root. Build for both GPUs' actual architectures.
 ## On high-steel, unset the existing architecture override for this process:
@@ -7,9 +7,11 @@
 ## .. code-block:: sh
 ##
 ##   env -u HSA_OVERRIDE_GFX_VERSION nim cpp --cc:hipcc -d:useMalloc -d:HippoRuntime:HIP --threads:on --passC:--offload-arch=gfx1100 --passC:--offload-arch=gfx1036 -r tests/manual_chapter11_multigpu.nim
+##   nim cpp --cc:nvcc -d:useMalloc -d:HippoRuntime:CUDA -r tests/manual_chapter11_multigpu.nim
+##   HIP_PLATFORM=nvidia nim cpp --cc:nvcc --nvcc.cpp.exe:hipcc --nvcc.cpp.linkerexe:hipcc -d:useMalloc -d:HippoRuntime:HIP -r tests/manual_chapter11_multigpu.nim
 ##
-## The first two visible HIP devices are used. Standard ROCR_VISIBLE_DEVICES can
-## select a different pair. No peer-to-peer support or speedup is required.
+## The first two visible devices are used. Standard ROCR_VISIBLE_DEVICES or
+## CUDA_VISIBLE_DEVICES can select a pair. No peer-to-peer support or speedup is required.
 ## Chapter 11.4 shares portable, mapped host inputs; each GPU gets its own alias.
 ## HIP's write-combined flag is accepted for CUDA compatibility but does not
 ## promise physical write-combined memory or a performance gain on AMD.
@@ -19,8 +21,8 @@ import
   hippo,
   ./chapter11_dot
 
-when HippoRuntime != "HIP":
-  {.error: "Chapter 11.3/11.4 require native HIP: --cc:hipcc -d:useMalloc -d:HippoRuntime:HIP.".}
+when HippoRuntime notin ["HIP", "CUDA"]:
+  {.error: "Chapter 11.3/11.4 require a native HIP or CUDA GPU backend.".}
 when not compileOption("threads"):
   {.error: "Chapter 11.3/11.4 require --threads:on.".}
 
@@ -111,7 +113,7 @@ proc deviceLabel(device: cint): string =
     " (" & kind & ")"
 
 if hippoGetDeviceCount() < 2:
-  raise newException(ValueError, "Chapter 11.3/11.4 need at least two visible HIP GPUs.")
+  raise newException(ValueError, "Chapter 11.3/11.4 need at least two visible GPUs.")
 
 suite "Chapter 11 multi-GPU [" & deviceLabel(0) & " + " & deviceLabel(1) & "]":
   test "11.3: per-GPU copies with equal, uneven and empty partitions":

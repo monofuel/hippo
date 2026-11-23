@@ -6,10 +6,13 @@
 ##
 ##   nim cpp --skipParentCfg --cc:hipcc -d:release -d:useMalloc -d:HippoRuntime:HIP -r tests/gui_interop.nim
 ##   nim cpp --skipParentCfg -d:release -r tests/gui_interop.nim
+##   nim cpp --skipParentCfg --cc:nvcc -d:release -d:useMalloc -d:HippoRuntime:CUDA -r tests/gui_interop.nim
+##   HIP_PLATFORM=nvidia nim cpp --skipParentCfg --cc:nvcc --nvcc.cpp.exe:hipcc --nvcc.cpp.linkerexe:hipcc -d:release -d:useMalloc -d:HippoRuntime:HIP -r tests/gui_interop.nim
 ##
 ## The first command uses native AMD HIP/GL sharing on Linux; the second uses
 ## HIP-CPU and a host-mapped GL buffer, labelled in the window title.
-## Normal HIP frames share the GL buffer; explicit PNG captures read it back.
+## CUDA and HIP GPU frames share the GL buffer; explicit PNG captures read it back.
+## NVIDIA CUDA/OpenGL interoperability requires native Linux, not WSL.
 ## On NixOS, `nix develop .#basic` supplies the system GUI libraries.
 ## The compiled backend is independent of the Nix shell's name.
 ## Use --help for view selection, controls, frame limits and PNG output options.
@@ -39,7 +42,7 @@ const
   RowBytes = Width * sizeof(cfloat)
   DefaultScreenshot = "interop.png"
   ModeNames = ["Basic pattern", "Ripples", "Heat diffusion"]
-  Help = """Chapter 8 OpenGL pixel-buffer interoperability (Linux HIP / HIP-CPU).
+  Help = """Chapter 8 OpenGL pixel-buffer interoperability (Linux HIP / CUDA / HIP-CPU).
 1: basic pattern. 2: animated ripples. 3: heat diffusion.
 Space: pause. R: reset. S: save interop.png. Esc: close.
 --mode=basic|ripple|heat  Select the initial view (default: heat).
@@ -140,7 +143,7 @@ proc main() =
   window.makeContextCurrent()
   loadExtensions()
   let api = loadGL()
-  when HippoRuntime == "HIP":
+  when HippoRuntime in ["HIP", "CUDA"]:
     discard hippoUseGLDevice()
   let
     stream = hippoStreamCreate()
@@ -215,7 +218,8 @@ proc main() =
     grid = newDim3((uint32(Width) + BlockSide - 1) div BlockSide,
       (uint32(Height) + BlockSide - 1) div BlockSide)
     blockSize = newDim3(BlockSide, BlockSide)
-    backend = when HippoRuntime == "HIP": "HIP / native GL sharing"
+    backend = when HippoRuntime == "CUDA": "CUDA / native GL sharing"
+              elif HippoRuntime == "HIP": "HIP / native GL sharing"
               else: "HIP-CPU / host-mapped GL buffer"
   window.onButtonPress = proc(button: Button) =
     ## Switch among the book's examples and keep the manual demo easy to operate.
