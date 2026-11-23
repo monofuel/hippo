@@ -54,7 +54,8 @@ proc getHipPlatform(): string =
     hipPlatform = getEnv("HIP_PLATFORM", defaultPlatform)
   result = hipPlatform
 
-const HipPlatform = if HippoPlatform.len > 0: HippoPlatform else: getHipPlatform()
+const HipPlatform* = if HippoPlatform.len > 0: HippoPlatform else: getHipPlatform()
+  ## Resolved HIP target platform, including automatic detection.
 
 # HippoRuntime can be set to "HIP", "HIP_CPU", or "CUDA"
 # HIP hipcc will auto detect the runtime of the build system
@@ -66,6 +67,9 @@ if HippoRuntime == "HIP":
 
 const hippoSrcPath = currentSourcePath().parentDir()
 {.passC: "-I" & hippoSrcPath.}
+when HippoRuntime == "HIP":
+  const hipIncludePath = getEnv("HIP_PATH", "/opt/rocm") / "include"
+  {.passC: "-I" & hipIncludePath.}
 
 when HippoRuntime == "HIP_CPU":
   # Intel TBB is required for HIP-CPU
@@ -95,6 +99,8 @@ elif HippoRuntime == "SIMPLE":
   include simple
 else:
   echo "DEBUG: Using HIP runtime"
+  when HipPlatform == "nvidia":
+    {.define: HIP_NVIDIA_RUNTIME.}
   include hip
 
 # -------------------
@@ -305,11 +311,13 @@ template hippoMemsetAsync*(dst: GpuRef, value: cint, size: int, stream: HippoStr
 # Atomics
 template hippoThreadfence*() =
   ## Order device memory accesses before and after the fence across all blocks.
-  ## Supported on HIP and HIP-CPU; it does not make other threads wait.
-  when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+  ## It does not make other threads wait.
+  when HippoRuntime == "CUDA":
+    cudaThreadfence()
+  elif HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
     hipThreadfence()
   else:
-    {.error: "hippoThreadfence is currently implemented for HIP and HIP_CPU only.".}
+    {.error: "hippoThreadfence is unavailable on SIMPLE.".}
 
 template hippoAtomicAdd*(address: ptr[int32]; val: int32): int32 =
   ## Atomically add and return the previous value.
@@ -560,11 +568,14 @@ template hippoHostAlloc*(size: int; flags: uint32 = HippoHostAllocDefault): poin
     hostPtr = alloc(size)
   hostPtr
 
-when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+when HippoRuntime in ["HIP", "HIP_CPU", "CUDA"]:
   proc hippoHostGetDevicePointer*(host: pointer): pointer =
     ## Borrow the current device's alias of mapped host memory, without copying it.
     ## The host allocation must outlive all kernel accesses; do not free this alias.
-    handleError(hipHostGetDevicePointer(addr result, host, 0))
+    when HippoRuntime == "CUDA":
+      handleError(cudaHostGetDevicePointer(addr result, host, 0))
+    else:
+      handleError(hipHostGetDevicePointer(addr result, host, 0))
 
 template hippoHostFree*(p: pointer) =
   ## Free page-locked host memory.
@@ -671,15 +682,21 @@ template hippoEventElapsedTime*(start: HippoEvent, stop: HippoEvent): float32 =
   ms.float32
 
 # Device Properties
-when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+when HippoRuntime in ["HIP", "HIP_CPU", "CUDA"]:
   proc hippoGetDeviceCount*(): cint =
     ## Enumerate devices; HIP-CPU returns its single CPU device.
-    handleError(hipGetDeviceCount(addr result))
+    when HippoRuntime == "CUDA":
+      handleError(cudaGetDeviceCount(addr result))
+    else:
+      handleError(hipGetDeviceCount(addr result))
 
   proc hippoSetDevice*(device: cint) =
     ## Select a device on the calling host thread, before allocating its resources.
     ## Keep device-owned allocations and streams on that device until cleaned up.
-    handleError(hipSetDevice(device))
+    when HippoRuntime == "CUDA":
+      handleError(cudaSetDevice(device))
+    else:
+      handleError(hipSetDevice(device))
 
 when HippoRuntime == "CUDA":
   type HippoDeviceProp* = cudaDeviceProp
@@ -784,7 +801,7 @@ template hippoLaunchKernel*(
   ## Important: this only checks if the kernel launch was successful, not the kernel itself.
   ## If you need help debugging, you can call hippoSynchronize() to wait for the kernel to finish and report errors.
 
-  when HippoRuntime == "HIP" and HipPlatform == "amd":
+  when HippoRuntime == "HIP":
     var kernelArgs = args  # stack-allocated array of ptr pointer
     result = hipLaunchKernel(
       cast[pointer](kernel),
@@ -794,7 +811,7 @@ template hippoLaunchKernel*(
       sharedMemBytes,
       stream
     )
-  elif (HippoRuntime == "HIP" and HipPlatform == "nvidia") or HippoRuntime == "HIP_CPU":
+  elif HippoRuntime == "HIP_CPU":
     hipLaunchKernelGGLWithTuple(
       kernel,
       gridDim,
@@ -832,7 +849,11 @@ template hippoLaunchCooperative*(
 ) =
   ## Launch a kernel using cooperative launch API, enabling grid-wide sync.
   ## The kernel can call hippoGridSync() for grid-level barriers.
-  when HippoRuntime == "HIP" and HipPlatform == "amd":
+  when HippoRuntime == "CUDA":
+    var kernelArgs = args
+    handleError(cudaLaunchCooperativeKernel(cast[pointer](kernel), gridDim, blockDim,
+      cast[ptr pointer](addr kernelArgs[0]), sharedMemBytes.csize_t, stream))
+  elif HippoRuntime == "HIP":
     var kernelArgs = args
     handleError(hipLaunchCooperativeKernel(
       cast[pointer](kernel), gridDim, blockDim,
@@ -843,17 +864,18 @@ template hippoLaunchCooperative*(
   else:
     {.error: "hippoLaunchCooperative not yet implemented for " & HippoRuntime & "/" & HipPlatform.}
 
-when HippoRuntime == "HIP":
+when HippoRuntime in ["HIP", "CUDA"]:
   proc hippoGridSyncImpl() {.importcpp: """
     do {
       cooperative_groups::grid_group __hippo_grid = cooperative_groups::this_grid();
       __hippo_grid.sync();
-    } while(0)""", header: "hip/hip_cooperative_groups.h", nodecl.}
+    } while(0)""", header: (if HippoRuntime == "CUDA": "cooperative_groups.h"
+                           else: "hip/hip_cooperative_groups.h"), nodecl.}
 
 template hippoGridSync*() =
   ## Grid-wide barrier. All blocks must reach this point before any proceed.
   ## Only valid inside a kernel launched with hippoLaunchCooperative.
-  when HippoRuntime == "HIP":
+  when HippoRuntime in ["HIP", "CUDA"]:
     hippoGridSyncImpl()
   elif HippoRuntime == "SIMPLE":
     hippoSyncthreads()
@@ -863,10 +885,14 @@ template hippoGridSync*() =
 proc hippoMaxActiveBlocksPerSM*(kernel: pointer; blockSize: int;
                                 sharedMem: int = 0): int =
   ## Query how many blocks of the given kernel can run concurrently per SM/CU.
-  when HippoRuntime == "HIP":
+  when HippoRuntime in ["HIP", "CUDA"]:
     var blocks: cint
-    handleError(hipOccupancyMaxActiveBlocksPerMultiprocessor(
-      addr blocks, kernel, cint(blockSize), csize_t(sharedMem)))
+    when HippoRuntime == "CUDA":
+      handleError(cudaOccupancyMaxActiveBlocksPerMultiprocessor(
+        addr blocks, kernel, cint(blockSize), csize_t(sharedMem)))
+    else:
+      handleError(hipOccupancyMaxActiveBlocksPerMultiprocessor(
+        addr blocks, kernel, cint(blockSize), csize_t(sharedMem)))
     result = int(blocks)
   else:
     result = 1
@@ -1045,7 +1071,7 @@ macro hippoConstant*(v: untyped): untyped =
 macro hippoArgs*(args: varargs[untyped]): untyped =
   ## Automatically convert varargs for use with CUDA/HIP.
   ## CUDA/HIP expects an array of arguments or pointers depending on platform.
-  when (HippoRuntime == "HIP" and HipPlatform == "nvidia") or HippoRuntime == "HIP_CPU" or HippoRuntime == "SIMPLE":
+  when HippoRuntime == "HIP_CPU" or HippoRuntime == "SIMPLE":
     # Create a tuple constructor with original arguments
     var tupleNode = newNimNode(nnkTupleConstr)
     for arg in args:
@@ -1390,7 +1416,7 @@ template hippoSdot4*(a, b: cint, c: cint): cint =
 
 # WMMA (Wave Matrix Multiply-Accumulate) for RDNA3+ wave32 GPUs.
 # These are only available on HIP with RDNA3+ targets (gfx11xx).
-when HippoRuntime == "HIP":
+when HippoRuntime == "HIP" and HipPlatform == "amd":
   type
     HippoWmmaHalf16* = WmmaHalf16
     HippoWmmaFloat8* = WmmaFloat8
@@ -1411,57 +1437,74 @@ when HippoRuntime == "HIP":
     wmmaZeroF32()
 
 # OpenGL buffer interoperability used by Chapter 8.
-when HippoRuntime == "HIP":
+when HippoRuntime in ["HIP", "CUDA"]:
   const
     GLDeviceListCurrentFrame = 2'i32
     GraphicsRegisterWriteDiscard = 2'u32
 
   proc hippoUseGLDevice*(): cint =
-    ## Select the HIP device associated with the current OpenGL context.
+    ## Select the compute device associated with the current OpenGL context.
     ## Call this after making GL current, before creating compute resources.
-    var capacity: cint
-    handleError(hipGetDeviceCount(addr capacity))
+    let capacity = hippoGetDeviceCount()
     if capacity <= 0:
-      raise newException(ValueError, "No HIP device is available for OpenGL interop.")
+      raise newException(ValueError, "No compute device is available for OpenGL interop.")
     var
       devices = newSeq[cint](int(capacity))
       count: cuint
-    handleError(hipGLGetDevices(addr count, addr devices[0], cuint(capacity), GLDeviceListCurrentFrame))
+    when HippoRuntime == "CUDA":
+      handleError(cudaGLGetDevices(addr count, addr devices[0], cuint(capacity), GLDeviceListCurrentFrame))
+    else:
+      handleError(hipGLGetDevices(addr count, addr devices[0], cuint(capacity), GLDeviceListCurrentFrame))
     if count == 0:
-      raise newException(ValueError, "The OpenGL context has no associated HIP device.")
+      raise newException(ValueError, "The OpenGL context has no associated compute device.")
     result = devices[0]
-    handleError(hipSetDevice(result))
+    hippoSetDevice(result)
 
   proc hippoGraphicsGLRegisterBuffer*(buffer: cuint;
                                      writeDiscard = true): HippoGraphicsResource =
     ## Register a GL buffer once, keeping its GL context current for interop calls.
     ## Write-discard requires overwriting the entire buffer on each mapping.
     let flags = if writeDiscard: GraphicsRegisterWriteDiscard else: 0'u32
-    handleError(hipGraphicsGLRegisterBuffer(addr result, buffer, flags))
+    when HippoRuntime == "CUDA":
+      handleError(cudaGraphicsGLRegisterBuffer(addr result, buffer, flags))
+    else:
+      handleError(hipGraphicsGLRegisterBuffer(addr result, buffer, flags))
 
   proc hippoGraphicsMap*(resource: HippoGraphicsResource; stream: HippoStream) =
-    ## Map a registered GL buffer for HIP; GL must not access it until unmapped.
+    ## Map a registered GL buffer for compute; GL must not access it until unmapped.
     var handle = resource
-    handleError(hipGraphicsMapResources(1, addr handle, stream))
+    when HippoRuntime == "CUDA":
+      handleError(cudaGraphicsMapResources(1, addr handle, stream))
+    else:
+      handleError(hipGraphicsMapResources(1, addr handle, stream))
 
   proc hippoGraphicsMappedPointer*(resource: HippoGraphicsResource): tuple[
       data: pointer, sizeBytes: int] =
     ## Borrow a mapped pointer; never free it or retain it across unmapping.
     var size: csize_t
-    handleError(hipGraphicsResourceGetMappedPointer(addr result.data, addr size, resource))
+    when HippoRuntime == "CUDA":
+      handleError(cudaGraphicsResourceGetMappedPointer(addr result.data, addr size, resource))
+    else:
+      handleError(hipGraphicsResourceGetMappedPointer(addr result.data, addr size, resource))
     result.sizeBytes = int(size)
 
   proc hippoGraphicsUnmap*(resource: HippoGraphicsResource; stream: HippoStream) =
     ## Return ownership to GL after preceding kernels in the supplied stream.
     var handle = resource
-    handleError(hipGraphicsUnmapResources(1, addr handle, stream))
+    when HippoRuntime == "CUDA":
+      handleError(cudaGraphicsUnmapResources(1, addr handle, stream))
+    else:
+      handleError(hipGraphicsUnmapResources(1, addr handle, stream))
 
   proc hippoGraphicsUnregister*(resource: HippoGraphicsResource) =
-    ## Release HIP's registration while GL is current, before deleting its buffer.
-    handleError(hipGraphicsUnregisterResource(resource))
+    ## Release the compute registration while GL is current, before deleting its buffer.
+    when HippoRuntime == "CUDA":
+      handleError(cudaGraphicsUnregisterResource(resource))
+    else:
+      handleError(hipGraphicsUnregisterResource(resource))
 
 # Float32 texture views used by Chapter 7's heat simulation.
-when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+when HippoRuntime in ["HIP", "HIP_CPU", "CUDA"]:
   template hippoMallocPitch*(widthBytes, height: int): untyped =
     ## Allocate pitched rows and return (memory: GpuRef, pitchBytes: int).
     ## Width is in bytes; free the allocation through the returned GpuRef.
@@ -1474,23 +1517,32 @@ when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
       var
         memory = GpuRef()
         pitch: csize_t
-      handleError(hipMallocPitch(addr memory.p, addr pitch, csize_t(rowBytes), csize_t(rows)))
+      when HippoRuntime == "CUDA":
+        handleError(cudaMallocPitch(addr memory.p, addr pitch, csize_t(rowBytes), csize_t(rows)))
+      else:
+        handleError(hipMallocPitch(addr memory.p, addr pitch, csize_t(rowBytes), csize_t(rows)))
       (memory: memory, pitchBytes: int(pitch))
 
   template hippoMemcpy2D*(dst: pointer; dstPitchBytes: int; src: pointer;
                          srcPitchBytes, widthBytes, height: int; kind: HippoMemcpyKind) =
     ## Copy logical rows between linear or pitched allocations; sizes are in bytes.
-    handleError(hipMemcpy2D(dst, csize_t(dstPitchBytes), src, csize_t(srcPitchBytes),
-                            csize_t(widthBytes), csize_t(height), kind))
+    when HippoRuntime == "CUDA":
+      handleError(cudaMemcpy2D(dst, csize_t(dstPitchBytes), src, csize_t(srcPitchBytes),
+                              csize_t(widthBytes), csize_t(height), kind))
+    else:
+      handleError(hipMemcpy2D(dst, csize_t(dstPitchBytes), src, csize_t(srcPitchBytes),
+                              csize_t(widthBytes), csize_t(height), kind))
 
   proc hippoCreateFloatTexture1D*(memory: GpuRef; count: int): HippoFloatTexture =
     ## Borrow count float32 elements without copying; memory must outlive the texture.
-    ## HIP uses a native texture object; HIP-CPU reads the same backing allocation.
+    ## GPU backends use native texture objects; HIP-CPU reads the backing allocation.
     if count <= 0:
       raise newException(ValueError, "Texture element count must be positive.")
     when HippoRuntime == "HIP_CPU":
       result = HippoFloatTexture(data: cast[ptr UncheckedArray[cfloat]](memory.p),
         width: count, height: 1, pitchElements: count)
+    elif HippoRuntime == "CUDA":
+      handleError(cudaCreateFloatTexture1D(addr result, memory.p, csize_t(count)))
     else:
       handleError(hipCreateFloatTexture1D(addr result, memory.p, csize_t(count)))
 
@@ -1505,6 +1557,9 @@ when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
     when HippoRuntime == "HIP_CPU":
       result = HippoFloatTexture(data: cast[ptr UncheckedArray[cfloat]](memory.p),
         width: width, height: height, pitchElements: pitchBytes div sizeof(cfloat))
+    elif HippoRuntime == "CUDA":
+      handleError(cudaCreateFloatTexture2D(addr result, memory.p, csize_t(width),
+        csize_t(height), csize_t(pitchBytes)))
     else:
       handleError(hipCreateFloatTexture2D(addr result, memory.p, csize_t(width),
         csize_t(height), csize_t(pitchBytes)))
@@ -1513,6 +1568,8 @@ when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
     ## Release a texture view before freeing its backing memory; HIP-CPU is a no-op.
     when HippoRuntime == "HIP_CPU":
       discard texture
+    elif HippoRuntime == "CUDA":
+      handleError(cudaDestroyTextureObject(texture))
     else:
       handleError(hipDestroyTextureObject(texture))
 
@@ -1523,6 +1580,8 @@ when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
         result = 0.0'f32
       else:
         result = texture.data[int(index)]
+    elif HippoRuntime == "CUDA":
+      result = cudaTex1DFetch(texture, index)
     else:
       result = hipTex1DFetch(texture, index)
 
@@ -1534,5 +1593,7 @@ when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
         column = min(max(int(x), 0), texture.width - 1)
         row = min(max(int(y), 0), texture.height - 1)
       result = texture.data[row * texture.pitchElements + column]
+    elif HippoRuntime == "CUDA":
+      result = cudaTex2D(texture, x, y)
     else:
       result = hipTex2D(texture, x, y)

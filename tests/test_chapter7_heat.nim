@@ -2,7 +2,7 @@ import
   std/[unittest, math],
   hippo
 
-when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+when HippoRuntime in ["HIP", "HIP_CPU", "CUDA"]:
   import ./heat_diffusion
 
   type
@@ -291,5 +291,5 @@ when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
         discard hippoCreateFloatTexture2D(memory, ProbeWidth, ProbeHeight, sizeof(cfloat))
 else:
   suite "Chapter 7: heat diffusion":
-    test "HIP and HIP-CPU only; other platforms are deferred":
+    test "SIMPLE texture support is deferred":
       skip()

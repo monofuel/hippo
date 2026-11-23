@@ -2,7 +2,7 @@ import
   std/unittest,
   hippo
 
-when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
+when HippoRuntime in ["HIP", "HIP_CPU", "CUDA"]:
   type
     HashEntry = object
       key: uint32
@@ -204,5 +204,5 @@ when HippoRuntime == "HIP" or HippoRuntime == "HIP_CPU":
         checkHashTable(MaxBlocks, 32, count)
 else:
   suite "Appendix A: Advanced Atomics":
-    test "AMD HIP and HIP-CPU only; other platforms are deferred":
+    test "SIMPLE atomic locking is deferred":
       skip()

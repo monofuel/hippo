@@ -6,8 +6,10 @@
 ##
 ##   nim cpp --skipParentCfg -d:release -r tests/gui_heatmap.nim
 ##   nim cpp --skipParentCfg --cc:hipcc -d:release -d:useMalloc -d:HippoRuntime:HIP -r tests/gui_heatmap.nim
+##   nim cpp --skipParentCfg --cc:nvcc -d:release -d:useMalloc -d:HippoRuntime:CUDA -r tests/gui_heatmap.nim
+##   HIP_PLATFORM=nvidia nim cpp --skipParentCfg --cc:nvcc --nvcc.cpp.exe:hipcc --nvcc.cpp.linkerexe:hipcc -d:release -d:useMalloc -d:HippoRuntime:HIP -r tests/gui_heatmap.nim
 ##
-## The first command uses HIP-CPU; the second uses AMD HIP.
+## These select HIP-CPU, AMD HIP, direct CUDA and HIP targeting NVIDIA.
 ## On NixOS, `nix develop .#basic` supplies the system GUI libraries.
 ## The compiled backend is independent of the Nix shell's name.
 ## Use --help for controls, frame limits and PNG output options.

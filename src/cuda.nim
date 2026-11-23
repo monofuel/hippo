@@ -9,6 +9,8 @@ type
   uint64_t* = uint64
   cudaStream_t* {.importcpp: "cudaStream_t", header: "cuda_runtime.h".} = pointer
   cudaError_t* {.importcpp: "cudaError_t", header: "cuda_runtime.h".} = cint
+  HippoFloatTexture* {.importcpp: "cudaTextureObject_t", header: "cuda_runtime.h".} = uint64
+  HippoGraphicsResource* {.importcpp: "cudaGraphicsResource_t", header: "cuda_runtime.h".} = pointer
 
 type
   cudaMemcpyKind* {.size: sizeof(cint), header: "cuda_runtime.h", importcpp: "cudaMemcpyKind".} = enum
@@ -46,11 +48,37 @@ proc newDim3*(x: uint32_t = 1; y: uint32_t = 1; z: uint32_t = 1): Dim3 =
   result.z = z
 
 proc cudaMalloc*(`ptr`: ptr pointer; size: csize_t): cudaError_t {.header: "cuda_runtime.h",importcpp: "cudaMalloc(@)".}
+proc cudaMallocPitch*(p: ptr pointer; pitch: ptr csize_t;
+                      widthBytes, height: csize_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaMallocPitch(@)".}
+  ## Allocate pitched rows, returning the actual byte pitch.
+proc cudaMemcpy2D*(dst: pointer; dstPitch: csize_t; src: pointer; srcPitch: csize_t;
+                   widthBytes, height: csize_t; kind: cudaMemcpyKind): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaMemcpy2D(@)".}
+  ## Copy logical rows between linear or pitched allocations.
+proc cudaCreateFloatTexture1D*(texture: ptr HippoFloatTexture; data: pointer;
+                               count: csize_t): cudaError_t {.
+  header: "hippo_texture.h", importcpp: "hippo_detail::create_float_texture_1d(@)".}
+  ## Create a linear float32 texture borrowing device memory.
+proc cudaCreateFloatTexture2D*(texture: ptr HippoFloatTexture; data: pointer;
+                               width, height, pitchBytes: csize_t): cudaError_t {.
+  header: "hippo_texture.h", importcpp: "hippo_detail::create_float_texture_2d(@)".}
+  ## Create a point-sampled float32 texture with clamped unnormalized coordinates.
+proc cudaDestroyTextureObject*(texture: HippoFloatTexture): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaDestroyTextureObject(@)".}
+  ## Destroy a texture view without freeing its backing allocation.
+proc cudaTex1DFetch*(texture: HippoFloatTexture; index: cint): cfloat {.
+  header: "cuda_runtime.h", importcpp: "tex1Dfetch<float>(@)".}
+  ## Fetch a linear float32 texture element by index.
+proc cudaTex2D*(texture: HippoFloatTexture; x, y: cfloat): cfloat {.
+  header: "cuda_runtime.h", importcpp: "tex2D<float>(@)".}
+  ## Sample a float32 texture using its configured sampler.
 proc cudaMemcpy*(dst: pointer; src: pointer; size: csize_t; kind: cudaMemcpyKind): cudaError_t {.header: "cuda_runtime.h",importcpp: "cudaMemcpy(@)".}
-proc cudaMemcpyToSymbol*(symbol: pointer; src: pointer; sizeBytes: csize_t;
+proc cudaMemcpyToSymbol*[T](symbol: var T; src: pointer; sizeBytes: csize_t;
                          offset: csize_t = 0;
                          kind: cudaMemcpyKind = cudaMemcpyHostToDevice): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaMemcpyToSymbol(@)".}
+  ## Copy to a typed device symbol without replacing its identity with a host pointer.
 proc cudaFree*(`ptr`: pointer): cudaError_t {.header: "cuda_runtime.h",importcpp: "cudaFree(@)".}
 
 proc cudaLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Dim3;
@@ -62,6 +90,41 @@ proc cudaLaunchKernel*(function_address: pointer; numBlocks: Dim3; dimBlocks: Di
 proc cudaDeviceSynchronize*(): cudaError_t {.header: "cuda_runtime.h",importcpp: "cudaDeviceSynchronize(@)".}
 proc cudaSyncthreads*() {.importcpp: "__syncthreads()", header: "cuda_runtime.h".}
 proc hippoSyncthreads*() {.importcpp: "__syncthreads()", header: "cuda_runtime.h".}
+proc cudaThreadfence*() {.importcpp: "__threadfence()", header: "cuda_runtime.h".}
+  ## Order the calling thread's memory accesses at device scope.
+proc cudaLaunchCooperativeKernel*(kernel: pointer; grid, blockSize: Dim3;
+    args: ptr pointer; sharedBytes: csize_t; stream: cudaStream_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaLaunchCooperativeKernel(@)".}
+  ## Launch a kernel whose blocks may synchronize across the grid.
+proc cudaOccupancyMaxActiveBlocksPerMultiprocessor*(blocks: ptr cint; kernel: pointer;
+    blockSize: cint; sharedBytes: csize_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaOccupancyMaxActiveBlocksPerMultiprocessor(@)".}
+  ## Query the kernel's maximum resident blocks per multiprocessor.
+
+proc cudaGLGetDevices*(count: ptr cuint; devices: ptr cint; capacity: cuint;
+                       deviceList: cint): cudaError_t {.
+  header: "cuda_gl_interop.h",
+  importcpp: "cudaGLGetDevices(#, #, #, static_cast<cudaGLDeviceList>(#))".}
+  ## Query CUDA devices associated with the current OpenGL context.
+proc cudaGraphicsGLRegisterBuffer*(resource: ptr HippoGraphicsResource;
+    buffer, flags: cuint): cudaError_t {.
+  header: "cuda_gl_interop.h", importcpp: "cudaGraphicsGLRegisterBuffer(@)".}
+  ## Register an OpenGL buffer for CUDA access.
+proc cudaGraphicsMapResources*(count: cint; resources: ptr HippoGraphicsResource;
+    stream: cudaStream_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaGraphicsMapResources(@)".}
+  ## Map graphics resources onto the selected CUDA stream.
+proc cudaGraphicsResourceGetMappedPointer*(data: ptr pointer; size: ptr csize_t;
+    resource: HippoGraphicsResource): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaGraphicsResourceGetMappedPointer(@)".}
+  ## Borrow the mapped resource's device pointer and size.
+proc cudaGraphicsUnmapResources*(count: cint; resources: ptr HippoGraphicsResource;
+    stream: cudaStream_t): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaGraphicsUnmapResources(@)".}
+  ## Return mapped resources to OpenGL after preceding stream operations.
+proc cudaGraphicsUnregisterResource*(resource: HippoGraphicsResource): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaGraphicsUnregisterResource(@)".}
+  ## Release a graphics registration while its GL context is current.
 
 # Atomics
 proc cudaAtomicAdd*(address: ptr int32; val: int32): int32 {.
@@ -136,6 +199,9 @@ proc cudaHostAlloc*(p: ptr pointer; size: csize_t;
   header: "cuda_runtime.h", importcpp: "cudaHostAlloc(@)".}
 proc cudaFreeHost*(p: pointer): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaFreeHost(@)".}
+proc cudaHostGetDevicePointer*(device: ptr pointer; host: pointer; flags: cuint): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaHostGetDevicePointer(@)".}
+  ## Borrow the current device's alias of mapped host memory.
 
 # Events for Timing
 type cudaEvent_t* {.importcpp: "cudaEvent_t", header: "cuda_runtime.h".} = pointer
@@ -166,10 +232,19 @@ proc cudaStreamWaitEvent*(stream: cudaStream_t; event: cudaEvent_t;
 # Device Properties
 type cudaDeviceProp* {.importcpp: "cudaDeviceProp", header: "cuda_runtime.h",
     incompleteStruct.} = object
+  name*: array[256, char]
+  canMapHostMemory*: cint
+  integrated*: cint
   deviceOverlap*: cint
   multiProcessorCount*: cint
   sharedMemPerBlock*: csize_t
   warpSize*: cint
+proc cudaGetDeviceCount*(count: ptr cint): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaGetDeviceCount(@)".}
+  ## Return the number of visible CUDA devices.
+proc cudaSetDevice*(device: cint): cudaError_t {.
+  header: "cuda_runtime.h", importcpp: "cudaSetDevice(@)".}
+  ## Select the calling host thread's CUDA device.
 proc cudaGetDevice*(device: ptr cint): cudaError_t {.
   header: "cuda_runtime.h", importcpp: "cudaGetDevice(@)".}
 proc cudaGetDeviceProperties*(prop: ptr cudaDeviceProp; device: cint): cudaError_t {.

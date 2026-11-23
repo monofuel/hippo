@@ -1,4 +1,4 @@
-version     = "0.13.0"
+version     = "0.14.0"
 author      = "Andrew Brower"
 description = "HIP library for Nim"
 license     = "MIT"
@@ -17,7 +17,10 @@ task test_amd, "Run all tests with AMD HIP":
   exec "set -e; for f in tests/test*.nim; do nim cpp --cc:hipcc --define:'useMalloc' --define:'HippoRuntime:HIP' -r $f; done"
 
 task test_cuda, "Run all tests with CUDA":
-  exec "set -e; for f in tests/test*.nim; do nim cpp --cc:nvcc --define:'useMalloc' -r $f; done"
+  exec "set -e; for f in tests/test*.nim; do nim cpp --cc:nvcc --define:'useMalloc' --define:'HippoRuntime:CUDA' -r $f; done"
+
+task test_hip_nvidia, "Run all tests with HIP targeting NVIDIA":
+  exec "set -e; export HIP_PLATFORM=nvidia; for f in tests/test*.nim; do nim cpp --cc:nvcc --nvcc.cpp.exe:hipcc --nvcc.cpp.linkerexe:hipcc --define:'useMalloc' --define:'HippoRuntime:HIP' --define:'HippoPlatform:nvidia' -r $f; done"
 
 task test_hip_cpu, "Run all tests with HIP-CPU backend":
   # explicit hip_cpu test in case we ever change the default for our tests

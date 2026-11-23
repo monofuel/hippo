@@ -2,7 +2,7 @@ import
   hippo,
   std/[unittest, math]
 
-when HippoRuntime == "HIP":
+when HippoRuntime == "HIP" and HipPlatform == "amd":
   proc wmmaMatmulKernel(
     aData, bData: ptr cushort,
     cData: ptr cfloat

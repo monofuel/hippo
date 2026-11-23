@@ -43,7 +43,7 @@ type
     sizeBytes*: int
     mapped: bool
     writeDiscard: bool
-    when HippoRuntime == "HIP":
+    when HippoRuntime in ["HIP", "CUDA"]:
       resource: HippoGraphicsResource
 
 const
@@ -161,7 +161,7 @@ proc newInteropBuffer*(api: GLApi; sizeBytes: int; writeDiscard = true;
   api.bindBuffer(PixelUnpackBuffer, result.name)
   api.bufferData(PixelUnpackBuffer, sizeBytes, initial, DynamicDraw)
   api.bindBuffer(PixelUnpackBuffer, 0)
-  when HippoRuntime == "HIP":
+  when HippoRuntime in ["HIP", "CUDA"]:
     try:
       result.resource = hippoGraphicsGLRegisterBuffer(result.name, writeDiscard)
     except:
@@ -172,7 +172,7 @@ proc map*(buffer: var InteropBuffer; stream: HippoStream): pointer =
   ## Borrow the buffer until unmap; HIP-CPU uses a host-writable GL mapping.
   if buffer.mapped:
     raise newException(ValueError, "Pixel buffer is already mapped.")
-  when HippoRuntime == "HIP":
+  when HippoRuntime in ["HIP", "CUDA"]:
     hippoGraphicsMap(buffer.resource, stream)
     buffer.mapped = true
     let view = hippoGraphicsMappedPointer(buffer.resource)
@@ -192,7 +192,7 @@ proc unmap*(buffer: var InteropBuffer; stream: HippoStream) =
   ## Complete compute work and return the buffer to OpenGL before drawing.
   if not buffer.mapped:
     raise newException(ValueError, "Pixel buffer is not mapped.")
-  when HippoRuntime == "HIP":
+  when HippoRuntime in ["HIP", "CUDA"]:
     hippoGraphicsUnmap(buffer.resource, stream)
     hippoStreamSynchronize(stream)
   else:
@@ -209,7 +209,7 @@ proc close*(buffer: var InteropBuffer; stream: HippoStream) =
   if buffer.name != 0:
     if buffer.mapped:
       buffer.unmap(stream)
-    when HippoRuntime == "HIP":
+    when HippoRuntime in ["HIP", "CUDA"]:
       hippoGraphicsUnregister(buffer.resource)
     buffer.api.deleteBuffers(1, addr buffer.name)
     buffer.name = 0
