@@ -912,31 +912,24 @@ macro hippoGlobal*(fn: untyped): untyped =
     let pragmas = if fn.len > 4 and fn[4].kind == nnkPragma: fn[4] else: newEmptyNode()
     let body = fn[^1]
 
-    let iterBody = newStmtList()
-    if body.kind == nnkStmtList:
-      for stmt in body:
-        iterBody.add(stmt)
-    else:
-      iterBody.add(body)
-    iterBody.add(newTree(nnkYieldStmt, newLit(false)))
+    let iterBody = body.copyNimTree()
 
     let anonIter = newNimNode(nnkIteratorDef)
     anonIter.add(newEmptyNode())
     anonIter.add(newEmptyNode())
     anonIter.add(newEmptyNode())
     anonIter.add(newNimNode(nnkFormalParams).add(ident("bool")))
-    anonIter.add(newEmptyNode())
+    anonIter.add(newTree(nnkPragma, ident("closure"), ident("gcsafe")))
     anonIter.add(newEmptyNode())
     anonIter.add(iterBody)
 
-    let returnBody = newStmtList()
-    returnBody.add(newTree(nnkReturnStmt, anonIter))
+    let returnBody = newStmtList(newTree(nnkReturnStmt, anonIter))
 
     let newParams = params.copyNimTree()
     if newParams.len > 0:
-      newParams[0] = ident("auto")
+      newParams[0] = bindSym"SimpleThread"
     else:
-      newParams.insert(0, ident("auto"))
+      newParams.insert(0, bindSym"SimpleThread")
 
     result = newNimNode(nnkProcDef)
     result.add(name)
@@ -1047,9 +1040,19 @@ macro hippoShared*(v: untyped): untyped =
       `v`
       {.pop.}
   else:
-    # TODO proper thread vars
-    quote do:
-      `v`
+    result = newStmtList()
+    for definition in v:
+      if definition[^1].kind != nnkEmpty:
+        error("Shared memory declarations cannot have initializers.", definition)
+      for index in 0 ..< definition.len - 2:
+        let
+          alias = definition[index]
+          storage = genSym(nskLet, "sharedView")
+          site = newLit(v.lineInfo & ":" & alias.repr & ":" & storage.repr)
+          memoryType = definition[^2]
+        result.add quote do:
+          let `storage` = simpleSharedMemory[`memoryType`](`site`)
+          template `alias`: untyped = `storage`[]
 
 macro hippoConstant*(v: untyped): untyped =
   ## Declared a variable as `__constant__`.

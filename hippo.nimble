@@ -1,4 +1,4 @@
-version     = "0.14.0"
+version     = "0.15.0"
 author      = "Andrew Brower"
 description = "HIP library for Nim"
 license     = "MIT"
@@ -27,8 +27,7 @@ task test_hip_cpu, "Run all tests with HIP-CPU backend":
   exec "set -e; for f in tests/test*.nim; do nim cpp --define:'HippoRuntime:HIP_CPU' -r $f; done"
 
 task test_simple, "Run all tests with Simple backend (threads enabled)":
-  # "simple with threads on" means we are using the Hippo backend to run kernels on CPU using Nim's threading.
-  # we run many many gpu threads on top of a pool of cpu threads.
+  # Exercise bounded CPU workers, including concurrent lanes within one block.
   exec "set -e; for f in tests/test*.nim; do nim cpp --threads:on --define:'HippoRuntime:SIMPLE' -r $f; done"
 
 task test_simple_no_threads, "Run all tests with Simple backend (threads disabled)":
