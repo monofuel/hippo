@@ -431,6 +431,10 @@
     blockSize: cint; dynSharedMemPerBlk: csize_t): hipError_t" href="hippo.html#hipOccupancyMaxActiveBlocksPerMultiprocessor%2Cptr.cint%2Cpointer%2Ccint%2Ccsize_t">hippo: proc hipOccupancyMaxActiveBlocksPerMultiprocessor(numBlocks: ptr cint; f: pointer;
     blockSize: cint; dynSharedMemPerBlk: csize_t): hipError_t</a></li>
           </ul></dd>
+<dt><a name="HipPlatform" href="#HipPlatform"><span>HipPlatform:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="hippo: const HipPlatform" href="hippo.html#HipPlatform">hippo: const HipPlatform</a></li>
+          </ul></dd>
 <dt><a name="hippoArgs" href="#hippoArgs"><span>hippoArgs:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: macro hippoArgs(args: varargs[untyped]): untyped" href="hippo.html#hippoArgs.m%2Cvarargs%5Buntyped%5D">hippo: macro hippoArgs(args: varargs[untyped]): untyped</a></li>
@@ -983,34 +987,6 @@
 <li><a class="reference external"
           data-doc-search-tag="hippo: const HippoWarpSize" href="hippo.html#HippoWarpSize">hippo: const HippoWarpSize</a></li>
           </ul></dd>
-<dt><a name="hippoWmmaF32_16x16x16_f16" href="#hippoWmmaF32_16x16x16_f16"><span>hippoWmmaF32_16x16x16_f16:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="hippo: template hippoWmmaF32_16x16x16_f16(a, b: HippoWmmaHalf16; c: HippoWmmaFloat8): HippoWmmaFloat8" href="hippo.html#hippoWmmaF32_16x16x16_f16.t%2CWmmaHalf16%2CWmmaHalf16%2CWmmaFloat8">hippo: template hippoWmmaF32_16x16x16_f16(a, b: HippoWmmaHalf16; c: HippoWmmaFloat8): HippoWmmaFloat8</a></li>
-          </ul></dd>
-<dt><a name="HippoWmmaFloat8" href="#HippoWmmaFloat8"><span>HippoWmmaFloat8:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="hippo: type HippoWmmaFloat8" href="hippo.html#HippoWmmaFloat8">hippo: type HippoWmmaFloat8</a></li>
-          </ul></dd>
-<dt><a name="hippoWmmaGetF32" href="#hippoWmmaGetF32"><span>hippoWmmaGetF32:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="hippo: template hippoWmmaGetF32(v: HippoWmmaFloat8; idx: int): cfloat" href="hippo.html#hippoWmmaGetF32.t%2CWmmaFloat8%2Cint">hippo: template hippoWmmaGetF32(v: HippoWmmaFloat8; idx: int): cfloat</a></li>
-          </ul></dd>
-<dt><a name="HippoWmmaHalf16" href="#HippoWmmaHalf16"><span>HippoWmmaHalf16:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="hippo: type HippoWmmaHalf16" href="hippo.html#HippoWmmaHalf16">hippo: type HippoWmmaHalf16</a></li>
-          </ul></dd>
-<dt><a name="hippoWmmaSetF16" href="#hippoWmmaSetF16"><span>hippoWmmaSetF16:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="hippo: template hippoWmmaSetF16(v: var HippoWmmaHalf16; idx: int; val: uint16)" href="hippo.html#hippoWmmaSetF16.t%2CWmmaHalf16%2Cint%2Cuint16">hippo: template hippoWmmaSetF16(v: var HippoWmmaHalf16; idx: int; val: uint16)</a></li>
-          </ul></dd>
-<dt><a name="hippoWmmaSetF32" href="#hippoWmmaSetF32"><span>hippoWmmaSetF32:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="hippo: template hippoWmmaSetF32(v: var HippoWmmaFloat8; idx: int; val: cfloat)" href="hippo.html#hippoWmmaSetF32.t%2CWmmaFloat8%2Cint%2Ccfloat">hippo: template hippoWmmaSetF32(v: var HippoWmmaFloat8; idx: int; val: cfloat)</a></li>
-          </ul></dd>
-<dt><a name="hippoWmmaZeroF32" href="#hippoWmmaZeroF32"><span>hippoWmmaZeroF32:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="hippo: template hippoWmmaZeroF32(): HippoWmmaFloat8" href="hippo.html#hippoWmmaZeroF32.t">hippo: template hippoWmmaZeroF32(): HippoWmmaFloat8</a></li>
-          </ul></dd>
 <dt><a name="hipSetDevice" href="#hipSetDevice"><span>hipSetDevice:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hippo: proc hipSetDevice(device: cint): hipError_t" href="hippo.html#hipSetDevice%2Ccint">hippo: proc hipSetDevice(device: cint): hipError_t</a></li>
@@ -1231,7 +1207,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-11-22 19:50:15 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-11-24 00:44:28 UTC</small>
       </div>
     </div>
   </div>
