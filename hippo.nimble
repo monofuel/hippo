@@ -1,4 +1,4 @@
-version     = "0.15.0"
+version     = "0.16.0"
 author      = "Andrew Brower"
 description = "HIP library for Nim"
 license     = "MIT"
@@ -34,3 +34,6 @@ task test_simple_no_threads, "Run all tests with Simple backend (threads disable
   # "simple with threads off" means we are using the Hippo backend to run kernels on CPU using a single cpu thread.
   # we run many many gpu threads on top of a single cpu thread.
   exec "set -e; for f in tests/test*.nim; do nim cpp --threads:off --define:'HippoRuntime:SIMPLE' -r $f; done"
+
+task bench_simple, "Measure cold and warmed SIMPLE kernel launches":
+  exec "nim cpp --threads:on -d:release --define:'HippoRuntime:SIMPLE' -r tests/bench_simple_launches.nim"

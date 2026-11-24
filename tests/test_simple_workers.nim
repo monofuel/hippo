@@ -8,6 +8,8 @@ when HippoRuntime == "SIMPLE":
     Lanes = 4
     ParticipationTimeoutMs = 5000
 
+  var workerVisits {.threadvar.}: int
+
   proc currentWorker(): int =
     ## Identify the actual OS thread, or the only execution context without threading.
     when compileOption("threads"):
@@ -65,6 +67,60 @@ when HippoRuntime == "SIMPLE":
       check caller notin observed
     check arrivals.load() == blocks * Lanes
 
+  proc retainedWorkerState(output: ptr int) {.hippoGlobal.} =
+    ## Observe worker identity and thread-local state surviving between launches.
+    let
+      lane = int(threadIdx.x)
+      actual = cast[ptr UncheckedArray[int]](output)
+    inc workerVisits
+    actual[lane * 2] = currentWorker()
+    actual[lane * 2 + 1] = workerVisits
+
+  proc captureWorkers(lanes: int): seq[int] =
+    ## Read one identity and visit count per lane without changing pool configuration.
+    let output = hippoMalloc(lanes * 2 * sizeof(int))
+    result = newSeq[int](lanes * 2)
+    hippoLaunchKernel(retainedWorkerState, blockDim = newDim3(lanes), args = hippoArgs(output.p))
+    hippoMemcpy(addr result[0], output, result.len * sizeof(int), HippoMemcpyDeviceToHost)
+
+  proc oneWorkerFails() {.hippoGlobal.} =
+    ## Cancel peers waiting at a barrier, leaving persistent workers reusable.
+    if threadIdx.x == 0:
+      raise newException(ValueError, "Intentional persistent worker failure.")
+    hippoSyncthreads()
+
+  proc workerPoolControl(mode: int) {.hippoGlobal.} =
+    ## Reentrant pool control must fail instead of waiting for its own launch.
+    if threadIdx.x == 0:
+      if mode == 0:
+        setThreads(1)
+      else:
+        shutdownSimpleWorkers()
+    hippoSyncthreads()
+
+  proc callerFailure() {.hippoGlobal.} =
+    ## Exercise wrapped exceptions on the calling thread rather than a pool worker.
+    raise newException(IOError, "Intentional caller kernel failure.")
+
+  when compileOption("threads"):
+    type HostStart = object
+      output: ptr UncheckedArray[int]
+      seed: int
+
+    proc hostKernel(output: ptr int; seed: int) {.hippoGlobal.} =
+      ## Write a caller-specific result through the shared persistent pool.
+      let actual = cast[ptr UncheckedArray[int]](output)
+      actual[int(threadIdx.x)] = seed + int(threadIdx.x)
+
+    proc hostCaller(start: HostStart) {.thread.} =
+      ## Submit independent synchronous launches from a short-lived host thread.
+      for iteration in 0 ..< 30:
+        var seed = start.seed + iteration * 10
+        hippoLaunchKernel(hostKernel, blockDim = newDim3(Lanes),
+          args = hippoArgs(cast[ptr int](start.output), seed))
+        for lane in 0 ..< Lanes:
+          doAssert start.output[lane] == seed + lane
+
   suite "SIMPLE CPU worker scheduling":
     test "one worker executes on the calling thread":
       checkWorkers(1, Blocks)
@@ -87,6 +143,88 @@ when HippoRuntime == "SIMPLE":
     test "zero workers is rejected":
       expect ValueError:
         setThreads(0)
+
+    test "shutdown is idempotent and later launches recreate workers":
+      checkWorkers(2, Blocks)
+      shutdownSimpleWorkers()
+      shutdownSimpleWorkers()
+      checkWorkers(2, Blocks)
+
+    test "pool control from a kernel is rejected without deadlocking":
+      for choice in 0 .. 1:
+        var mode = choice
+        expect ValueError:
+          hippoLaunchKernel(workerPoolControl, blockDim = newDim3(Lanes), args = hippoArgs(mode))
+        checkWorkers(2, Blocks)
+
+    test "wrapped caller failures release context and dispatch before the next launch":
+      setThreads(1)
+      expect SimpleKernelError:
+        hippoLaunchKernel(callerFailure, args = hippoArgs())
+      checkWorkers(1, Blocks)
+      checkWorkers(2, Blocks)
+
+  when compileOption("threads"):
+    suite "SIMPLE persistent worker lifetime":
+      test "worker identities and thread-local state survive smaller and repeated launches":
+        shutdownSimpleWorkers()
+        setThreads(4)
+        let first = captureWorkers(4)
+        for repetition in 2 .. 20:
+          # Setting the same limit must not discard the existing pool.
+          setThreads(4)
+          let current = captureWorkers(4)
+          for lane in 0 ..< 4:
+            check current[lane * 2] == first[lane * 2]
+            check current[lane * 2 + 1] == repetition
+        let smaller = captureWorkers(2)
+        for lane in 0 ..< 2:
+          check smaller[lane * 2] == first[lane * 2]
+          check smaller[lane * 2 + 1] == 21
+        let larger = captureWorkers(4)
+        for lane in 0 ..< 4:
+          check larger[lane * 2] == first[lane * 2]
+          check larger[lane * 2 + 1] == (if lane < 2: 22 else: 21)
+
+      test "configuration changes and shutdown retire old worker state":
+        shutdownSimpleWorkers()
+        for workers in [4'u, 2'u, 8'u, 3'u]:
+          setThreads(workers)
+          let actual = captureWorkers(int(workers))
+          for lane in 0 ..< int(workers):
+            check actual[lane * 2 + 1] == 1
+        shutdownSimpleWorkers()
+        let recreated = captureWorkers(3)
+        for lane in 0 ..< 3:
+          check recreated[lane * 2 + 1] == 1
+        setThreads(1)
+        let caller = captureWorkers(1)
+        check caller[0] == currentWorker()
+
+      test "failure cancellation does not poison or replace persistent workers":
+        setThreads(4)
+        let first = captureWorkers(4)
+        for repetition in 2 .. 20:
+          expect ValueError:
+            hippoLaunchKernel(oneWorkerFails, blockDim = newDim3(4), args = hippoArgs())
+          let current = captureWorkers(4)
+          for lane in 0 ..< 4:
+            check current[lane * 2] == first[lane * 2]
+            check current[lane * 2 + 1] == repetition
+
+      test "host callers may exit while their pool remains reusable by another caller":
+        shutdownSimpleWorkers()
+        setThreads(4)
+        var
+          output: array[2, array[Lanes, int]]
+          callers: array[2, Thread[HostStart]]
+        for index in 0 ..< callers.len:
+          createThread(callers[index], hostCaller,
+            HostStart(output: cast[ptr UncheckedArray[int]](addr output[index][0]), seed: index * 10000))
+        for index in 0 ..< callers.len:
+          joinThread(callers[index])
+        checkWorkers(4, Blocks)
+        shutdownSimpleWorkers()
 else:
   suite "SIMPLE CPU worker scheduling":
     test "SIMPLE-only scheduler checks":

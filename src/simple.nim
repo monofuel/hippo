@@ -2,7 +2,7 @@
 ## Logical GPU lanes run cooperatively as iterators, with storage owned by each block.
 ## Threaded builds distribute lanes, including those in one block, across bounded workers.
 import
-  std/[cpuinfo, macros, os, strutils, math, locks, typetraits, atomics]
+  std/[cpuinfo, macros, os, strutils, math, locks, typetraits, atomics, exitprocs]
 
 ## TERMINOLOGY: `threads` or `SingleThread` refers to the number of CPU threads we are using under the hood.
 ## Execution is cooperative; the threading option does not create an OS thread per lane.
@@ -46,13 +46,6 @@ proc newDim3*(x: SomeInteger = 1; y: SomeInteger = 1; z: SomeInteger = 1): Dim3 
 
 
 var threads = 1.uint
-
-proc setThreads*(n: uint) =
-  ## Set the maximum CPU workers per launch; one uses the calling thread.
-  if n == 0:
-    raise newException(ValueError, "SIMPLE needs at least one CPU worker.")
-  threads = n
-
 
 proc simpleInit() =
   ## get the number of cpu cores and set the number of threads to use.
@@ -296,51 +289,162 @@ when not SingleThread:
       runWorker: ptr SimpleWorkerProc
       cancelled: Atomic[bool]
       failure: SimpleFailure
-    SimpleWorkerStart = object
+    SimplePoolState = object
+      lock: Lock
+      wake, finished: Cond
+      generation: uint
+      stopping: bool
       work: ptr SimpleWorkState
-      index, count: int
+      activeCount, remaining, size: int
+      workers: ptr UncheckedArray[Thread[SimpleWorkerStart]]
+    SimpleWorkerStart = object
+      pool: ptr SimplePoolState
+      index: int
+
+  var
+    simpleDispatchLock: Lock
+    simplePool: SimplePoolState
+
+  initLock(simpleDispatchLock)
+  initLock(simplePool.lock)
+  initCond(simplePool.wake)
+  initCond(simplePool.finished)
 
   proc simpleWorker(start: SimpleWorkerStart) {.thread.} =
-    ## Run pinned logical lanes and cancel waiting peers if any kernel fails.
-    try:
-      start.work.runWorker[](start.index, start.count, addr start.work.cancelled)
-    except Exception as error:
-      acquire(start.work.lock)
+    ## Sleep between launches and keep each launch's iterators on this worker.
+    let pool = start.pool
+    var generation = 0'u
+    while true:
+      acquire(pool.lock)
+      while not pool.stopping and generation == pool.generation:
+        wait(pool.wake, pool.lock)
+      if pool.stopping:
+        release(pool.lock)
+        return
+      generation = pool.generation
+      let
+        count = pool.activeCount
+        work = if start.index < count: pool.work else: nil
+      release(pool.lock)
+      # An inactive worker may wake after the participating workers already finished.
+      if work == nil:
+        continue
       try:
-        if start.work.failure.name == nil:
-          start.work.failure = describeFailure(error)
-        start.work.cancelled.store(true)
-      finally:
-        release(start.work.lock)
+        work.runWorker[](start.index, count, addr work.cancelled)
+      except Exception as error:
+        acquire(work.lock)
+        try:
+          if work.failure.name == nil:
+            work.failure = describeFailure(error)
+          work.cancelled.store(true)
+        finally:
+          release(work.lock)
+      acquire(pool.lock)
+      dec pool.remaining
+      if pool.remaining == 0:
+        pool.work = nil
+        signal(pool.finished)
+      release(pool.lock)
+
+  proc stopSimpleWorkers() =
+    ## Join idle pool workers while the caller holds the launch dispatch lock.
+    acquire(simplePool.lock)
+    simplePool.stopping = true
+    broadcast(simplePool.wake)
+    release(simplePool.lock)
+    for index in 0 ..< simplePool.size:
+      joinThread(simplePool.workers[index])
+    simpleRelease(simplePool.workers)
+    simplePool.workers = nil
+    simplePool.size = 0
+    acquire(simplePool.lock)
+    simplePool.stopping = false
+    simplePool.generation = 0
+    release(simplePool.lock)
+
+  proc ensureSimpleWorkers(count: int) =
+    ## Grow lazily; smaller launches reuse a subset without moving thread handles.
+    if simplePool.size >= count:
+      return
+    stopSimpleWorkers()
+    # Nim's thread entry point borrows its Thread object, so handles must not move.
+    simplePool.workers = cast[ptr UncheckedArray[Thread[SimpleWorkerStart]]](
+      simpleAllocate(count.csize_t, sizeof(Thread[SimpleWorkerStart]).csize_t))
+    if simplePool.workers == nil:
+      raise newException(OutOfMemDefect, "Unable to allocate SIMPLE worker handles.")
+    try:
+      for index in 0 ..< count:
+        createThread(simplePool.workers[index], simpleWorker,
+          SimpleWorkerStart(pool: addr simplePool, index: index))
+        inc simplePool.size
+    except:
+      stopSimpleWorkers()
+      raise
 
   proc runParallelLanes(runWorker: SimpleWorkerProc; laneCount: int) =
-    ## Borrow the launch callback until all bounded workers have joined.
+    ## Borrow the callback until every participating persistent worker has finished.
     let workerCount = min(threads, uint(laneCount)).int
-    var
-      work = SimpleWorkState(runWorker: unsafeAddr runWorker)
-      workers = newSeq[Thread[SimpleWorkerStart]](workerCount)
-      started = 0
+    ensureSimpleWorkers(workerCount)
+    var work = SimpleWorkState(runWorker: unsafeAddr runWorker)
     initLock(work.lock)
     try:
+      acquire(simplePool.lock)
       try:
-        for index in 0 ..< workerCount:
-          createThread(workers[index], simpleWorker,
-            SimpleWorkerStart(work: addr work, index: index, count: workerCount))
-          inc started
-      except:
-        work.cancelled.store(true)
-        raise
+        simplePool.work = addr work
+        simplePool.activeCount = workerCount
+        simplePool.remaining = workerCount
+        inc simplePool.generation
+        broadcast(simplePool.wake)
+        while simplePool.remaining > 0:
+          wait(simplePool.finished, simplePool.lock)
       finally:
-        for index in 0 ..< started:
-          joinThread(workers[index])
+        release(simplePool.lock)
       if work.failure.name != nil:
         raiseFailure(work.failure)
     finally:
       releaseFailure(work.failure)
       deinitLock(work.lock)
 
+template withSimpleLaunch(body: untyped) =
+  if currentSimpleBlock != nil:
+    raise newException(ValueError, "SIMPLE launches and worker configuration require host code.")
+  when not SingleThread:
+    acquire(simpleDispatchLock)
+  try:
+    body
+  finally:
+    when not SingleThread:
+      release(simpleDispatchLock)
+
+proc shutdownSimpleWorkers*() =
+  ## Wait for any launch and stop idle SIMPLE workers; a later launch recreates them.
+  ## Host launches share one pool and execute synchronously under the dispatch lock.
+  ## Call from host code; workers also stop automatically at normal process exit.
+  withSimpleLaunch:
+    when not SingleThread:
+      stopSimpleWorkers()
+
+proc setThreads*(n: uint) =
+  ## Set the maximum CPU workers; changing it stops the pool between launches.
+  ## One uses the calling thread. Without threading, every launch uses the caller.
+  ## Call from host code; setting the existing limit preserves the pool.
+  if n == 0:
+    raise newException(ValueError, "SIMPLE needs at least one CPU worker.")
+  withSimpleLaunch:
+    when not SingleThread:
+      if n != threads:
+        stopSimpleWorkers()
+    threads = n
+
+when not SingleThread:
+  proc quitSimpleWorkers() {.noconv.} =
+    ## Release persistent workers at normal process exit.
+    shutdownSimpleWorkers()
+
+  addExitProc(quitSimpleWorkers)
+
 template simpleLaunchKernel(fn: untyped; gridDimArg, blockDimArg: Dim3; args: tuple) =
-  block:
+  withSimpleLaunch:
     let
       launchGrid = gridDimArg
       launchBlock = blockDimArg
@@ -394,6 +498,7 @@ template simpleLaunchKernel(fn: untyped; gridDimArg, blockDimArg: Dim3; args: tu
         result.add(makeLaneTask(index))
         index += workerCount
 
+    var serialFailure: SimpleFailure
     try:
       when not SingleThread:
         if threads > 1 and totalLanes > 1:
@@ -413,8 +518,7 @@ template simpleLaunchKernel(fn: untyped; gridDimArg, blockDimArg: Dim3; args: tu
     except ValueError, Defect, SimpleKernelError:
       raise
     except Exception as error:
-      var failure = describeFailure(error)
-      raiseFailure(failure)
+      serialFailure = describeFailure(error)
     finally:
       currentSimpleBlock = previousBlock
       for index in 0 ..< totalBlocks:
@@ -427,6 +531,9 @@ template simpleLaunchKernel(fn: untyped; gridDimArg, blockDimArg: Dim3; args: tu
         when not SingleThread:
           deinitLock(states[index].lock)
       deallocShared(states)
+    # Restore launch state before propagating a replacement exception.
+    if serialFailure.name != nil:
+      raiseFailure(serialFailure)
 
 template hippoSyncthreads*() =
   ## Release worker capacity until all logical lanes in this block arrive.
