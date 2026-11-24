@@ -46,11 +46,7 @@ proc dot(a, b, c: ptr[float64]){.hippoGlobal.} =
     cArray[blockIdx.x] = cache[0]
 
 suite "dot product":
-  # TODO unskip SIMPLE.
-  # syncthreads work on SIMPLE, but we still need to figure out block shared memory.
-  testSkipPlatforms "dot", "SIMPLE":
-    # This test runs on: HIP, CUDA, HIP_CPU
-    # This test skips on: SIMPLE and SIMPLE_NO_THREADS (both thread variants)
+  test "dot":
     var a, b, partial_c: array[N, float64]
 
     # allocate gpu memory

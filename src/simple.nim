@@ -1,22 +1,18 @@
 ## `simple` is a pure-nim backend for hippo.
-## You must compile with --threads:on for using more cpu cores.
-## Otherwise it will only use 1 core.
-## Single threaded mode should 'just work' anywhere, even in js, but won't be fast.
+## Logical GPU lanes run cooperatively as iterators, with storage owned by each block.
+## Threaded builds distribute lanes, including those in one block, across bounded workers.
 import
-  std/[cpuinfo, macros, os, strutils, math, tables, locks]
+  std/[cpuinfo, macros, os, strutils, math, locks, typetraits, atomics]
 
 ## TERMINOLOGY: `threads` or `SingleThread` refers to the number of CPU threads we are using under the hood.
-## these CPU threads are in a pool that runs the actual gpu kernels.
-## GPU blocks and GPU threads are closures that are a separate distinct concept.
+## Execution is cooperative; the threading option does not create an OS thread per lane.
+## Logical GPU threads are lane iterators; each block owns shared storage and barrier state.
 ## GPU threads can sync with all the other threads in a block using `hippoSyncthreads()` just like in CUDA/HIP.
-## we may be running thousands of GPU threads on top of a pool or 8, 4, or maybe even 1 cpu thread.
+## Barriers yield worker capacity while other logical lanes remain queued.
 ## BlockDim, GridDim, ThreadIdx, BlockIdx, are all referring to GPU threads.
 
 
 const SingleThread = defined(js) or not compileOption("threads")
-
-when SingleThread:
-  {.warning: "hippo/simple: Compiled without --threads:on, performance will be limited to 1 core".}
 
 type
   Dim3* = object
@@ -52,6 +48,9 @@ proc newDim3*(x: SomeInteger = 1; y: SomeInteger = 1; z: SomeInteger = 1): Dim3 
 var threads = 1.uint
 
 proc setThreads*(n: uint) =
+  ## Set the maximum CPU workers per launch; one uses the calling thread.
+  if n == 0:
+    raise newException(ValueError, "SIMPLE needs at least one CPU worker.")
   threads = n
 
 
@@ -66,7 +65,7 @@ proc simpleInit() =
       except ValueError: threads = countProcessors().uint
     else:
       threads = countProcessors().uint
-    echo "DEBUG: hippo/simple: Using ", threads, " threads"
+    echo "DEBUG: hippo/simple: Using up to ", threads, " CPU workers"
 
 simpleInit()
 
@@ -98,8 +97,8 @@ proc hipDeviceSynchronize*(): HippoError =
   ## SIMPLE backend executes synchronously, so there's nothing to wait for.
   0
 
-macro callWithTuple(fn: typed, args: untyped): untyped =
-  ## Expand a tuple constructor into a call expression and cast args to param types.
+macro callWithTuple(fn: typed, args: typed): untyped =
+  ## Expand tuple arguments into a call, casting each to its formal parameter type.
   proc paramTypeAt(params: NimNode, idx: int): NimNode =
     var count = 0
     for i in 1..<params.len:
@@ -122,7 +121,16 @@ macro callWithTuple(fn: typed, args: untyped): untyped =
     if fnType.kind == nnkProcTy:
       params = fnType[0]
 
-  if args.kind in {nnkTupleConstr, nnkPar}:
+  if args.getTypeImpl.kind in {nnkTupleTy, nnkTupleConstr}:
+    for index in 0 ..< args.getTypeImpl.len:
+      let
+        child = newTree(nnkBracketExpr, args, newLit(index))
+        paramType = if params.kind != nnkEmpty: paramTypeAt(params, index) else: newEmptyNode()
+      if paramType.kind != nnkEmpty:
+        result.add(newTree(nnkCast, paramType, child))
+      else:
+        result.add(child)
+  elif args.kind in {nnkTupleConstr, nnkPar}:
     var i = 0
     for child in args:
       let paramType = if params.kind != nnkEmpty: paramTypeAt(params, i) else: newEmptyNode()
@@ -138,226 +146,298 @@ macro callWithTuple(fn: typed, args: untyped): untyped =
     else:
       result.add(args)
 
+type
+  SimpleThread = iterator(): bool {.closure, gcsafe.}
+  SimpleWorkerProc = proc(workerIndex, workerCount: int; cancelled: ptr Atomic[bool]) {.closure, gcsafe.}
+  SimpleSharedSlot = object
+    key, allocation, data: pointer
+    next: ptr SimpleSharedSlot
+  SimpleBlockState = object
+    lock: Lock
+    arrived, generation, completed, laneCount: int
+    shared: ptr SimpleSharedSlot
+  SimpleKernelError* = object of CatchableError
+    ## User kernel failures with their original exception type and diagnostic text.
+    originalType*: string
+  SimpleFailureKind = enum
+    valueFailure, defectFailure, kernelFailure
+  SimpleFailure = object
+    kind: SimpleFailureKind
+    name, message: cstring
+
 var
   blockIdx* {.threadvar.}: BlockIdx
   threadIdx* {.threadvar.}: ThreadIdx
   blockDim* {.threadvar.}: BlockDim
   gridDim* {.threadvar.}: GridDim
+  currentSimpleBlock {.threadvar.}: ptr SimpleBlockState
 
-type
-  BlockBarrier = object
-    lock: Lock
-    counter: int
-    generation: int
-    numThreads: int
-    lastLaunchId: int  # Track which kernel launch this barrier belongs to
-  Task = iterator (): bool {.gcsafe.}  # Closure iterator that yields true while working, false when done
+proc simpleAllocate(count, size: csize_t): pointer {.importc: "calloc", header: "stdlib.h".}
+  ## Allocate zeroed storage whose lifetime can extend past its creating CPU worker.
+proc simpleRelease(memory: pointer) {.importc: "free", header: "stdlib.h".}
+  ## Release storage allocated by simpleAllocate, on any CPU worker or the caller.
 
-var blockBarriers: Table[uint64, ptr BlockBarrier]
-var currentKernelLaunch*: int = 0
-var syncthreadsCalled*: bool = false  # Global flag for syncthreads
+proc sharedErrorText(text: string): cstring =
+  ## Copy diagnostics outside worker-owned Nim heaps before the worker exits.
+  result = cast[cstring](simpleAllocate(1, csize_t(text.len + 1)))
+  if result == nil:
+    raise newException(OutOfMemDefect, "Unable to copy a SIMPLE worker failure.")
+  if text.len > 0:
+    copyMem(result, unsafeAddr text[0], text.len)
 
-proc runAllTasks(tasks: seq[Task]) {.gcsafe.} =
-  ## Cooperative scheduler that runs tasks in round-robin until all complete.
-  var active = newSeq[Task]()
-  for t in tasks: active.add(t)
+proc releaseFailure(failure: var SimpleFailure) =
+  ## Release the value-only failure record after recreating caller-owned diagnostics.
+  simpleRelease(failure.name)
+  simpleRelease(failure.message)
+  failure.name = nil
+  failure.message = nil
 
+template withSimpleBlock(state: ptr SimpleBlockState; body: untyped) =
+  when not SingleThread:
+    acquire(state.lock)
+  try:
+    body
+  finally:
+    when not SingleThread:
+      release(state.lock)
+
+proc simpleSharedMemory[T](site: static[string]): ptr T =
+  ## Borrow one raw shared allocation per declaration and block until launch completion.
+  when not supportsCopyMem(T):
+    {.error: "SIMPLE shared memory requires a type without managed references or destructors.".}
+  # The tag identifies a declaration; the allocation itself belongs to a block.
+  var declarationTag {.global.}: byte
+  let state = currentSimpleBlock
+  if state == nil:
+    raise newException(ValueError, "Shared memory requires an active SIMPLE block.")
+  withSimpleBlock(state):
+    var slot = state.shared
+    while slot != nil and slot.key != addr declarationTag:
+      slot = slot.next
+    if slot == nil:
+      slot = cast[ptr SimpleSharedSlot](simpleAllocate(1, sizeof(SimpleSharedSlot).csize_t))
+      if slot == nil:
+        raise newException(OutOfMemDefect, "Unable to allocate a SIMPLE shared-memory slot.")
+      slot.allocation = simpleAllocate(1, csize_t(max(1, sizeof(T) + alignof(T) - 1)))
+      if slot.allocation == nil:
+        simpleRelease(slot)
+        raise newException(OutOfMemDefect, "Unable to allocate SIMPLE block-shared memory.")
+      slot.data = cast[pointer]((cast[uint](slot.allocation) + uint(alignof(T) - 1)) and
+        not uint(alignof(T) - 1))
+      slot.key = addr declarationTag
+      slot.next = state.shared
+      state.shared = slot
+    result = cast[ptr T](slot.data)
+
+proc describeFailure(error: ref Exception): SimpleFailure =
+  ## Keep ORC-managed exception graphs on their worker and transfer diagnostic values.
+  result.kind = if error of ValueError: valueFailure
+                elif error of Defect: defectFailure
+                else: kernelFailure
+  result.name = sharedErrorText($error.name)
+  result.message = sharedErrorText($error.name & ": " & error.msg & "\n" & getStackTrace(error))
+
+proc raiseFailure(failure: var SimpleFailure) {.noreturn.} =
+  ## Recreate failures on the caller without converting defects to recoverable errors.
+  let
+    kind = failure.kind
+    originalType = $failure.name
+    message = $failure.message
+  releaseFailure(failure)
+  case kind
+  of valueFailure:
+    raise newException(ValueError, message)
+  of defectFailure:
+    raise newException(Defect, message)
+  of kernelFailure:
+    let error = newException(SimpleKernelError, message)
+    error.originalType = originalType
+    raise error
+
+proc simpleLaneFinished(state: ptr SimpleBlockState) =
+  ## Retire a lane from later barriers, releasing peers already waiting for its exit.
+  withSimpleBlock(state):
+    inc state.completed
+    if state.arrived > 0 and state.arrived == state.laneCount - state.completed:
+      state.arrived = 0
+      inc state.generation
+
+proc simpleArrive(state: ptr SimpleBlockState): int =
+  ## Publish this lane's writes and advance the generation after the last arrival.
+  withSimpleBlock(state):
+    result = state.generation
+    inc state.arrived
+    if state.arrived == state.laneCount - state.completed:
+      state.arrived = 0
+      inc state.generation
+
+proc simpleBarrierPending(state: ptr SimpleBlockState; generation: int): bool =
+  ## Acquire the block lock before observing a barrier release and its memory writes.
+  withSimpleBlock(state):
+    result = state.generation == generation
+
+proc runAllTasks(tasks: seq[SimpleThread]; cancelled: ptr Atomic[bool] = nil) {.gcsafe.} =
+  ## Keep lane iterators on their owning worker and yield capacity at barriers.
+  var active = tasks
   while active.len > 0:
-    var i = 0
-    while i < active.len:
-      let stillWorking = active[i]()
-      if not stillWorking:
-        active.del(i)
+    var index = 0
+    while index < active.len:
+      if cancelled != nil and cancelled[].load():
+        return
+      if active[index]():
+        inc index
       else:
-        inc i
+        active.del(index)
 
 when not SingleThread:
-  var barriersLock: Lock
-  initLock(barriersLock)
+  type
+    SimpleWorkState = object
+      lock: Lock
+      runWorker: ptr SimpleWorkerProc
+      cancelled: Atomic[bool]
+      failure: SimpleFailure
+    SimpleWorkerStart = object
+      work: ptr SimpleWorkState
+      index, count: int
 
-# Export functions so they're accessible from templates expanded in kernel iterators
-proc getBlockId*(blockIdx: BlockIdx): uint64 =
-  # Create a unique identifier for a block
-  result = blockIdx.x.uint64
-  result = result * 1000000'u64 + blockIdx.y.uint64
-  result = result * 1000000'u64 + blockIdx.z.uint64
+  proc simpleWorker(start: SimpleWorkerStart) {.thread.} =
+    ## Run pinned logical lanes and cancel waiting peers if any kernel fails.
+    try:
+      start.work.runWorker[](start.index, start.count, addr start.work.cancelled)
+    except Exception as error:
+      acquire(start.work.lock)
+      try:
+        if start.work.failure.name == nil:
+          start.work.failure = describeFailure(error)
+        start.work.cancelled.store(true)
+      finally:
+        release(start.work.lock)
 
-proc getOrCreateBarrier*(blockId: uint64, numThreads: int, launchId: int): ptr BlockBarrier =
-  when not SingleThread:
-    acquire(barriersLock)
-  if not blockBarriers.hasKey(blockId):
-    var barrier = cast[ptr BlockBarrier](allocShared(sizeof(BlockBarrier)))
-    initLock(barrier.lock)
-    barrier.counter = 0
-    barrier.generation = 0
-    barrier.numThreads = numThreads
-    barrier.lastLaunchId = launchId
-    blockBarriers[blockId] = barrier
-    result = barrier
-  else:
-    result = blockBarriers[blockId]
-  when not SingleThread:
-    release(barriersLock)
-  
+  proc runParallelLanes(runWorker: SimpleWorkerProc; laneCount: int) =
+    ## Borrow the launch callback until all bounded workers have joined.
+    let workerCount = min(threads, uint(laneCount)).int
+    var
+      work = SimpleWorkState(runWorker: unsafeAddr runWorker)
+      workers = newSeq[Thread[SimpleWorkerStart]](workerCount)
+      started = 0
+    initLock(work.lock)
+    try:
+      try:
+        for index in 0 ..< workerCount:
+          createThread(workers[index], simpleWorker,
+            SimpleWorkerStart(work: addr work, index: index, count: workerCount))
+          inc started
+      except:
+        work.cancelled.store(true)
+        raise
+      finally:
+        for index in 0 ..< started:
+          joinThread(workers[index])
+      if work.failure.name != nil:
+        raiseFailure(work.failure)
+    finally:
+      releaseFailure(work.failure)
+      deinitLock(work.lock)
 
-
-
-when SingleThread:
-  template simpleLaunchKernel(fn: untyped, gridDimArg: Dim3, blockDimArg: Dim3, args: tuple) =
-    block:
-      inc currentKernelLaunch
-      blockBarriers.clear()
-
-      gridDim = gridDimArg
-      blockDim = blockDimArg
-
-      let totalBlocks = int(gridDimArg.x * gridDimArg.y * gridDimArg.z)
-      let totalThreadsPerBlock = int(blockDimArg.x * blockDimArg.y * blockDimArg.z)
-      let totalBlocksPerPlane = int(gridDimArg.x * gridDimArg.y)
-      let totalThreadsPerBlockPlane = int(blockDimArg.x * blockDimArg.y)
-
-      proc executeBlock(blockIndex: int): proc() {.closure, gcsafe.} =
-        let bz = blockIndex div totalBlocksPerPlane
-        let remainder = blockIndex mod totalBlocksPerPlane
-        let by = remainder div int(gridDimArg.x)
-        let bx = remainder mod int(gridDimArg.x)
-
-        result = proc() {.closure, gcsafe.} =
-          proc makeThreadTask(bxVal, byVal, bzVal, txVal, tyVal, tzVal: uint): Task =
-            iterator (): bool =
-              {.gcsafe.}:
-                blockIdx.x = bxVal
-                blockIdx.y = byVal
-                blockIdx.z = bzVal
-                threadIdx.x = txVal
-                threadIdx.y = tyVal
-                threadIdx.z = tzVal
-                gridDim = gridDimArg
-                blockDim = blockDimArg
-
-                let kernelIter = callWithTuple(fn, args)
-                while true:
-                  blockIdx.x = bxVal
-                  blockIdx.y = byVal
-                  blockIdx.z = bzVal
-                  threadIdx.x = txVal
-                  threadIdx.y = tyVal
-                  threadIdx.z = tzVal
-                  gridDim = gridDimArg
-                  blockDim = blockDimArg
-                  if not kernelIter():
-                    break
-                  yield true
-              yield false
-
-          var blockTasks: seq[Task]
-          for threadIndex in 0..<totalThreadsPerBlock:
-            let tz = threadIndex div totalThreadsPerBlockPlane
-            let threadRemainder = threadIndex mod totalThreadsPerBlockPlane
-            let ty = threadRemainder div int(blockDimArg.x)
-            let tx = threadRemainder mod int(blockDimArg.x)
-            blockTasks.add(makeThreadTask(uint(bx), uint(by), uint(bz), uint(tx), uint(ty), uint(tz)))
-
-          runAllTasks(blockTasks)
-
-      for blockIndex in 0..<totalBlocks:
-        let closure = executeBlock(blockIndex)
-        closure()
-
-else:
-
-  proc worker(closure: proc () {.closure, gcsafe.}) {.thread.} =
-    ## Worker procedure that executes the provided closure in a thread.
-    closure()
-
-  template simpleLaunchKernel(fn: untyped, gridDimArg: Dim3, blockDimArg: Dim3, args: tuple) =
-    block:
-      # Reset barriers for this kernel launch (before threads start)
-      acquire(barriersLock)
-      inc currentKernelLaunch
-      blockBarriers.clear()
-      release(barriersLock)
-
-      # Multi-threaded execution: blocks run in parallel OS threads.
-      # Threads within each block run cooperatively using round-robin scheduling.
-      let totalBlocks = int(gridDimArg.x * gridDimArg.y * gridDimArg.z)
-      let totalThreadsPerBlock = int(blockDimArg.x * blockDimArg.y * blockDimArg.z)
-      let totalBlocksPerPlane = int(gridDimArg.x * gridDimArg.y)
-      let totalThreadsPerBlockPlane = int(blockDimArg.x * blockDimArg.y)
-
-      proc executeBlock(blockIndex: int): proc() {.closure, gcsafe.} =
-        let bz = blockIndex div totalBlocksPerPlane
-        let remainder = blockIndex mod totalBlocksPerPlane
-        let by = remainder div int(gridDimArg.x)
-        let bx = remainder mod int(gridDimArg.x)
-
-        result = proc() {.closure, gcsafe.} =
-          proc makeThreadTask(bxVal, byVal, bzVal, txVal, tyVal, tzVal: uint): Task =
-            iterator (): bool =
-              {.gcsafe.}:
-                blockIdx.x = bxVal
-                blockIdx.y = byVal
-                blockIdx.z = bzVal
-                threadIdx.x = txVal
-                threadIdx.y = tyVal
-                threadIdx.z = tzVal
-                gridDim = gridDimArg
-                blockDim = blockDimArg
-
-                let kernelIter = callWithTuple(fn, args)
-                while true:
-                  blockIdx.x = bxVal
-                  blockIdx.y = byVal
-                  blockIdx.z = bzVal
-                  threadIdx.x = txVal
-                  threadIdx.y = tyVal
-                  threadIdx.z = tzVal
-                  gridDim = gridDimArg
-                  blockDim = blockDimArg
-                  if not kernelIter():
-                    break
-                  yield true
-              yield false
-
-          var blockTasks: seq[Task]
-          for threadIndex in 0..<totalThreadsPerBlock:
-            let tz = threadIndex div totalThreadsPerBlockPlane
-            let threadRemainder = threadIndex mod totalThreadsPerBlockPlane
-            let ty = threadRemainder div int(blockDimArg.x)
-            let tx = threadRemainder mod int(blockDimArg.x)
-            blockTasks.add(makeThreadTask(uint(bx), uint(by), uint(bz), uint(tx), uint(ty), uint(tz)))
-
-          runAllTasks(blockTasks)
-
-      for i in 0..<totalBlocks:
-        let closure = executeBlock(i)
-        closure()
-
-
-# hippoSyncthreads implementation depends on threading mode
-template hippoSyncthreads*() {.dirty.} =
-  ## Blocking barrier that synchronizes threads within a block.
-  ## Since blocks may run in parallel OS threads, this can be blocking.
+template simpleLaunchKernel(fn: untyped; gridDimArg, blockDimArg: Dim3; args: tuple) =
   block:
-    bind acquire, release
-    let blockId {.gensym.} = getBlockId(blockIdx)
-    let barrier {.gensym.} = getOrCreateBarrier(blockId, int(blockDim.x * blockDim.y * blockDim.z), currentKernelLaunch)
+    let
+      launchGrid = gridDimArg
+      launchBlock = blockDimArg
+      launchArgs = args
+      totalBlocks = int(launchGrid.x * launchGrid.y * launchGrid.z)
+      lanesPerBlock = int(launchBlock.x * launchBlock.y * launchBlock.z)
+      totalLanes = totalBlocks * lanesPerBlock
+      previousBlock = currentSimpleBlock
+      states = cast[ptr UncheckedArray[SimpleBlockState]](
+        allocShared0(totalBlocks * sizeof(SimpleBlockState)))
+    for index in 0 ..< totalBlocks:
+      states[index].laneCount = lanesPerBlock
+      when not SingleThread:
+        initLock(states[index].lock)
 
-    acquire(barrier.lock)
-    let myGen {.gensym.} = barrier.generation
-    inc barrier.counter
-    if barrier.counter == barrier.numThreads:
-      inc barrier.generation
-      barrier.counter = 0
-    release(barrier.lock)
+    proc makeWorkerTasks(workerIndex, workerCount: int; blockArgs: typeof(launchArgs);
+                         blockGrid, blockSize: Dim3;
+                         blockStates: ptr UncheckedArray[SimpleBlockState]): seq[SimpleThread] {.nimcall.} =
+      ## Create every iterator on its worker, borrowing only raw block-shared memory.
+      let
+        blocksPerPlane = int(blockGrid.x * blockGrid.y)
+        lanesPerPlane = int(blockSize.x * blockSize.y)
+        lanesPerBlock = int(blockSize.x * blockSize.y * blockSize.z)
+        count = int(blockGrid.x * blockGrid.y * blockGrid.z) * lanesPerBlock
+      proc makeLaneTask(index: int): SimpleThread =
+        ## Preserve lane affinity and restore its identity at every resume.
+        let
+          blockIndex = index div lanesPerBlock
+          laneIndex = index mod lanesPerBlock
+          bz = uint(blockIndex div blocksPerPlane)
+          by = uint((blockIndex mod blocksPerPlane) div int(blockGrid.x))
+          bx = uint(blockIndex mod int(blockGrid.x))
+          tz = uint(laneIndex div lanesPerPlane)
+          ty = uint((laneIndex mod lanesPerPlane) div int(blockSize.x))
+          tx = uint(laneIndex mod int(blockSize.x))
+          state = addr blockStates[blockIndex]
+          kernelIter = callWithTuple(fn, blockArgs)
+        result = iterator(): bool {.gcsafe.} =
+          while true:
+            blockIdx = newDim3(bx, by, bz)
+            threadIdx = newDim3(tx, ty, tz)
+            gridDim = blockGrid
+            blockDim = blockSize
+            currentSimpleBlock = state
+            if not kernelIter():
+              simpleLaneFinished(state)
+              break
+            yield true
+      var index = workerIndex
+      while index < count:
+        result.add(makeLaneTask(index))
+        index += workerCount
 
-    while true:
-      acquire(barrier.lock)
-      if barrier.generation > myGen:
-        release(barrier.lock)
-        break
-      release(barrier.lock)
+    try:
+      when not SingleThread:
+        if threads > 1 and totalLanes > 1:
+          proc runWorker(index, count: int; cancelled: ptr Atomic[bool]) {.gcsafe.} =
+            ## Keep iterator allocation, execution and destruction on the same worker.
+            let previous = currentSimpleBlock
+            try:
+              runAllTasks(makeWorkerTasks(index, count, launchArgs,
+                launchGrid, launchBlock, states), cancelled)
+            finally:
+              currentSimpleBlock = previous
+          runParallelLanes(runWorker, totalLanes)
+        else:
+          runAllTasks(makeWorkerTasks(0, 1, launchArgs, launchGrid, launchBlock, states))
+      else:
+        runAllTasks(makeWorkerTasks(0, 1, launchArgs, launchGrid, launchBlock, states))
+    except ValueError, Defect, SimpleKernelError:
+      raise
+    except Exception as error:
+      var failure = describeFailure(error)
+      raiseFailure(failure)
+    finally:
+      currentSimpleBlock = previousBlock
+      for index in 0 ..< totalBlocks:
+        var slot = states[index].shared
+        while slot != nil:
+          let next = slot.next
+          simpleRelease(slot.allocation)
+          simpleRelease(slot)
+          slot = next
+        when not SingleThread:
+          deinitLock(states[index].lock)
+      deallocShared(states)
+
+template hippoSyncthreads*() =
+  ## Release worker capacity until all logical lanes in this block arrive.
+  block:
+    let state = currentSimpleBlock
+    if state == nil:
+      raise newException(ValueError, "SIMPLE barriers require an active kernel block.")
+    let generation = simpleArrive(state)
+    while simpleBarrierPending(state, generation):
       yield true
+
 
 # Warp shuffle stubs — no-op in SIMPLE backend (single-threaded per "warp")
 proc shflDown*(val: cfloat, delta: cint): cfloat = val
