@@ -1711,8 +1711,8 @@
   <dd>
     
     Warp/wavefront size for the current backend.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1285" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1285" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1288" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1288" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -1781,8 +1781,8 @@
   <dd>
     
     Sum <tt class="docutils literal"><span class="pre"><span class="Identifier">v</span></span></tt> across every thread of the block. <tt class="docutils literal"><span class="pre"><span class="Identifier">shared</span></span></tt> must point at a caller-provided <tt class="docutils literal"><span class="pre"><span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">hippoShared</span><span class="Operator">.</span><span class="Punctuation">}</span></span></tt> array of at least (blockDim.x div HippoWarpSize) floats. The total is valid in thread 0 only; other threads hold partial sums.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L988" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L988" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L981" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L981" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2902,8 +2902,8 @@
   <dd>
     
     Borrow count float32 elements without copying; memory must outlive the texture. GPU backends use native texture objects; HIP-CPU reads the backing allocation.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1536" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1536" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1539" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1539" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2916,8 +2916,8 @@
   <dd>
     
     Borrow pitched float32 rows with unnormalized coordinates, point sampling, and clamped edges. Memory must outlive the texture; its rows are not copied. HIP-CPU implements these sampling rules over ordinary host memory.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1549" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1549" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1552" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1552" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2930,8 +2930,8 @@
   <dd>
     
     Release a texture view before freeing its backing memory; HIP-CPU is a no-op.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1567" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1567" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1570" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1570" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2971,8 +2971,8 @@
   <dd>
     
     Register a GL buffer once, keeping its GL context current for interop calls. Write-discard requires overwriting the entire buffer on each mapping.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1463" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1463" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1466" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1466" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2985,8 +2985,8 @@
   <dd>
     
     Map a registered GL buffer for compute; GL must not access it until unmapped.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1473" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1473" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1476" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1476" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -2999,8 +2999,8 @@
   <dd>
     
     Borrow a mapped pointer; never free it or retain it across unmapping.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1481" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1481" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1484" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1484" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3013,8 +3013,8 @@
   <dd>
     
     Return ownership to GL after preceding kernels in the supplied stream.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1491" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1491" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1494" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1494" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3027,8 +3027,8 @@
   <dd>
     
     Release the compute registration while GL is current, before deleting its buffer.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1499" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1499" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1502" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1502" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3071,8 +3071,8 @@
   <dd>
     
     Hash <tt class="docutils literal"><span class="pre"><span class="Identifier">pos</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">seed</span></span></tt> into a pseudorandom uint32 with SquirrelNoise5. Callable from both host and device code, and stable across backends.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1034" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1034" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1027" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1027" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3114,8 +3114,8 @@
   <dd>
     
     Fetch a float32 element by integer index from a linear texture view.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L988" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L988" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L981" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L981" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3129,8 +3129,8 @@
   <dd>
     
     Point-sample finite, unnormalized coordinates with clamped edges. Pixel (x, y) has its center at (x + 0.5, y + 0.5).
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L988" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L988" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L981" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L981" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3143,8 +3143,8 @@
   <dd>
     
     Select the compute device associated with the current OpenGL context. Call this after making GL current, before creating compute resources.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1445" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1445" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1448" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1448" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3678,8 +3678,8 @@
   <dd>
     
     Reduce <tt class="docutils literal"><span class="pre"><span class="Identifier">v</span></span></tt> to its maximum across every lane of the warp. The maximum is valid in lane 0; other lanes hold partial maxima.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L988" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L988" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L981" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L981" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3692,8 +3692,8 @@
   <dd>
     
     Sum <tt class="docutils literal"><span class="pre"><span class="Identifier">v</span></span></tt> across every lane of the warp with a shuffle-down ladder. The total is valid in lane 0; other lanes hold partial sums.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L988" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L988" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L981" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L981" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3831,8 +3831,8 @@
   <dd>
     
     Automatically convert varargs for use with CUDA/HIP. CUDA/HIP expects an array of arguments or pointers depending on platform.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1071" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1071" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1074" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1074" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3844,8 +3844,8 @@
   <dd>
     
     Declared a variable as <tt class="docutils literal"><span class="pre"><span class="Identifier">__constant__</span></span></tt>. Constants are read-only globals that are cached on-chip. constants are useful for data that is being read by all threads in a warp at the same time. if each thread in a warp accesses different addresses in constant memory, the accesses are serialized and this may cause a 16x slowdown. eg: <tt class="docutils literal"><span class="pre"><span class="Keyword">const</span> <span class="Identifier">N</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">hippoConstant</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="DecNumber">1024</span></span></tt>
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1054" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1054" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1057" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1057" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3857,8 +3857,8 @@
   <dd>
     
     Declare fuctions for use on the <tt class="docutils literal"><span class="pre"><span class="Identifier">__device__</span></span></tt> (the gpu), to be called by either <tt class="docutils literal"><span class="pre"><span class="Identifier">device</span></span></tt> or <tt class="docutils literal"><span class="pre"><span class="Identifier">global</span></span></tt> functions.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L960" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L960" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L953" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L953" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3870,8 +3870,8 @@
   <dd>
     
     Declare a <tt class="docutils literal"><span class="pre"><span class="Identifier">__device__</span></span></tt> function that is emitted into every translation unit that calls it. Device symbols do not link across translation units without relocatable device code, so library device helpers must be inline.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L975" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L975" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L968" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L968" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3896,8 +3896,8 @@
   <dd>
     
     Explicitly declare a function as a <tt class="docutils literal"><span class="pre"><span class="Identifier">__host__</span></span></tt> function (cpu side). All functions default to <tt class="docutils literal"><span class="pre"><span class="Identifier">host</span></span></tt> functions, so this is not required.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L993" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L993" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L986" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L986" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3909,8 +3909,8 @@
   <dd>
     
     Declare a function as both <tt class="docutils literal"><span class="pre"><span class="Identifier">__host__</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">__device__</span></span></tt>. This is useful for functions that are usable from either the host and the device. eg: <tt class="docutils literal"><span class="pre"><span class="Keyword">proc</span> <span class="Identifier">add</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Punctuation">:</span> <span class="Identifier">int</span><span class="Punctuation">,</span> <span class="Identifier">b</span><span class="Punctuation">:</span> <span class="Identifier">int</span><span class="Punctuation">)</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">hippoHostDevice</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span> <span class="Identifier">a</span> <span class="Operator">+</span> <span class="Identifier">b</span></span></tt>
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1007" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1007" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1000" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1000" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3922,8 +3922,8 @@
   <dd>
     
     Declare a <tt class="docutils literal"><span class="pre"><span class="Identifier">__device__</span> <span class="Identifier">__host__</span></span></tt> function that is emitted into every translation unit that calls it, so it links from both host and device code.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1022" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1022" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1015" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1015" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -3935,8 +3935,8 @@
   <dd>
     
     Declared a variable as static shared memory <tt class="docutils literal"><span class="pre"><span class="Identifier">__shared__</span></span></tt>. Shared memory is shared between threads in the same block. It is faster than global memory, but is limited in size. They are located on-chip. eg: <tt class="docutils literal"><span class="pre"><span class="Keyword">var</span> <span class="Identifier">cache</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">hippoShared</span><span class="Operator">.</span><span class="Punctuation">}</span><span class="Punctuation">:</span> <span class="Identifier">array</span><span class="Punctuation">[</span><span class="DecNumber">256</span><span class="Punctuation">,</span> <span class="Identifier">float</span><span class="Punctuation">]</span></span></tt>
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1039" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1039" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1032" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1032" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4171,8 +4171,8 @@
   <dd>
     
     Cosine function for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1143" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1143" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1146" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1146" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4184,8 +4184,8 @@
   <dd>
     
     Hyperbolic cosine for single-precision float.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1216" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1216" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1219" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1219" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4197,8 +4197,8 @@
   <dd>
     
     Access the kernel dynamic shared memory block as an <tt class="docutils literal"><span class="pre"><span class="Identifier">UncheckedArray</span><span class="Punctuation">[</span><span class="Identifier">T</span><span class="Punctuation">]</span></span></tt>. The size is the <tt class="docutils literal"><span class="pre"><span class="Identifier">sharedMemBytes</span></span></tt> argument given to <tt class="docutils literal"><span class="pre"><span class="Identifier">hippoLaunchKernel</span></span></tt>.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1288" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1288" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1291" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1291" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4301,8 +4301,8 @@
   <dd>
     
     Exponential function (e^x) for double-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1103" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1103" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1106" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1106" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4311,8 +4311,8 @@
   <dd>
     
     Exponential function (e^x) for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1093" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1093" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1096" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1096" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4324,8 +4324,8 @@
   <dd>
     
     Exponential function (e^x) for single-precision float. cfloat-only alias for <tt class="docutils literal"><span class="pre"><span class="Identifier">hippoExp</span></span></tt> that avoids the f32/f64 overload ambiguity.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1201" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1201" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1204" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1204" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4337,8 +4337,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1183" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1183" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1186" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1186" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4350,8 +4350,8 @@
   <dd>
     
     Convert float32 to IEEE 754 half-precision (uint16). Uses hardware intrinsic on HIP/CUDA, software fallback on SIMPLE.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1377" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1377" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1380" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1380" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4363,8 +4363,8 @@
   <dd>
     
     Fused multiply-add (a * b + c) for single-precision float.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1237" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1237" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1240" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1240" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4376,8 +4376,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1189" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1189" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1192" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1192" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4389,8 +4389,8 @@
   <dd>
     
     Minimum of two single-precision floats.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1230" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1230" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1233" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1233" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4506,8 +4506,8 @@
   <dd>
     
     Convert IEEE 754 half-precision (uint16) to float32. Uses hardware intrinsic on HIP/CUDA, software fallback on SIMPLE.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1372" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1372" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1375" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1375" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4580,8 +4580,8 @@
   <dd>
     
     Safe uint32 load from a byte pointer using __builtin_memcpy. Avoids strict aliasing violations that break cast<a class="reference internal" href="#ptr uint32">ptr uint32</a> on HIP/CUDA.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1382" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1382" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1385" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1385" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4593,8 +4593,8 @@
   <dd>
     
     Natural logarithm for double-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1123" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1123" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1126" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1126" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4603,8 +4603,8 @@
   <dd>
     
     Natural logarithm for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1113" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1113" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1116" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1116" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4629,8 +4629,8 @@
   <dd>
     
     Allocate pitched rows and return (memory: GpuRef, pitchBytes: int). Width is in bytes; free the allocation through the returned GpuRef.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1508" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1508" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1511" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1511" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4688,8 +4688,8 @@
   <dd>
     
     Copy logical rows between linear or pitched allocations; sizes are in bytes.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1526" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1526" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1529" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1529" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4778,8 +4778,8 @@
   <dd>
     
     Power function (base^exp) for double-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1173" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1173" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1176" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1176" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4788,8 +4788,8 @@
   <dd>
     
     Power function (base^exp) for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1163" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1163" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1166" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1166" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4801,8 +4801,8 @@
   <dd>
     
     
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1195" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1195" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1198" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1198" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4814,8 +4814,8 @@
   <dd>
     
     Reciprocal square root (1/sqrt(x)) for single-precision float.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1223" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1223" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1226" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1226" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4827,8 +4827,8 @@
   <dd>
     
     4×int8 dot product: treats a and b as 4 packed signed int8, accumulates into c.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1404" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1404" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1407" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1407" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4840,8 +4840,8 @@
   <dd>
     
     Warp shuffle: read float32 from srcLane (broadcast).
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1253" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1253" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1256" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1256" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4850,8 +4850,8 @@
   <dd>
     
     Warp shuffle: read int32 from srcLane (broadcast).
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1257" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1257" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1260" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1260" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4863,8 +4863,8 @@
   <dd>
     
     Warp shuffle down for float32. Returns the value from the lane <tt class="docutils literal"><span class="pre"><span class="Identifier">delta</span></span></tt> positions below the calling lane within the same warp.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1244" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1244" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1247" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1247" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4873,8 +4873,8 @@
   <dd>
     
     Warp shuffle down for float32 within a sub-warp of <tt class="docutils literal"><span class="pre"><span class="Identifier">width</span></span></tt> lanes.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1265" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1265" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1268" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1268" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4883,8 +4883,8 @@
   <dd>
     
     Warp shuffle down for int32.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1249" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1249" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1252" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1252" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4893,8 +4893,8 @@
   <dd>
     
     Warp shuffle down for int32 within a sub-warp of <tt class="docutils literal"><span class="pre"><span class="Identifier">width</span></span></tt> lanes.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1269" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1269" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1272" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1272" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4903,8 +4903,8 @@
   <dd>
     
     Warp shuffle down for uint32.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1261" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1261" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1264" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1264" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4913,8 +4913,8 @@
   <dd>
     
     Warp shuffle down for uint32 within a sub-warp of <tt class="docutils literal"><span class="pre"><span class="Identifier">width</span></span></tt> lanes.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1273" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1273" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1276" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1276" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4926,8 +4926,8 @@
   <dd>
     
     Warp shuffle xor for float32: read the lane whose id is <tt class="docutils literal"><span class="pre"><span class="Identifier">lane</span> <span class="Keyword">xor</span> <span class="Identifier">laneMask</span></span></tt>.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1277" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1277" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1280" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1280" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4936,8 +4936,8 @@
   <dd>
     
     Warp shuffle xor for int32: read the lane whose id is <tt class="docutils literal"><span class="pre"><span class="Identifier">lane</span> <span class="Keyword">xor</span> <span class="Identifier">laneMask</span></span></tt>.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1281" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1281" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1284" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1284" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4949,8 +4949,8 @@
   <dd>
     
     Sine function for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1133" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1133" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1136" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1136" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -4962,8 +4962,8 @@
   <dd>
     
     Square root function for single-precision float
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1153" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1153" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1156" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1156" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -5067,8 +5067,8 @@
   <dd>
     
     Hyperbolic tangent for single-precision float.
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1209" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1209" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1212" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1212" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -5093,8 +5093,8 @@
   <dd>
     
     Packed int8×4 saturated subtract: result<a class="reference internal" href="#i">i</a> = clamp(a<a class="reference internal" href="#i">i</a> - b<a class="reference internal" href="#i">i</a>, -128, 127)
-    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1387" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1387" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/monofuel/hippo/tree/master/src/hippo.nim#L1390" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/monofuel/hippo/edit/devel/src/hippo.nim#L1390" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -5110,7 +5110,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-11-24 00:44:28 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-11-24 19:29:12 UTC</small>
       </div>
     </div>
   </div>
